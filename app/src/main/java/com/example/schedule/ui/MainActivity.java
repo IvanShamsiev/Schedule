@@ -34,11 +34,10 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static Schedule schedule;
+
     public static Calendar currentDate;
     public static Calendar pageDate;
 
-
-    ViewPager viewPager;
     static SharedPreferences preferences;
     static boolean lessonNames; // false: short; true: full
     public static boolean weekEvenStyle; // false: В-Н; true: Ч-Н
@@ -51,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String[] dayOfWeek = {"Воскресенье", "Поненельник", "Вторник", "Среда",
             "Четверг", "Пятница", "Суббота"};
 
-    AlertDialog changeScheduleDialog;
-
-    DatePickerDialog dataChoiseCialog;
+    private ViewPager viewPager;
+    private AlertDialog changeScheduleDialog;
+    private DatePickerDialog dataChoiceDialog;
 
     //boolean currentConfigChanged = false;
 
@@ -67,20 +66,32 @@ public class MainActivity extends AppCompatActivity {
         currentDate = new GregorianCalendar();
         pageDate = new GregorianCalendar();
 
-        viewPager = findViewById(R.id.container);
+        viewPager = findViewById(R.id.viewPager);
 
         changeScheduleDialog = new AlertDialog.Builder(this)
                 .setTitle("Введите пароль")
                 .setView(getLayoutInflater().inflate(R.layout.change_schedule_dialog, null))
-                .setPositiveButton("Ок", checkPass)
-                .setNegativeButton("Отмена", null)
+                .setPositiveButton("Ок", (dialog, which) -> {
+                    EditText editTextPass = ((AlertDialog) dialog).findViewById(R.id.editTextPass);
+                    String pass = editTextPass.getText().toString();
+                    if (pass.equals("02281488")) {
+                        Intent changeSchedule = new Intent(this, ScheduleChanger.class);
+                        startActivityForResult(changeSchedule, 0);
+                    } else Toast.makeText(this, "Неверный пароль", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Отмена", (dialog, which) -> dialog.cancel())
                 .create();
 
+
+        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+            pageDate.set(year, month, dayOfMonth);
+            setAdapter();
+        };
         int year = currentDate.get(Calendar.YEAR);
         int month = currentDate.get(Calendar.MONTH);
         int day = currentDate.get(Calendar.DAY_OF_MONTH);
-        dataChoiseCialog = new DatePickerDialog(this, dateSetListener, year, month, day);
-        dataChoiseCialog.setTitle("Выберите дату");
+        dataChoiceDialog = new DatePickerDialog(this, dateSetListener, year, month, day);
+        dataChoiceDialog.setTitle("Выберите дату");
     }
 
 
@@ -94,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         schedule = ScheduleHelper.getInstance(lessonNames);
 
-        DayFragment.DaysPagerAdapter adapter = new DayFragment.DaysPagerAdapter(getSupportFragmentManager());
-        setAdapter(adapter);
+        setAdapter();
 
         super.onResume();
     }
@@ -103,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
     /*@Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putBoolean("isOrientationChanged", true);
     }
 
     @Override
@@ -122,6 +131,18 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.preferences).setIntent(
                 new Intent(this, PreferencesActivity.class));
+        menu.findItem(R.id.calendar).setOnMenuItemClickListener(item -> {
+            dataChoiceDialog.show();
+            return true;
+        });
+        menu.findItem(R.id.reloadSchedule).setOnMenuItemClickListener(item -> {
+            ScheduleHelper.downloadSchedule(callback);
+            return true;
+        });
+        menu.findItem(R.id.changeSchedule).setOnMenuItemClickListener(item -> {
+            changeScheduleDialog.show();
+            return true;
+        });
         return true;
     }
 
@@ -159,41 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void showCalendar(MenuItem item) {
-        dataChoiseCialog.show();
-    }
 
-    DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
-        pageDate.set(year, month, dayOfMonth);
-        setAdapter();
-    };
-
-
-
-
-    public void downloadSchedule(@Nullable MenuItem item) {
-        ScheduleHelper.downloadSchedule(callback);
-    }
-
-
-
-    public void changeSchedule(@Nullable MenuItem item) {
-        changeScheduleDialog.show();
-    }
-
-    DialogInterface.OnClickListener checkPass = (dialog, which) -> {
-        EditText editTextPass = ((AlertDialog) dialog).findViewById(R.id.editTextPass);
-        String pass = editTextPass.getText().toString();
-
-        editTextPass.setText("");
-
-        if (pass.equals("02281488")) {
-            Intent changeSchedule = new Intent(this, ScheduleChanger.class);
-            startActivityForResult(changeSchedule, 0);
-        } else Toast.makeText(this, "Неверный пароль", Toast.LENGTH_SHORT).show();
-
-
-    };
 
     Callback callback = new Callback() {
 

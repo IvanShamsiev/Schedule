@@ -46,7 +46,7 @@ public class Schedule {
     }
 
     public boolean isEven(Calendar date) { // true - Нижняя, false - Верхняя
-        return (date.get(Calendar.WEEK_OF_YEAR) % 2) == 1;
+        return (date.get(Calendar.WEEK_OF_YEAR) % 2) == 0;
     }
 
 

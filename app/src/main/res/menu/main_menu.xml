@@ -6,8 +6,7 @@
         android:id="@+id/calendar"
         android:icon="@android:drawable/ic_menu_today"
         android:title="@string/calendar"
-        app:showAsAction="always"
-        android:onClick="showCalendar"/>
+        app:showAsAction="always"/>
     <item
         android:id="@+id/preferences"
         android:icon="@android:drawable/ic_menu_preferences"
@@ -16,10 +15,8 @@
     <item
         android:id="@+id/reloadSchedule"
         android:icon="@android:drawable/ic_menu_upload"
-        android:title="@string/reloadSchedule"
-        android:onClick="downloadSchedule"/>
+        android:title="@string/reloadSchedule"/>
     <item
         android:id="@+id/changeSchedule"
-        android:title="@string/changeSchedule"
-        android:onClick="changeSchedule"/>
+        android:title="@string/changeSchedule"/>
 </menu>
