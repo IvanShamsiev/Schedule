@@ -2,7 +2,6 @@ package com.example.schedule.ui;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -13,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(callback);
+        if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(downloadCallback);
     }
 
 
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         menu.findItem(R.id.reloadSchedule).setOnMenuItemClickListener(item -> {
-            ScheduleHelper.downloadSchedule(callback);
+            ScheduleHelper.downloadSchedule(downloadCallback);
             return true;
         });
         menu.findItem(R.id.changeSchedule).setOnMenuItemClickListener(item -> {
@@ -159,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
         lessonNames = preferences.getBoolean("full_lesson_names", false);
         weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
 
-        try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), callback); }
-        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(callback); }
+        try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
+        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }
 
         schedule = ScheduleHelper.getInstance(lessonNames);
 
@@ -187,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    Callback callback = new Callback() {
+    Callback downloadCallback = new Callback() {
 
         Handler onFailure = new Handler(msg -> {
             Toast.makeText(MainActivity.this, "Не удалось загрузить расписание",
@@ -208,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onResponse(Call call, @NonNull Response response) {
+        public void onResponse(@NonNull Call call, @NonNull Response response) {
             String json;
             try {json = response.body().string();}
             catch (IOException | NullPointerException e) {e.printStackTrace(); return;}

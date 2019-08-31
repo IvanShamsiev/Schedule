@@ -14,7 +14,6 @@ import java.util.Calendar;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -28,12 +27,8 @@ public class ScheduleHelper {
     private static String stringSchedule;
     public static String getStringSchedule() { return stringSchedule; }
 
-
     private static Schedule shortNamesWeek = null;
     private static Schedule fullNamesWeek = null;
-
-
-    private static final MediaType JsonType = MediaType.parse("application/json; charset=utf-8");
 
     public static Schedule getInstance(boolean fullLessonsNames) { // false: short; true: full
         return fullLessonsNames ? fullNamesWeek : shortNamesWeek;
@@ -41,9 +36,9 @@ public class ScheduleHelper {
 
     public static void setSchedule(String json) {
         stringSchedule = json;
-        Schedule[] weeks = new Gson().fromJson(json, Schedule[].class);
-        shortNamesWeek = weeks[0];
-        fullNamesWeek = weeks[1];
+        Schedule[] scheduleTypes = new Gson().fromJson(json, Schedule[].class);
+        shortNamesWeek = scheduleTypes[0];
+        fullNamesWeek = scheduleTypes[1];
     }
 
     public static void downloadSchedule(Callback callback) {

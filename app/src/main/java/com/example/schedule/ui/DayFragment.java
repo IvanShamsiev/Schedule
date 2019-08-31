@@ -2,7 +2,6 @@ package com.example.schedule.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -34,14 +33,11 @@ public class DayFragment extends Fragment {
     public static int middlePos = pagesCount / 2;
 
     private Calendar currentDate;
-    int pos;
 
     public static DayFragment newInstance(int pos) {
         DayFragment fragment = new DayFragment();
         fragment.currentDate = new GregorianCalendar();
         fragment.currentDate.add(Calendar.DATE, pos);
-
-        fragment.pos = pos;
         return fragment;
     }
 
@@ -49,7 +45,7 @@ public class DayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setRetainInstance(true);
+        setRetainInstance(true); // For saving state
 
         View rootView = inflater.inflate(R.layout.page, container, false);
 
@@ -95,13 +91,6 @@ public class DayFragment extends Fragment {
 
         return rootView;
     }
-
-    /*@Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("currentDate", currentDate);
-        onDestroyView();
-    }*/
 
     public static class DaysPagerAdapter extends FragmentPagerAdapter {
 
