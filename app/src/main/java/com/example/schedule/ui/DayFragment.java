@@ -14,6 +14,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.schedule.R;
+import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.model.Lesson;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class DayFragment extends Fragment {
 
         String upWeek = weekEvenStyle ? "Верхняя неделя" : "Нечётная неделя";
         String downWeek = weekEvenStyle ? "Нижняя неделя" : "Чётная неделя";
-        textEvenWeek.setText((schedule.isEven(currentDate) ? upWeek : downWeek));
+        textEvenWeek.setText((ScheduleHelper.isEven(currentDate) ? downWeek : upWeek));
 
         return rootView;
     }

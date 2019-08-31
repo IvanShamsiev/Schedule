@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -92,5 +93,9 @@ public class ScheduleHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isEven(Calendar date) { // true - Нижняя, false - Верхняя
+        return (date.get(Calendar.WEEK_OF_YEAR) % 2) == 0;
     }
 }

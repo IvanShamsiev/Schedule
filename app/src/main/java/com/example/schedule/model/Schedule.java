@@ -2,6 +2,7 @@ package com.example.schedule.model;
 
 import android.support.annotation.NonNull;
 
+import com.example.schedule.logic.ScheduleHelper;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -35,7 +36,7 @@ public class Schedule {
     public List<Lesson> getLessons(Calendar date) {
         List<Lesson> lessons = new ArrayList<>();
 
-        List<List<String>> stringLessons = isEven(date) ?
+        List<List<String>> stringLessons = ScheduleHelper.isEven(date) ?
             evenWeek.get(date.get(Calendar.DAY_OF_WEEK)):
             unevenWeek.get(date.get(Calendar.DAY_OF_WEEK));
 
@@ -43,10 +44,6 @@ public class Schedule {
         for (List<String> lessonInfo: stringLessons) lessons.add(new Lesson(lessonInfo));
 
         return lessons;
-    }
-
-    public boolean isEven(Calendar date) { // true - Нижняя, false - Верхняя
-        return (date.get(Calendar.WEEK_OF_YEAR) % 2) == 0;
     }
 
 
