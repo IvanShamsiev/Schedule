@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -18,23 +17,26 @@ import com.example.schedule.model.Lesson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import static com.example.schedule.ui.MainActivity.months;
-import static com.example.schedule.ui.MainActivity.page;
-import static com.example.schedule.ui.MainActivity.pageDate;
 import static com.example.schedule.ui.MainActivity.schedule;
 import static com.example.schedule.ui.MainActivity.weekEvenStyle;
 
-public class WeekFragment extends Fragment {
+public class DayFragment extends Fragment {
 
-    int position;
+    private static int pagesCount = 2000;
+    public static int middlePos = pagesCount / 2;
 
-    public static WeekFragment newInstance(int pos) {
-        WeekFragment fragment = new WeekFragment();
-        fragment.position = pos;
+    private Calendar currentDate;
+
+    public static DayFragment newInstance(int pos, Calendar fromDate) {
+        DayFragment fragment = new DayFragment();
+        fragment.currentDate = (Calendar) fromDate.clone();
+        fragment.currentDate.add(Calendar.DATE, pos);
         return fragment;
     }
 
@@ -47,11 +49,8 @@ public class WeekFragment extends Fragment {
 
         ListView listView = rootView.findViewById(R.id.week_page);
 
-        Calendar dayDate = (Calendar) pageDate.clone();
-        dayDate.add(Calendar.DAY_OF_MONTH, position - page);
-
         if (schedule == null) return rootView;
-        List<Lesson> lessons = schedule.getLessons(dayDate);
+        List<Lesson> lessons = schedule.getLessons(currentDate);
 
         if (lessons.size() == 0) {
             listView.setVisibility(View.GONE);
@@ -82,29 +81,40 @@ public class WeekFragment extends Fragment {
         TextView textEvenWeek = rootView.findViewById(R.id.textEvenWeek);
 
         textDate.setText(String.format(Locale.getDefault(), "%d %s",
-                dayDate.get(Calendar.DAY_OF_MONTH), months[dayDate.get(Calendar.MONTH)]));
+                currentDate.get(Calendar.DAY_OF_MONTH), months[currentDate.get(Calendar.MONTH)]));
 
         String upWeek = weekEvenStyle ? "Верхняя неделя" : "Нечётная неделя";
         String downWeek = weekEvenStyle ? "Нижняя неделя" : "Чётная неделя";
-        textEvenWeek.setText((schedule.isEven(dayDate) ? upWeek : downWeek));
+        textEvenWeek.setText((schedule.isEven(currentDate) ? upWeek : downWeek));
 
         return rootView;
     }
 
-    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class DaysPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private Calendar fromDate;
+
+        public DaysPagerAdapter(FragmentManager fm) {
+            this(fm, MainActivity.currentDate);
+        }
+
+        public DaysPagerAdapter(FragmentManager fm, Calendar fromDate) {
             super(fm);
+            this.fromDate = fromDate;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return WeekFragment.newInstance(position);
+            return DayFragment.newInstance(position - middlePos, fromDate);
         }
 
         @Override
         public int getCount() {
-            return 2000;
+            return pagesCount;
+        }
+
+        public void setFromDate(Calendar fromDate) {
+            this.fromDate = fromDate;
         }
     }
 }

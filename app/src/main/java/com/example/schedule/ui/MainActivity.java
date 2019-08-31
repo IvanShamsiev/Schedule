@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,17 +33,14 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static Schedule schedule;
-    static Calendar currentDate;
+    public static Calendar currentDate;
     public static Calendar pageDate;
 
 
     ViewPager viewPager;
-    static WeekFragment.SectionsPagerAdapter adapter;
     static SharedPreferences preferences;
     static boolean lessonNames; // false: short; true: full
     public static boolean weekEvenStyle; // false: В-Н; true: Ч-Н
-
-    public static int page = 1000;
 
     public static final String scheduleFileName = "schedule.json";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
@@ -56,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
             "Четверг", "Пятница", "Суббота"};
 
     AlertDialog changeScheduleDialog;
+
+    DatePickerDialog dataChoiseCialog;
 
     //boolean currentConfigChanged = false;
 
@@ -77,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Ок", checkPass)
                 .setNegativeButton("Отмена", null)
                 .create();
+
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        dataChoiseCialog = new DatePickerDialog(this, dateSetListener, year, month, day);
+        dataChoiseCialog.setTitle("Выберите дату");
     }
 
 
@@ -90,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
         schedule = ScheduleHelper.getInstance(lessonNames);
 
-        setAdapter();
+        DayFragment.DaysPagerAdapter adapter = new DayFragment.DaysPagerAdapter(getSupportFragmentManager());
+        setAdapter(adapter);
 
         super.onResume();
     }
@@ -121,32 +125,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean setAdapter() {
-        setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK)-1]);
-
-        adapter = new WeekFragment.SectionsPagerAdapter(getSupportFragmentManager());
+    private void setAdapter(DayFragment.DaysPagerAdapter adapter) {
+        viewPager.removeAllViews();
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(page);
+        viewPager.setCurrentItem(DayFragment.middlePos);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
+            int currentPage = DayFragment.middlePos;
+
             @Override
-            public void onPageSelected(int arg0) {
-                if (arg0 - page == -1) { // left
-                    page--;
-                    pageDate.add(Calendar.DAY_OF_MONTH, -1);
-                } else if (arg0 - page == 1) { // right
-                    page++;
-                    pageDate.add(Calendar.DAY_OF_MONTH, +1);
-                }
-
-                setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK)-1]);
+            public void onPageSelected(int page) {
+                pageDate.add(Calendar.DAY_OF_WEEK, page - currentPage);
+                setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                currentPage = page;
             }
-
-            public void onPageScrolled(int arg0, float arg1, int arg2) {}
-            public void onPageScrollStateChanged(int arg0) {}
+            @Override public void onPageScrolled(int i, float v, int i1) { }
+            @Override public void onPageScrollStateChanged(int i) { }
         });
 
-        return true;
+        setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK)-1]);
     }
 
 
@@ -154,21 +151,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void showCalendar(MenuItem item) {
-        int year = currentDate.get(Calendar.YEAR);
-        int month = currentDate.get(Calendar.MONTH);
-        int day = currentDate.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(
-                this, dateSetListener, year, month, day);
-        dialog.setTitle("Выберите дату");
-        dialog.show();
+        dataChoiseCialog.show();
     }
 
     DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
         pageDate.set(year, month, dayOfMonth);
-        viewPager.removeAllViews();
-        setAdapter();
-
+        DayFragment.DaysPagerAdapter adapter = new DayFragment.DaysPagerAdapter(getSupportFragmentManager());
+        adapter.setFromDate(new GregorianCalendar(year, month, dayOfMonth, 0, 0, 0));
+        setAdapter(adapter);
     };
 
 
@@ -200,7 +190,11 @@ public class MainActivity extends AppCompatActivity {
 
     Callback callback = new Callback() {
 
-        Handler setAdapterHandler = new Handler(msg -> setAdapter());
+        Handler setAdapterHandler = new Handler(msg -> {
+            DayFragment.DaysPagerAdapter adapter = new DayFragment.DaysPagerAdapter(getSupportFragmentManager());
+            setAdapter(adapter);
+            return true;
+        });
 
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
