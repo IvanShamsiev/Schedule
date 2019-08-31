@@ -33,41 +33,59 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Main schedule
     public static Schedule schedule;
 
+    // Calendars for title and viewPager
     public static Calendar currentDate;
     public static Calendar pageDate;
 
+    // Shared preferences
     static SharedPreferences preferences;
     static boolean lessonNames; // false: short; true: full
     public static boolean weekEvenStyle; // false: В-Н; true: Ч-Н
+    private static boolean prefsUpdate = false; // for update on change prefs
 
+    // Constants
     public static final String scheduleFileName = "schedule.json";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля",
             "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
-
     public static final String[] dayOfWeek = {"Воскресенье", "Поненельник", "Вторник", "Среда",
             "Четверг", "Пятница", "Суббота"};
 
+    // UI
     private ViewPager viewPager;
     private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
-
-    //boolean currentConfigChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Ser prefs
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> prefsUpdate = true);
 
+        // Set dates
         currentDate = new GregorianCalendar();
         pageDate = new GregorianCalendar();
 
+        // Set viewPager
         viewPager = findViewById(R.id.viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int page) {
+                pageDate = (Calendar) currentDate.clone();
+                pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
+                setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+            }
+            @Override public void onPageScrolled(int i, float v, int i1) { }
+            @Override public void onPageScrollStateChanged(int i) { }
+        });
 
+        // Set dialog for change schedule
         changeScheduleDialog = new AlertDialog.Builder(this)
                 .setTitle("Введите пароль")
                 .setView(getLayoutInflater().inflate(R.layout.change_schedule_dialog, null))
@@ -83,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
 
+        // Set dialog for peek date for schedule
         DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
             pageDate.set(year, month, dayOfMonth);
             setAdapter();
@@ -92,39 +111,27 @@ public class MainActivity extends AppCompatActivity {
         int day = currentDate.get(Calendar.DAY_OF_MONTH);
         dataChoiceDialog = new DatePickerDialog(this, dateSetListener, year, month, day);
         dataChoiceDialog.setTitle("Выберите дату");
-    }
 
+        // Update schedule state
+        updateScheduleState();
+    }
 
     @Override
     protected void onResume() {
-        lessonNames = preferences.getBoolean("full_lesson_names", false);
-        weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
-
-        try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), callback); }
-        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(callback); }
-
-        schedule = ScheduleHelper.getInstance(lessonNames);
-
-        setAdapter();
-
         super.onResume();
+
+        if (prefsUpdate) {
+            updateScheduleState();
+            prefsUpdate = false;
+        }
     }
 
-    /*@Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
-        currentConfigChanged = savedInstanceState.getBoolean("isOrientationChanged", false);
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(callback);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,32 +155,30 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void setAdapter() {
-        setAdapter(new DayFragment.DaysPagerAdapter(getSupportFragmentManager()));
+    private void updateScheduleState() {
+        lessonNames = preferences.getBoolean("full_lesson_names", false);
+        weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
+
+        try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), callback); }
+        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(callback); }
+
+        schedule = ScheduleHelper.getInstance(lessonNames);
+
+        setAdapter();
     }
 
-    private void setAdapter(DayFragment.DaysPagerAdapter adapter) {
+    private void setAdapter() {
         viewPager.removeAllViews();
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(new DayFragment.DaysPagerAdapter(getSupportFragmentManager()));
         int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
         int currentStartPage = DayFragment.middlePos - leftDays;
         viewPager.setCurrentItem(currentStartPage);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int page) {
-                pageDate = (Calendar) currentDate.clone();
-                pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
-                setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
-            }
-            @Override public void onPageScrolled(int i, float v, int i1) { }
-            @Override public void onPageScrollStateChanged(int i) { }
-        });
 
         setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK)-1]);
     }
 
-    public static int daysBetween(Date d1, Date d2){
-        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+    public static int daysBetween(Date d1, Date d2) {
+        return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
 
 
@@ -184,15 +189,22 @@ public class MainActivity extends AppCompatActivity {
 
     Callback callback = new Callback() {
 
-        Handler setAdapterHandler = new Handler(msg -> {
-            setAdapter();
+        Handler onFailure = new Handler(msg -> {
+            Toast.makeText(MainActivity.this, "Не удалось загрузить расписание",
+                    Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
+        Handler onUpdateSchedule = new Handler(msg -> {
+            updateScheduleState();
+            Toast.makeText(MainActivity.this, "Расписание успешно обновлено!",
+                    Toast.LENGTH_SHORT).show();
             return true;
         });
 
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
-            Toast.makeText(MainActivity.this, "Не удалось загрузить расписание",
-                    Toast.LENGTH_SHORT).show();
+            onFailure.sendEmptyMessage(0);
         }
 
         @Override
@@ -201,27 +213,11 @@ public class MainActivity extends AppCompatActivity {
             try {json = response.body().string();}
             catch (IOException | NullPointerException e) {e.printStackTrace(); return;}
 
-            try {
-                ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName , MODE_PRIVATE));
-                ScheduleHelper.setSchedule(json);
-
-                schedule = ScheduleHelper.getInstance(lessonNames);
-
-                setAdapterHandler.sendEmptyMessage(0);
-            } catch (FileNotFoundException e) { e.printStackTrace(); }
+            try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName , MODE_PRIVATE)); }
+            catch (FileNotFoundException e) { e.printStackTrace(); }
 
             onUpdateSchedule.sendEmptyMessage(0);
         }
     };
-
-    Handler onUpdateSchedule = new Handler(msg -> {
-        Toast.makeText(MainActivity.this, "Расписание успешно обновлено!",
-                Toast.LENGTH_SHORT).show();
-        return true;
-    });
-
-
-
-
 
 }
