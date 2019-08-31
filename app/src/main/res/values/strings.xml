@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Расписание</string>
+    <string name="calendar">Календарь</string>
+    <string name="preferences">Настройки</string>
+    <string name="reloadSchedule">Обновить расписание</string>
+    <string name="noLessons">Сегодня нет занятий</string>
+    <string name="textView">TextView</string>
+    <string name="changeSchedule">Изменить расписание</string>
+    <string name="send">Отправить</string>
+
+    <string-array name="week_style_entries">
+        <item>Верхняя-Нижняя</item>
+        <item>Чётная-Нечётная</item>
+    </string-array>
+
+    <string-array name="week_style_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+</resources>

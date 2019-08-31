@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/calendar"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title="@string/calendar"
+        app:showAsAction="always"
+        android:onClick="showCalendar"/>
+    <item
+        android:id="@+id/preferences"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/preferences" />
+
+    <item
+        android:id="@+id/reloadSchedule"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:title="@string/reloadSchedule"
+        android:onClick="downloadSchedule"/>
+    <item
+        android:id="@+id/changeSchedule"
+        android:title="@string/changeSchedule"
+        android:onClick="changeSchedule"/>
+</menu>
