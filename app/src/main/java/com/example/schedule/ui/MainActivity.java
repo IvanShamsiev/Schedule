@@ -24,6 +24,7 @@ import com.example.schedule.model.Schedule;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import okhttp3.Call;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля",
             "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
 
-    private static final String[] dayOfWeek = {"Воскресенье", "Поненельник", "Вторник", "Среда",
+    public static final String[] dayOfWeek = {"Воскресенье", "Поненельник", "Вторник", "Среда",
             "Четверг", "Пятница", "Суббота"};
 
     AlertDialog changeScheduleDialog;
@@ -125,25 +126,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    private void setAdapter() {
+        setAdapter(new DayFragment.DaysPagerAdapter(getSupportFragmentManager()));
+    }
+
     private void setAdapter(DayFragment.DaysPagerAdapter adapter) {
         viewPager.removeAllViews();
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(DayFragment.middlePos);
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            int currentPage = DayFragment.middlePos;
-
+        int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
+        int currentStartPage = DayFragment.middlePos - leftDays;
+        viewPager.setCurrentItem(currentStartPage);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int page) {
-                pageDate.add(Calendar.DAY_OF_WEEK, page - currentPage);
+                pageDate = (Calendar) currentDate.clone();
+                pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
                 setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
-                currentPage = page;
             }
             @Override public void onPageScrolled(int i, float v, int i1) { }
             @Override public void onPageScrollStateChanged(int i) { }
         });
 
         setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK)-1]);
+    }
+
+    public static int daysBetween(Date d1, Date d2){
+        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
 
 
@@ -156,9 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
         pageDate.set(year, month, dayOfMonth);
-        DayFragment.DaysPagerAdapter adapter = new DayFragment.DaysPagerAdapter(getSupportFragmentManager());
-        adapter.setFromDate(new GregorianCalendar(year, month, dayOfMonth, 0, 0, 0));
-        setAdapter(adapter);
+        setAdapter();
     };
 
 
@@ -191,8 +198,7 @@ public class MainActivity extends AppCompatActivity {
     Callback callback = new Callback() {
 
         Handler setAdapterHandler = new Handler(msg -> {
-            DayFragment.DaysPagerAdapter adapter = new DayFragment.DaysPagerAdapter(getSupportFragmentManager());
-            setAdapter(adapter);
+            setAdapter();
             return true;
         });
 

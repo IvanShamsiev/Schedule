@@ -33,9 +33,9 @@ public class DayFragment extends Fragment {
 
     private Calendar currentDate;
 
-    public static DayFragment newInstance(int pos, Calendar fromDate) {
+    public static DayFragment newInstance(int pos) {
         DayFragment fragment = new DayFragment();
-        fragment.currentDate = (Calendar) fromDate.clone();
+        fragment.currentDate = new GregorianCalendar();
         fragment.currentDate.add(Calendar.DATE, pos);
         return fragment;
     }
@@ -90,31 +90,23 @@ public class DayFragment extends Fragment {
         return rootView;
     }
 
+
     public static class DaysPagerAdapter extends FragmentPagerAdapter {
 
-        private Calendar fromDate;
-
         public DaysPagerAdapter(FragmentManager fm) {
-            this(fm, MainActivity.currentDate);
+            super(fm);
         }
 
-        public DaysPagerAdapter(FragmentManager fm, Calendar fromDate) {
-            super(fm);
-            this.fromDate = fromDate;
-        }
 
         @Override
         public Fragment getItem(int position) {
-            return DayFragment.newInstance(position - middlePos, fromDate);
+            System.out.println(position);
+            return DayFragment.newInstance(position - middlePos);
         }
 
         @Override
         public int getCount() {
             return pagesCount;
-        }
-
-        public void setFromDate(Calendar fromDate) {
-            this.fromDate = fromDate;
         }
     }
 }
