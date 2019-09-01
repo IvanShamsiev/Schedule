@@ -36,7 +36,7 @@ public class DayFragment extends Fragment {
 
     public static DayFragment newInstance(int pos) {
         DayFragment fragment = new DayFragment();
-        fragment.currentDate = new GregorianCalendar();
+        fragment.currentDate = (Calendar) MainActivity.currentDate.clone();
         fragment.currentDate.add(Calendar.DATE, pos);
         return fragment;
     }
@@ -47,7 +47,7 @@ public class DayFragment extends Fragment {
                              Bundle savedInstanceState) {
         setRetainInstance(true); // For saving state
 
-        View rootView = inflater.inflate(R.layout.page, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_item_page, container, false);
 
         ListView listView = rootView.findViewById(R.id.week_page);
 
@@ -73,7 +73,7 @@ public class DayFragment extends Fragment {
                     R.id.lessonTeacher, R.id.lessonLocation, R.id.lessonType};
 
             SimpleAdapter adapter = new SimpleAdapter(
-                    getContext(), data, R.layout.lesson, from, to);
+                    getContext(), data, R.layout.item_lesson, from, to);
 
             listView.setAdapter(adapter);
         }
@@ -102,6 +102,14 @@ public class DayFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             return DayFragment.newInstance(position - middlePos);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Calendar currentDate = (Calendar) MainActivity.currentDate.clone();
+            currentDate.add(Calendar.DATE, position - middlePos);
+
+            return MainActivity.dayOfWeek[currentDate.get(Calendar.DAY_OF_WEEK)-1];
         }
 
         @Override

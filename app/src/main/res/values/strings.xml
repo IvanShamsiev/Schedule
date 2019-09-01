@@ -9,8 +9,8 @@
     <string name="send">Отправить</string>
 
     <string-array name="week_style_entries">
-        <item>Верхняя-Нижняя</item>
-        <item>Чётная-Нечётная</item>
+        <item>Верхняя - Нижняя</item>
+        <item>Чётная - Нечётная</item>
     </string-array>
 
     <string-array name="week_style_values">

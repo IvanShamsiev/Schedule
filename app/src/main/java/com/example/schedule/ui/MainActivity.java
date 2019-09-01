@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -119,7 +120,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (prefsUpdate) {
-            updateScheduleState();
+            lessonNames = preferences.getBoolean("full_lesson_names", false);
+            weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
+            schedule = ScheduleHelper.getInstance(lessonNames);
+            setAdapter();
+
             prefsUpdate = false;
         }
     }
