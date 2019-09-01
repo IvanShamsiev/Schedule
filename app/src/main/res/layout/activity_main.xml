@@ -8,6 +8,41 @@
     tools:context=".ui.MainActivity">
 
 
+    <LinearLayout
+        android:id="@+id/navigationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/btnLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_arrow_back_pink_48dp" />
+
+        <TextView
+            android:id="@+id/twTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="12pt"
+            tools:text="Воскресенье" />
+
+        <ImageButton
+            android:id="@+id/btnRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_arrow_forward_pink_48dp" />
+
+    </LinearLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"

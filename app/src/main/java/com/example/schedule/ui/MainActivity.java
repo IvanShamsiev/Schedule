@@ -8,12 +8,15 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schedule.R;
@@ -35,14 +38,15 @@ public class MainActivity extends AppCompatActivity {
     // Main schedule
     public static Schedule schedule;
 
-    // Calendars for title and viewPager
+    // Calendars for navigationTitle and viewPager
     public static Calendar currentDate;
     public static Calendar pageDate;
 
     // Shared preferences
     static SharedPreferences preferences;
-    static boolean lessonNames; // false: short; true: full
+    public static boolean lessonNames; // false: short; true: full
     public static boolean weekEvenStyle; // false: В-Н; true: Ч-Н
+    public static boolean showNavigationLayout; // false: hide, true: show
     private static boolean prefsUpdate = false; // for update on change prefs
 
     // Constants
@@ -57,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
+
+    // UI for navigation layout
+    private LinearLayout navigationLayout;
+    private TextView navigationTitle;
+    private static int currentPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int page) {
                 pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
-                setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                currentPos = page;
+                if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
             }
             @Override public void onPageScrolled(int i, float v, int i1) { }
             @Override public void onPageScrollStateChanged(int i) { }
@@ -111,6 +122,18 @@ public class MainActivity extends AppCompatActivity {
         dataChoiceDialog = new DatePickerDialog(this, dateSetListener, year, month, day);
         dataChoiceDialog.setTitle("Выберите дату");
 
+
+
+        // Set navigation layout
+        navigationLayout = findViewById(R.id.navigationLayout);
+        navigationTitle = findViewById(R.id.twTitle);
+        ImageButton btnLeft = findViewById(R.id.btnLeft);
+        ImageButton btnRight = findViewById(R.id.btnRight);
+        btnLeft.setOnClickListener(btn -> viewPager.setCurrentItem(currentPos - 1));
+        btnRight.setOnClickListener(btn -> viewPager.setCurrentItem(currentPos + 1));
+
+
+
         // Update schedule state
         updateScheduleState();
     }
@@ -122,6 +145,10 @@ public class MainActivity extends AppCompatActivity {
         if (prefsUpdate) {
             lessonNames = preferences.getBoolean("full_lesson_names", false);
             weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
+            showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
+            navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
+            if (showNavigationLayout) setTitle(R.string.app_name);
+
             schedule = ScheduleHelper.getInstance(lessonNames);
             setAdapter();
 
@@ -161,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
     private void updateScheduleState() {
         lessonNames = preferences.getBoolean("full_lesson_names", false);
         weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
+        showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
+        navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
 
         try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
         catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }
@@ -177,7 +206,10 @@ public class MainActivity extends AppCompatActivity {
         int currentStartPage = DayFragment.middlePos - leftDays;
         viewPager.setCurrentItem(currentStartPage);
 
-        setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK)-1]);
+
+
+        if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+        else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
     }
 
     public static int daysBetween(Date d1, Date d2) {

@@ -4,7 +4,6 @@
     <string name="preferences">Настройки</string>
     <string name="reloadSchedule">Обновить расписание</string>
     <string name="noLessons">Сегодня нет занятий</string>
-    <string name="textView">TextView</string>
     <string name="changeSchedule">Изменить расписание</string>
     <string name="send">Отправить</string>
 
