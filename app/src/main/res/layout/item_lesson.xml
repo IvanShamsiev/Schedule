@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="10dp"
-    android:baselineAligned="false">
+    android:focusable="true"
+    android:clickable="true"
+    android:background="?android:selectableItemBackground" >
 
     <LinearLayout
         android:layout_width="wrap_content"

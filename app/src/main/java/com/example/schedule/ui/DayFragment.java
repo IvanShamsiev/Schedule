@@ -5,21 +5,20 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.model.Lesson;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,33 +48,18 @@ public class DayFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_item_page, container, false);
 
-        ListView listView = rootView.findViewById(R.id.week_page);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         if (schedule == null) return rootView;
         List<Lesson> lessons = schedule.getLessons(currentDate);
 
-        if (lessons.size() == 0) {
-            listView.setVisibility(View.GONE);
+        if (lessons.size() != 0) recyclerView.setAdapter(new LessonAdapter(lessons));
+        else {
+            recyclerView.setVisibility(View.GONE);
             rootView.findViewById(R.id.textNoLessons).setVisibility(View.VISIBLE);
-        } else {
-            List<HashMap<String, String>> data = new ArrayList<>(lessons.size());
-
-            HashMap<String, String> map;
-            for (Lesson l : lessons) {
-                map = new HashMap<>(Lesson.length);
-                String[] values = l.getArray();
-                for (int i = 0; i < Lesson.length; i++) map.put(Lesson.names[i], values[i]);
-                data.add(map);
-            }
-
-            String[] from = Lesson.names;
-            int[] to = {R.id.timeLessonBegin, R.id.timeLessonEnd, R.id.lessonName,
-                    R.id.lessonTeacher, R.id.lessonLocation, R.id.lessonType};
-
-            SimpleAdapter adapter = new SimpleAdapter(
-                    getContext(), data, R.layout.item_lesson, from, to);
-
-            listView.setAdapter(adapter);
         }
 
 

@@ -16,8 +16,8 @@
         android:textSize="11pt"
         android:visibility="gone" />
 
-    <ListView
-        android:id="@+id/week_page"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
