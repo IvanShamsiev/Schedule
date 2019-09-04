@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,19 +59,36 @@ public class MainActivity extends AppCompatActivity {
             "Четверг", "Пятница", "Суббота"};
 
     // UI
-    private ViewPager viewPager;
+    public ViewPager viewPager;
     private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
 
     // UI for navigation layout
     private LinearLayout navigationLayout;
     private TextView navigationTitle;
-    private static int currentPos;
+
+
+    public static int currentPos = 1;
+    private static boolean pageSelectedFromMenu = false;
+
+
+
+    TextView textDate, textEvenWeek;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+
+
+        textDate = findViewById(R.id.textDate);
+        textEvenWeek = findViewById(R.id.textEvenWeek);
+
+
 
         // Ser prefs
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,16 +101,46 @@ public class MainActivity extends AppCompatActivity {
         // Set viewPager
         viewPager = findViewById(R.id.viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageSelected(int page) {
-                pageDate = (Calendar) currentDate.clone();
+                if (pageSelectedFromMenu) {
+                    currentPos = page;
+                    pageSelectedFromMenu = false;
+                    return;
+                }
+
+                if (page - currentPos == 1) pageDate.add(Calendar.DATE, 1);
+                if (page - currentPos == -1) pageDate.add(Calendar.DATE, -1);
+                currentPos = page;
+
+
+                if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                textDate.setText(String.format(Locale.getDefault(), "%d %s",
+                        pageDate.get(Calendar.DAY_OF_MONTH), months[currentDate.get(Calendar.MONTH)]));
+                String upWeek = weekEvenStyle ? "Верхняя неделя" : "Нечётная неделя";
+                String downWeek = weekEvenStyle ? "Нижняя неделя" : "Чётная неделя";
+                textEvenWeek.setText((ScheduleHelper.isEven(pageDate) ? downWeek : upWeek));
+
+                /*pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
                 currentPos = page;
                 if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
-                else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);*/
             }
-            @Override public void onPageScrolled(int i, float v, int i1) { }
-            @Override public void onPageScrollStateChanged(int i) { }
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+            @Override public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    int current = viewPager.getCurrentItem();
+                    if (current == DayFragment.pagesCount - 1) current = 1;
+                    else if (current == 0) current = DayFragment.pagesCount - 2;
+                    viewPager.setCurrentItem(current, false);
+                }
+            }
         });
 
         // Set dialog for change schedule
@@ -113,8 +161,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Set dialog for peek date for schedule
         DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+            pageSelectedFromMenu = true;
+
             pageDate.set(year, month, dayOfMonth);
-            setAdapter();
+
+            if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+            else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+            textDate.setText(String.format(Locale.getDefault(), "%d %s",
+                    pageDate.get(Calendar.DAY_OF_MONTH), months[currentDate.get(Calendar.MONTH)]));
+
+            int leftDays = daysBetween(currentDate.getTime(), pageDate.getTime());
+            int page = (leftDays + 1) % 14;
+            if (page <= 0) page += 14;
+            viewPager.setCurrentItem(page, false);
         };
         int year = currentDate.get(Calendar.YEAR);
         int month = currentDate.get(Calendar.MONTH);
@@ -202,9 +261,11 @@ public class MainActivity extends AppCompatActivity {
     private void setAdapter() {
         viewPager.removeAllViews();
         viewPager.setAdapter(new DayFragment.DaysPagerAdapter(getSupportFragmentManager()));
-        int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
+        viewPager.setCurrentItem(1);
+
+        /*int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
         int currentStartPage = DayFragment.middlePos - leftDays;
-        viewPager.setCurrentItem(currentStartPage);
+        viewPager.setCurrentItem(currentStartPage);*/
 
 
 

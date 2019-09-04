@@ -5,42 +5,31 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import com.example.schedule.R;
-import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.model.Lesson;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
-import static com.example.schedule.ui.MainActivity.months;
 import static com.example.schedule.ui.MainActivity.schedule;
-import static com.example.schedule.ui.MainActivity.weekEvenStyle;
 
 public class DayFragment extends Fragment {
 
-    private static int pagesCount = 2000;
-    public static int middlePos = pagesCount / 2;
-
-    private Calendar currentDate;
+    public static int pagesCount = 14 + 2;
 
     public static DayFragment newInstance(int pos) {
         DayFragment fragment = new DayFragment();
-        fragment.currentDate = (Calendar) MainActivity.currentDate.clone();
-        fragment.currentDate.add(Calendar.DATE, pos);
+        fragment.pos = pos;
         return fragment;
     }
 
+    private int pos;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -49,45 +38,18 @@ public class DayFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_item_page, container, false);
 
-        ListView listView = rootView.findViewById(R.id.week_page);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false));
 
         if (schedule == null) return rootView;
+
+        Calendar currentDate = (Calendar) MainActivity.currentDate.clone();
+        currentDate.add(Calendar.DATE, pos - 1);
         List<Lesson> lessons = schedule.getLessons(currentDate);
 
-        if (lessons.size() == 0) {
-            listView.setVisibility(View.GONE);
-            rootView.findViewById(R.id.textNoLessons).setVisibility(View.VISIBLE);
-        } else {
-            List<HashMap<String, String>> data = new ArrayList<>(lessons.size());
-
-            HashMap<String, String> map;
-            for (Lesson l : lessons) {
-                map = new HashMap<>(Lesson.length);
-                String[] values = l.getArray();
-                for (int i = 0; i < Lesson.length; i++) map.put(Lesson.names[i], values[i]);
-                data.add(map);
-            }
-
-            String[] from = Lesson.names;
-            int[] to = {R.id.timeLessonBegin, R.id.timeLessonEnd, R.id.lessonName,
-                    R.id.lessonTeacher, R.id.lessonLocation, R.id.lessonType};
-
-            SimpleAdapter adapter = new SimpleAdapter(
-                    getContext(), data, R.layout.item_lesson, from, to);
-
-            listView.setAdapter(adapter);
-        }
-
-
-        TextView textDate = rootView.findViewById(R.id.textDate);
-        TextView textEvenWeek = rootView.findViewById(R.id.textEvenWeek);
-
-        textDate.setText(String.format(Locale.getDefault(), "%d %s",
-                currentDate.get(Calendar.DAY_OF_MONTH), months[currentDate.get(Calendar.MONTH)]));
-
-        String upWeek = weekEvenStyle ? "Верхняя неделя" : "Нечётная неделя";
-        String downWeek = weekEvenStyle ? "Нижняя неделя" : "Чётная неделя";
-        textEvenWeek.setText((ScheduleHelper.isEven(currentDate) ? downWeek : upWeek));
+        if (lessons.size() != 0) recyclerView.setAdapter(new LessonAdapter(lessons));
+        else rootView.findViewById(R.id.textNoLessons).setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -101,16 +63,16 @@ public class DayFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return DayFragment.newInstance(position - middlePos);
+            return DayFragment.newInstance(position);
         }
 
-        @Override
+        /*@Override
         public CharSequence getPageTitle(int position) {
             Calendar currentDate = (Calendar) MainActivity.currentDate.clone();
             currentDate.add(Calendar.DATE, position - middlePos);
 
             return MainActivity.dayOfWeek[currentDate.get(Calendar.DAY_OF_WEEK)-1];
-        }
+        }*/
 
         @Override
         public int getCount() {
