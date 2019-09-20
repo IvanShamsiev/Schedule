@@ -78,7 +78,6 @@ public class ScheduleHelper {
     }
 
     public static void saveSchedule(String json, FileOutputStream outputStream) {
-        System.out.println(json);
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
             bw.write(json);
