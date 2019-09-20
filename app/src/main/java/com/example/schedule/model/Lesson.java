@@ -3,15 +3,16 @@ package com.example.schedule.model;
 import java.util.List;
 
 public class Lesson {
-    private String  beginTime, endTime, name, teacher, location, type;
 
-    Lesson(String bt, String et, String n, String tch, String l, String t) {
-        beginTime = bt;
-        endTime = et;
-        name = n;
-        teacher = tch;
-        location = l;
-        type = t;
+    private String beginTime, endTime, name, teacher, location, type;
+
+    public Lesson(String beginTime, String endTime, String name, String teacher, String location, String type) {
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.name = name;
+        this.teacher = teacher;
+        this.location = location;
+        this.type = type;
     }
 
     Lesson(List<String> list) {
@@ -81,9 +82,5 @@ public class Lesson {
                 ", location='" + location + '\'' +
                 ", type='" + type + '\'' +
                 '}';
-    }
-
-    public String[] getArray() {
-        return new String[] {beginTime, endTime, name, teacher, location, type};
     }
 }

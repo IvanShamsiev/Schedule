@@ -25,10 +25,11 @@ public class ScheduleHelper {
 
 
     private static String stringSchedule;
-    public static String getStringSchedule() { return stringSchedule; }
 
     private static Schedule shortNamesWeek = null;
     private static Schedule fullNamesWeek = null;
+
+    public static String getStringSchedule() { return stringSchedule; }
 
     public static Schedule getInstance(boolean fullLessonsNames) { // false: short; true: full
         return fullLessonsNames ? fullNamesWeek : shortNamesWeek;

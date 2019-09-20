@@ -16,14 +16,16 @@ public class Schedule {
     private Schedule() {}
 
     public List<Lesson> getLessons(Calendar date) {
-        List<Lesson> lessons = new ArrayList<>();
 
         List<List<String>> stringLessons = ScheduleHelper.isEven(date) ?
             evenWeek.get(date.get(Calendar.DAY_OF_WEEK)):
             unevenWeek.get(date.get(Calendar.DAY_OF_WEEK));
 
-        if (stringLessons != null && stringLessons.size() != 0)
-        for (List<String> lessonInfo: stringLessons) lessons.add(new Lesson(lessonInfo));
+        List<Lesson> lessons = new ArrayList<>();
+
+        if (stringLessons != null)
+            for (List<String> lessonInfo: stringLessons)
+                lessons.add(new Lesson(lessonInfo));
 
         return lessons;
     }
