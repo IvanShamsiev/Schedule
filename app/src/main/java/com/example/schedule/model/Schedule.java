@@ -1,6 +1,6 @@
 package com.example.schedule.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.example.schedule.logic.ScheduleHelper;
 

@@ -18,6 +18,11 @@ public class PreferencesActivity extends Activity {
     }
 
     public static class SettingsFragment extends PreferenceFragment {
+
+        public SettingsFragment() {
+            super();
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
