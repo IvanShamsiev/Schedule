@@ -26,20 +26,17 @@ public class ScheduleHelper {
 
     private static String stringSchedule;
 
-    private static Schedule shortNamesWeek = null;
-    private static Schedule fullNamesWeek = null;
+    private static Schedule mainSchedule = null;
 
     public static String getStringSchedule() { return stringSchedule; }
 
-    public static Schedule getInstance(boolean fullLessonsNames) { // false: short; true: full
-        return fullLessonsNames ? fullNamesWeek : shortNamesWeek;
+    public static Schedule getInstance() { // false: short; true: full
+        return mainSchedule;
     }
 
     public static void setSchedule(String json) {
         stringSchedule = json;
-        Schedule[] scheduleTypes = new Gson().fromJson(json, Schedule[].class);
-        shortNamesWeek = scheduleTypes[0];
-        fullNamesWeek = scheduleTypes[1];
+        mainSchedule = new Gson().fromJson(json, Schedule.class);
     }
 
     public static void downloadSchedule(Callback callback) {

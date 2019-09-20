@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.schedule.R;
 import com.example.schedule.model.Lesson;
@@ -60,7 +59,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         void bind(Lesson lesson) {
             beginTime.setText(lesson.getBeginTime());
             endTime.setText(lesson.getEndTime());
-            name.setText(lesson.getName());
+            name.setText(MainActivity.lessonNames ? lesson.getFullName() : lesson.getShortName());
             teacher.setText(lesson.getTeacher());
             location.setText(lesson.getLocation());
             type.setText(lesson.getType());

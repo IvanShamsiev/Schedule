@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
             navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
             if (showNavigationLayout) setTitle(R.string.app_name);
 
-            schedule = ScheduleHelper.getInstance(lessonNames);
             setAdapter();
 
             prefsUpdate = false;
@@ -194,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
         catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }
 
-        schedule = ScheduleHelper.getInstance(lessonNames);
+        schedule = ScheduleHelper.getInstance();
 
         setAdapter();
     }
