@@ -11,20 +11,20 @@
         android:id="@+id/toolbar"
         style="@style/AppTheme.Toolbar"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/twWeekType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+
             android:textSize="10pt"
             tools:text="Верхняя неделя" />
 
@@ -33,11 +33,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+
+            android:layout_alignParentEnd="true"
+
             android:layout_margin="5dp"
             android:background="#00FFFFFF"
             android:tint="@color/colorPrimary"
             app:srcCompat="@android:drawable/stat_notify_sync" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

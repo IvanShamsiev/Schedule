@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
@@ -9,11 +10,12 @@
     android:layout_margin="3dp">
 
     <TextView
-        android:id="@+id/textWeekDay"
+        android:id="@+id/twDayOfWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="TextView" />
+        android:textColor="@color/colorPrimary"
+        tools:text="Воскресенье"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -26,10 +28,10 @@
         android:fillViewport="true">
 
         <TextView
-            android:id="@+id/textDayLessons"
+            android:id="@+id/twDayLessons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            tools:text="Какие-то пары" />
     </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
