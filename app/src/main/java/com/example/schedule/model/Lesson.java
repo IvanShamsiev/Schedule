@@ -1,5 +1,7 @@
 package com.example.schedule.model;
 
+import androidx.annotation.NonNull;
+
 public class Lesson {
 
     private String beginTime, endTime, shortName, fullName, teacher, location, type;
@@ -32,6 +34,7 @@ public class Lesson {
         return type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Lesson { " +

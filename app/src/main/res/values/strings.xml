@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Расписание</string>
     <string name="calendar">Календарь</string>
+    <string name="weeks">Недели</string>
     <string name="preferences">Настройки</string>
     <string name="reloadSchedule">Обновить расписание</string>
     <string name="noLessons">Сегодня нет занятий</string>

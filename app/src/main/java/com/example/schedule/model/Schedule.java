@@ -20,6 +20,13 @@ public class Schedule {
             unevenWeek.get(date.get(Calendar.DAY_OF_WEEK));
     }
 
+    public HashMap<Integer, List<Lesson>> getUnevenWeek() {
+        return unevenWeek;
+    }
+
+    public HashMap<Integer, List<Lesson>> getEvenWeek() {
+        return evenWeek;
+    }
 
     @Override
     @NonNull

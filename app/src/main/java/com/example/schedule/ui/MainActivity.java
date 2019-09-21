@@ -166,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        menu.findItem(R.id.typeWeeks).setIntent(
+                new Intent(this, FullScheduleActivity.class));
         menu.findItem(R.id.preferences).setIntent(
                 new Intent(this, PreferencesActivity.class));
         menu.findItem(R.id.calendar).setOnMenuItemClickListener(item -> {

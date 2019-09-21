@@ -3,10 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/typeWeeks"
+        android:icon="@drawable/ic_view_week_48dp"
+        android:title="@string/weeks"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/calendar"
         android:icon="@android:drawable/ic_menu_today"
         android:title="@string/calendar"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/preferences"
         android:icon="@android:drawable/ic_menu_preferences"
