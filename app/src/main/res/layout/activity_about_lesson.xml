@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.AboutLessonActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/AppTheme.Toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/beginTime"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twBeginTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/endTime"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twEndTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shortName"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twShortName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fullName"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/teacher"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twTeacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/location"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/type"
+                android:theme="@style/AppTheme.AboutLessonTwText" />
+
+            <TextView
+                android:id="@+id/twType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AboutLessonTwLesson" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

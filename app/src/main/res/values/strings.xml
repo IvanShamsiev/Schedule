@@ -8,6 +8,14 @@
     <string name="changeSchedule">Изменить расписание</string>
     <string name="send">Отправить</string>
 
+    <string name="beginTime">Время начала</string>
+    <string name="endTime">Время окончания</string>
+    <string name="shortName">Краткое название предмета</string>
+    <string name="fullName">Полное название предмета</string>
+    <string name="teacher">Преподаватель</string>
+    <string name="location">Аудитория</string>
+    <string name="type">Тип пары</string>
+
     <string-array name="week_style_entries">
         <item>Верхняя - Нижняя</item>
         <item>Чётная - Нечётная</item>

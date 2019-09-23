@@ -2,6 +2,8 @@ package com.example.schedule.ui;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,8 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
         TextView beginTime, endTime, name, teacher, location, type;
 
+        Lesson lesson;
+
         public LessonViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -53,10 +57,16 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
             location = itemView.findViewById(R.id.lessonLocation);
             type = itemView.findViewById(R.id.lessonType);
 
-            //itemView.setOnClickListener(view -> Toast.makeText(itemView.getContext(), "Привет!", Toast.LENGTH_SHORT).show());
+            itemView.setOnClickListener(view -> {
+                Intent intent = new Intent(itemView.getContext(), AboutLessonActivity.class);
+                intent.putExtra("lesson", lesson);
+                itemView.getContext().startActivity(intent);
+            });
         }
 
         void bind(Lesson lesson) {
+            this.lesson = lesson;
+
             beginTime.setText(lesson.getBeginTime());
             endTime.setText(lesson.getEndTime());
             name.setText(MainActivity.lessonNames ? lesson.getFullName() : lesson.getShortName());

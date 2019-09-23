@@ -46,7 +46,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
 
     @Override
     public int getItemCount() {
-        return week.size() - 1;
+        return 6;
     }
 
     public void updateWeek(HashMap<Integer, List<Lesson>> week, boolean isEven) {

@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
     // Constants
     public static final String scheduleFileName = "schedule.json";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
-    public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля",
-            "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
-    public static final String[] dayOfWeek = {"Воскресенье", "Поненельник", "Вторник", "Среда",
+    public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+            "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
+    public static final String[] dayOfWeek = {"Воскресенье", "Понедельник", "Вторник", "Среда",
             "Четверг", "Пятница", "Суббота"};
 
     // UI
