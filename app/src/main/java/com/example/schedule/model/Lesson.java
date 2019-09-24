@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 public class Lesson implements Parcelable {
 
-    private String beginTime, endTime, name, teacher, location, type;
+    private String beginTime, endTime, even, name, location, type, chair, post, teacher;
 
     public String getBeginTime() {
         return beginTime;
@@ -17,12 +17,12 @@ public class Lesson implements Parcelable {
         return endTime;
     }
 
-    public String getName() {
-        return name;
+    public String getEven() {
+        return even;
     }
 
-    public String getTeacher() {
-        return teacher;
+    public String getName() {
+        return name;
     }
 
     public String getLocation() {
@@ -33,31 +33,48 @@ public class Lesson implements Parcelable {
         return type;
     }
 
+    public String getChair() {
+        return chair;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return "Lesson { " +
                 "beginTime='" + beginTime + '\'' +
                 ", endTime='" + endTime + '\'' +
+                ", even='" + even + '\'' +
                 ", name='" + name + '\'' +
-                ", teacher='" + teacher + '\'' +
                 ", location='" + location + '\'' +
                 ", type='" + type + '\'' +
+                ", chair='" + chair + '\'' +
+                ", post='" + post + '\'' +
+                ", teacher='" + teacher + '\'' +
                 " }";
     }
 
-
     // For parcelable
     private Lesson(Parcel source) {
-        String[] strings = new String[6];
+        String[] strings = new String[9];
         source.readStringArray(strings);
 
         beginTime = strings[0];
         endTime = strings[1];
-        name = strings[2];
-        teacher = strings[3];
+        even = strings[2];
+        name = strings[3];
         location = strings[4];
         type = strings[5];
+        chair = strings[6];
+        post = strings[7];
+        teacher = strings[8];
     }
 
     @Override
@@ -67,7 +84,7 @@ public class Lesson implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[] {beginTime, endTime, name, teacher, location, type});
+        parcel.writeStringArray(new String[] {beginTime, endTime, even, name, location, type, chair, post, teacher});
     }
 
     public static final Parcelable.Creator<Lesson> CREATOR = new Parcelable.Creator<Lesson>() {
