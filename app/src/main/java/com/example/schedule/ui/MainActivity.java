@@ -25,9 +25,12 @@ import com.example.schedule.model.Schedule;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -55,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
             "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
-    public static final String[] dayOfWeek = {"Воскресенье", "Понедельник", "Вторник", "Среда",
-            "Четверг", "Пятница", "Суббота"};
+    public static final List<String> dayOfWeek = Arrays.asList(
+            "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
+
 
     // UI
     private ViewPager viewPager;
@@ -88,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
                 pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
                 currentPos = page;
-                if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
-                else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+                if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
+                else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
             }
             @Override public void onPageScrolled(int i, float v, int i1) { }
             @Override public void onPageScrollStateChanged(int i) { }
@@ -146,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
         navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
 
-        String day = dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1];
+        String day = dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1);
         if (showNavigationLayout) {
             setTitle(R.string.app_name);
             navigationTitle.setText(day);
@@ -205,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        if (showNavigationLayout) navigationTitle.setText(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
-        else setTitle(dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1]);
+        if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
+        else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
     }
 
     public static int daysBetween(Date d1, Date d2) {

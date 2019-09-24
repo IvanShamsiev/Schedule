@@ -7,6 +7,18 @@ import androidx.annotation.NonNull;
 
 public class Lesson implements Parcelable {
 
+    public Lesson(String beginTime, String endTime, String even, String name, String location, String type, String chair, String post, String teacher) {
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.even = even;
+        this.name = name;
+        this.location = location;
+        this.type = type;
+        this.chair = chair;
+        this.post = post;
+        this.teacher = teacher;
+    }
+
     private String beginTime, endTime, even, name, location, type, chair, post, teacher;
 
     public String getBeginTime() {
