@@ -35,6 +35,8 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Для всех
+
     // Main schedule
     public static Schedule schedule;
 
