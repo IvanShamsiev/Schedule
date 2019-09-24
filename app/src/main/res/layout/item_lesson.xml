@@ -1,88 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp"
-    android:focusable="true"
+    android:background="?android:selectableItemBackground"
     android:clickable="true"
-    android:background="?android:selectableItemBackground" >
+    android:focusable="true"
+    android:paddingEnd="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp" >
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/timeLessonBegin"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingRight="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:textSize="9pt"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="8:00" />
 
-        <TextView
-            android:id="@+id/timeLessonBegin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textSize="9pt"
-            android:textStyle="bold"
-            tools:text="8:00" />
-
-        <TextView
-            android:id="@+id/timeLessonEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textSize="8pt"
-            tools:text="9:30" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/timeLessonEnd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="20"
-        android:orientation="vertical">
+        android:textAlignment="textEnd"
+        android:textSize="8pt"
+        app:layout_constraintEnd_toEndOf="@+id/timeLessonBegin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeLessonBegin"
+        tools:text="9:30" />
 
-        <TextView
-            android:id="@+id/lessonName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:textSize="9pt"
-            android:textStyle="bold"
-            tools:text="Название предмета" />
 
-        <TextView
-            android:id="@+id/lessonTeacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:textSize="8pt"
-            tools:text="Имя препода"/>
+    <TextView
+        android:id="@+id/lessonName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textSize="9pt"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/lessonType"
+        app:layout_constraintStart_toEndOf="@+id/timeLessonBegin"
+        app:layout_constraintTop_toTopOf="@+id/timeLessonBegin"
+        tools:text="Название предмета" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/lessonTeacher"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="8pt"
+        app:layout_constraintEnd_toEndOf="@+id/lessonType"
+        app:layout_constraintStart_toStartOf="@+id/lessonName"
+        app:layout_constraintTop_toBottomOf="@+id/lessonName"
+        tools:text="Имя препода" />
 
-            <TextView
-                android:id="@+id/lessonLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:textSize="7pt"
-                tools:text="Аудитория (УЛК-2 420)" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+    <TextView
+        android:id="@+id/lessonLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="7pt"
+        app:layout_constraintEnd_toStartOf="@+id/lessonType"
+        app:layout_constraintStart_toStartOf="@+id/lessonTeacher"
+        app:layout_constraintTop_toBottomOf="@+id/lessonTeacher"
+        tools:text="Аудитория (УЛК-2 420)" />
 
-            <TextView
-                android:id="@+id/lessonType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="7pt"
-                tools:text="Тип занятия" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/lessonType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="7pt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Тип занятия" />
 
-    </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

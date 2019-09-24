@@ -18,6 +18,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+import static com.example.schedule.ui.MainActivity.changeScheduleName;
 import static com.example.schedule.ui.MainActivity.scheduleFileName;
 import static com.example.schedule.ui.MainActivity.url;
 
@@ -54,7 +55,7 @@ public class ScheduleHelper {
 
         RequestBody body = new FormBody.Builder().add("newSchedule", json).build();
         Request request = new Request.Builder()
-                .url(url + "changeSchedule.php")
+                .url(url + changeScheduleName)
                 .post(body)
                 .build();
 

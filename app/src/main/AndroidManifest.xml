@@ -9,7 +9,9 @@
         android:roundIcon="@drawable/kit"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.AboutLessonActivity"
+        <activity android:name=".ui.StartActivity"></activity>
+        <activity
+            android:name=".ui.AboutLessonActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.FullScheduleActivity"

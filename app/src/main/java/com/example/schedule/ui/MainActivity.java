@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Constants
     public static final String scheduleFileName = "scheduleForAll.json";
+    public static final String changeScheduleName = "changeNewSchedule.php";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
             "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
