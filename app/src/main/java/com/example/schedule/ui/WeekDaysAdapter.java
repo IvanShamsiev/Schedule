@@ -122,7 +122,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
             StringBuilder stringBuilder = new StringBuilder();
 
             for (Lesson l: lessons) stringBuilder.append(l.getBeginTime())
-                    .append(" - ").append(l.getShortName()).append("\n");
+                    .append(" - ").append(l.getName()).append("\n");
 
             return stringBuilder.toString();
         }

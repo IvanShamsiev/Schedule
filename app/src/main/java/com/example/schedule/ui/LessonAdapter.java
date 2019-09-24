@@ -69,7 +69,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
             beginTime.setText(lesson.getBeginTime());
             endTime.setText(lesson.getEndTime());
-            name.setText(MainActivity.lessonNames ? lesson.getFullName() : lesson.getShortName());
+            name.setText(lesson.getName());
             teacher.setText(lesson.getTeacher());
             location.setText(lesson.getLocation());
             type.setText(lesson.getType());

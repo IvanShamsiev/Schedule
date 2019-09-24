@@ -46,13 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Shared preferences
     static SharedPreferences preferences;
-    public static boolean lessonNames; // false: short; true: full
     public static boolean weekEvenStyle; // false: В-Н; true: Ч-Н
     public static boolean showNavigationLayout; // false: hide, true: show
-    private static boolean prefsUpdate = false; // for update on change prefs
 
     // Constants
-    public static final String scheduleFileName = "schedule.json";
+    public static final String scheduleFileName = "scheduleForAll.json";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
             "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Ser prefs
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> prefsUpdate = true);
 
         // Set dates
         currentDate = new GregorianCalendar();
@@ -144,17 +141,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (prefsUpdate) {
-            lessonNames = preferences.getBoolean("full_lesson_names", false);
-            weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
-            showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
-            navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
-            if (showNavigationLayout) setTitle(R.string.app_name);
+        weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
+        showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
+        navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
 
-            setAdapter();
+        String day = dayOfWeek[pageDate.get(Calendar.DAY_OF_WEEK) - 1];
+        if (showNavigationLayout) {
+            setTitle(R.string.app_name);
+            navigationTitle.setText(day);
+        } else setTitle(day);
 
-            prefsUpdate = false;
-        }
+        setAdapter();
     }
 
 
@@ -190,11 +187,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateScheduleState() {
-        lessonNames = preferences.getBoolean("full_lesson_names", false);
-        weekEvenStyle = preferences.getString("week_even_style", "0").equals("0");
-        showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
-        navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
-
         try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
         catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }
 

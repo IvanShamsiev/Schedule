@@ -26,12 +26,11 @@ public class AboutLessonActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
 
-        TextView twBeginTime, twEndTime, twShortName, twFullName, twTeacher, twLocation, twType;
+        TextView twBeginTime, twEndTime, twName, twTeacher, twLocation, twType;
 
         twBeginTime = findViewById(R.id.twBeginTime);
         twEndTime = findViewById(R.id.twEndTime);
-        twShortName = findViewById(R.id.twShortName);
-        twFullName = findViewById(R.id.twFullName);
+        twName = findViewById(R.id.twName);
         twTeacher = findViewById(R.id.twTeacher);
         twLocation = findViewById(R.id.twLocation);
         twType = findViewById(R.id.twType);
@@ -40,8 +39,7 @@ public class AboutLessonActivity extends AppCompatActivity {
 
         twBeginTime.setText(lesson.getBeginTime());
         twEndTime.setText(lesson.getEndTime());
-        twShortName.setText(lesson.getShortName());
-        twFullName.setText(lesson.getFullName());
+        twName.setText(lesson.getName());
         twTeacher.setText(lesson.getTeacher());
         twLocation.setText(lesson.getLocation());
         twType.setText(lesson.getType());

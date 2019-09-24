@@ -10,8 +10,7 @@
 
     <string name="beginTime">Время начала</string>
     <string name="endTime">Время окончания</string>
-    <string name="shortName">Краткое название предмета</string>
-    <string name="fullName">Полное название предмета</string>
+    <string name="name">Название предмета</string>
     <string name="teacher">Преподаватель</string>
     <string name="location">Аудитория</string>
     <string name="type">Тип пары</string>

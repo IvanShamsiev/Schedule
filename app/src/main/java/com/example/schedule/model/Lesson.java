@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 public class Lesson implements Parcelable {
 
-    private String beginTime, endTime, shortName, fullName, teacher, location, type;
+    private String beginTime, endTime, name, teacher, location, type;
 
     public String getBeginTime() {
         return beginTime;
@@ -17,12 +17,8 @@ public class Lesson implements Parcelable {
         return endTime;
     }
 
-    public String getShortName() {
-        return shortName;
-    }
-
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
     public String getTeacher() {
@@ -43,8 +39,7 @@ public class Lesson implements Parcelable {
         return "Lesson { " +
                 "beginTime='" + beginTime + '\'' +
                 ", endTime='" + endTime + '\'' +
-                ", shortName='" + shortName + '\'' +
-                ", fullName='" + fullName + '\'' +
+                ", name='" + name + '\'' +
                 ", teacher='" + teacher + '\'' +
                 ", location='" + location + '\'' +
                 ", type='" + type + '\'' +
@@ -54,16 +49,15 @@ public class Lesson implements Parcelable {
 
     // For parcelable
     private Lesson(Parcel source) {
-        String[] strings = new String[7];
+        String[] strings = new String[6];
         source.readStringArray(strings);
 
         beginTime = strings[0];
         endTime = strings[1];
-        shortName = strings[2];
-        fullName = strings[3];
-        teacher = strings[4];
-        location = strings[5];
-        type = strings[6];
+        name = strings[2];
+        teacher = strings[3];
+        location = strings[4];
+        type = strings[5];
     }
 
     @Override
@@ -73,7 +67,7 @@ public class Lesson implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[] {beginTime, endTime, shortName, fullName, teacher, location, type});
+        parcel.writeStringArray(new String[] {beginTime, endTime, name, teacher, location, type});
     }
 
     public static final Parcelable.Creator<Lesson> CREATOR = new Parcelable.Creator<Lesson>() {

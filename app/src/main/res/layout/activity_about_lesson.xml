@@ -47,23 +47,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/shortName"
+                android:text="@string/name"
                 android:theme="@style/AppTheme.AboutLessonTwText" />
 
             <TextView
-                android:id="@+id/twShortName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/fullName"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twFullName"
+                android:id="@+id/twName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AboutLessonTwLesson" />

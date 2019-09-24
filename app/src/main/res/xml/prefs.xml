@@ -3,11 +3,6 @@
 
     <PreferenceCategory android:title="Визуальное оформление">
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="full_lesson_names"
-            android:title="Полные названия предметов" />
-
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/week_style_entries"
