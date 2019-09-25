@@ -5,9 +5,15 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Lesson implements Parcelable {
 
-    public Lesson(String beginTime, String endTime, String even, String name, String location, String type, String chair, String post, String teacher) {
+    private String beginTime, endTime, even, name, location, type, chair, post, teacher;
+
+    public Lesson(String beginTime, String endTime, String even, String name, String location,
+                  String type, String chair, String post, String teacher) {
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.even = even;
@@ -18,8 +24,6 @@ public class Lesson implements Parcelable {
         this.post = post;
         this.teacher = teacher;
     }
-
-    private String beginTime, endTime, even, name, location, type, chair, post, teacher;
 
     public String getBeginTime() {
         return beginTime;
@@ -57,7 +61,16 @@ public class Lesson implements Parcelable {
         return teacher;
     }
 
-    /*@NonNull
+    public List<String> getNames() {
+        return Arrays.asList("Время начала", "Время окончания", "Неделя", "Название предмета",
+                "Аудитория", "Тип пары", "Кафедра", "Должность", "Преподаватель");
+    }
+
+    public List<String> getValues() {
+        return Arrays.asList(beginTime, endTime, even, name, location, type, chair, post, teacher);
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return "Lesson { " +
@@ -71,7 +84,7 @@ public class Lesson implements Parcelable {
                 ", post='" + post + '\'' +
                 ", teacher='" + teacher + '\'' +
                 " }";
-    }*/
+    }
 
     // For parcelable
     private Lesson(Parcel source) {

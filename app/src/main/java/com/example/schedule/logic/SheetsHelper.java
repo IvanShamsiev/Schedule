@@ -126,6 +126,10 @@ public class SheetsHelper {
         }
 
         String even = lessonRow.getCell(column + evenColumn).toString();
+        switch (even) {
+            case "в": even = "Верхняя"; break;
+            case "н": even = "Нижняя"; break;
+        }
 
         String name = lessonRow.getCell(column + nameColumn).toString();
 
@@ -137,6 +141,11 @@ public class SheetsHelper {
         String location = locationOne + (locationTwo.isEmpty() ? "" : (" " + locationTwo));
 
         String type = lessonRow.getCell(column + typeColumn).toString();
+        switch (type) {
+            case "лек": type = "Лекция"; break;
+            case "пр": type = "Практика"; break;
+            case "лаб": type = "Лаба"; break;
+        }
 
         String chair = lessonRow.getCell(column + chairColumn).toString();
 

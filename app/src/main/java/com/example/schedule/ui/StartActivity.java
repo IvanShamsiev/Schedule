@@ -16,7 +16,11 @@ import com.example.schedule.logic.StartHelper;
 import com.example.schedule.model.Lesson;
 import com.example.schedule.model.Schedule;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
+
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -47,25 +52,13 @@ public class StartActivity extends AppCompatActivity {
 
         Button btnLoad = findViewById(R.id.btnLoad);
         btnLoad.setOnClickListener(btn -> {
-            try {
-
-                ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), null);
-                System.out.println(ScheduleHelper.getStringSchedule());
-                LinkedTreeMap<String, List<Lesson>> scheduleMap = new Gson().fromJson(ScheduleHelper.getStringSchedule(), LinkedTreeMap.class);
-                HashMap<String, List<Lesson>> m = new HashMap<>(scheduleMap);
-                System.out.println(scheduleMap);
-                System.out.println(m);
-
-                System.out.println(scheduleMap.get("2").get(0).getEven());
-
-                /*System.out.println(scheduleMap.keySet());
-
-                System.out.println(scheduleMap.get("2"));
-                System.out.println(scheduleMap.get("2").get(0));*/
-                //Lesson l = scheduleMap.get("2").get(0);
-                //System.out.println(l);
-            } catch (Exception e) {e.printStackTrace();}
+            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+            startActivity(intent);
         });
+    }
+
+    static class Sch {
+        HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> week;
     }
 
     Callback getBranchesCallback = new Callback() {
@@ -105,24 +98,25 @@ public class StartActivity extends AppCompatActivity {
         HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap;
 
         Handler getBranchHandler = new Handler(msg -> {
-            openCoursesDialog(coursesMap);
+            openCoursesDialog(new TreeMap<>(coursesMap));
             return true;
         });
 
-        void openCoursesDialog(HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap) {
+        void openCoursesDialog(TreeMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap) {
             new AlertDialog.Builder(StartActivity.this)
                     .setItems(coursesMap.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
-                        openGroupsDialog(new ArrayList<>(coursesMap.values()).get(i));
+                        openGroupsDialog(new TreeMap<>(new ArrayList<>(coursesMap.values()).get(i)));
                         dialogInterface.dismiss();
                     })
                     .show();
         }
 
-        void openGroupsDialog(HashMap<String, HashMap<Integer, List<Lesson>>> groupsMap) {
+        void openGroupsDialog(TreeMap<String, HashMap<Integer, List<Lesson>>> groupsMap) {
             new AlertDialog.Builder(StartActivity.this)
                     .setItems(groupsMap.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
                         HashMap<Integer, List<Lesson>> weekMap = new ArrayList<>(groupsMap.values()).get(i);
                         String json = new Gson().toJson(weekMap);
+                        json = "{\"week\":" + json + "}";
                         System.out.println(json);
                         try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
                         catch (FileNotFoundException e) { e.printStackTrace(); }

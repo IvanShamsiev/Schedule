@@ -40,8 +40,7 @@ public class ScheduleHelper {
 
     public static void setSchedule(String json) {
         stringSchedule = json;
-        HashMap<Integer, List<Lesson>> scheduleMap = new Gson().fromJson(ScheduleHelper.getStringSchedule(), HashMap.class);
-        mainSchedule = new Schedule(scheduleMap);
+        mainSchedule = new Gson().fromJson(ScheduleHelper.getStringSchedule(), Schedule.class);
     }
 
     public static void downloadSchedule(Callback callback) {

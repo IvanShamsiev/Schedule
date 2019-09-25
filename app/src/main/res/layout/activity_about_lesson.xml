@@ -11,88 +11,9 @@
         android:id="@+id/toolbar"
         style="@style/AppTheme.Toolbar" />
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/beginTime"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twBeginTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/endTime"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twEndTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/name"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/teacher"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twTeacher"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/location"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/type"
-                android:theme="@style/AppTheme.AboutLessonTwText" />
-
-            <TextView
-                android:id="@+id/twType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AboutLessonTwLesson" />
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

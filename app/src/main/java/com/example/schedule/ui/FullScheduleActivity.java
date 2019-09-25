@@ -54,7 +54,7 @@ public class FullScheduleActivity extends AppCompatActivity {
                 this, 2, LinearLayoutManager.VERTICAL, false));
 
 
-        weekAdapter = new WeekDaysAdapter(schedule.getEvenWeek(), true);
+        weekAdapter = new WeekDaysAdapter(true);
 
         recyclerView.setAdapter(weekAdapter);
 
@@ -67,13 +67,13 @@ public class FullScheduleActivity extends AppCompatActivity {
         isEven = false;
         twWeekType.setText("Верхняя неделя");
 
-        weekAdapter.updateWeek(schedule.getUnevenWeek(), false);
+        weekAdapter.updateWeek(false);
     }
 
     void setEvenWeek() {
         isEven = true;
         twWeekType.setText("Нижняя неделя");
 
-        weekAdapter.updateWeek(schedule.getEvenWeek(), true);
+        weekAdapter.updateWeek(true);
     }
 }

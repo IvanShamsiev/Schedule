@@ -13,17 +13,16 @@ import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.model.Lesson;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDayHolder> {
 
-    private HashMap<Integer, List<Lesson>> week;
     private boolean isEven;
 
-    public WeekDaysAdapter(HashMap<Integer, List<Lesson>> week, boolean isEven) {
-        this.week = week;
+    public WeekDaysAdapter(boolean isEven) {
         this.isEven = isEven;
     }
 
@@ -37,9 +36,14 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
 
     @Override
     public void onBindViewHolder(@NonNull WeekDayHolder holder, int position) {
-        WeekDay weekDay = new WeekDay(MainActivity.dayOfWeek.get(position + 1), week.get(position + 2),
+
+        List<Lesson> lessons = new ArrayList<>();
+        for (Lesson l: ScheduleHelper.getInstance().getWeek().get(position + 1))
+            if (isEven == l.getEven().equals("Нижняя")) lessons.add(l);
+
+        WeekDay weekDay = new WeekDay(MainActivity.dayOfWeek.get(position + 1), lessons,
                 ScheduleHelper.isEven(MainActivity.currentDate) == isEven &&
-                        MainActivity.currentDate.get(Calendar.DAY_OF_WEEK) == (position + 2));
+                        MainActivity.currentDate.get(Calendar.DAY_OF_WEEK) - 1 == (position + 1));
 
         holder.onBind(weekDay);
     }
@@ -49,8 +53,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
         return 6;
     }
 
-    public void updateWeek(HashMap<Integer, List<Lesson>> week, boolean isEven) {
-        this.week = week;
+    public void updateWeek(boolean isEven) {
         this.isEven = isEven;
 
         notifyDataSetChanged();
@@ -75,12 +78,14 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
 
             twDayOfWeek.setText(weekDay.getDayOfWeek());
 
+
+
             if (weekDay.isToday())
                 twDayOfWeek.setTextColor(itemView.getResources().getColor(R.color.colorAccent));
             else
                 twDayOfWeek.setTextColor(itemView.getResources().getColor(R.color.colorPrimary));
 
-            if (weekDay.getLessons().isEmpty()) {
+            if (weekDay.getLessons() == null || weekDay.getLessons().isEmpty()) {
                 twDayLessons.setText("Нет пар");
                 twDayLessons.setGravity(Gravity.CENTER);
             } else {
@@ -121,8 +126,8 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
         String getStringLessons() {
             StringBuilder stringBuilder = new StringBuilder();
 
-            for (Lesson l: lessons) stringBuilder.append(l.getBeginTime())
-                    .append(" - ").append(l.getName()).append("\n");
+            for (Lesson l: lessons)
+                stringBuilder.append(l.getBeginTime()).append(" - ").append(l.getName()).append("\n");
 
             return stringBuilder.toString();
         }
