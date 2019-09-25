@@ -27,7 +27,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -53,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
     public static boolean showNavigationLayout; // false: hide, true: show
 
     // Constants
-    public static final String scheduleFileName = "scheduleForAll.json";
+    public static final String scheduleFileName = "schedule.json";
+    public static final String scheduleUrl = "getSchedule.php";
+    public static final String branchesUrl = "getBranches.php";
     public static final String changeScheduleName = "changeNewSchedule.php";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
@@ -192,8 +193,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateScheduleState() {
+        /*try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
+        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }*/
+
         try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
-        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         schedule = ScheduleHelper.getInstance();
 
@@ -249,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
             try {json = response.body().string();}
             catch (IOException | NullPointerException e) {e.printStackTrace(); return;}
 
-            try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName , MODE_PRIVATE)); }
+            try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
             catch (FileNotFoundException e) { e.printStackTrace(); }
 
             onUpdateSchedule.sendEmptyMessage(0);

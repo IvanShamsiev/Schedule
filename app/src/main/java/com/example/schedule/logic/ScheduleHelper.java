@@ -1,5 +1,6 @@
 package com.example.schedule.logic;
 
+import com.example.schedule.model.Lesson;
 import com.example.schedule.model.Schedule;
 import com.google.gson.Gson;
 
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -19,7 +22,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import static com.example.schedule.ui.MainActivity.changeScheduleName;
-import static com.example.schedule.ui.MainActivity.scheduleFileName;
+import static com.example.schedule.ui.MainActivity.scheduleUrl;
 import static com.example.schedule.ui.MainActivity.url;
 
 public class ScheduleHelper {
@@ -37,14 +40,15 @@ public class ScheduleHelper {
 
     public static void setSchedule(String json) {
         stringSchedule = json;
-        mainSchedule = new Gson().fromJson(json, Schedule.class);
+        HashMap<Integer, List<Lesson>> scheduleMap = new Gson().fromJson(ScheduleHelper.getStringSchedule(), HashMap.class);
+        mainSchedule = new Schedule(scheduleMap);
     }
 
     public static void downloadSchedule(Callback callback) {
         OkHttpClient client = new OkHttpClient();
 
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url + scheduleFileName)
+                .url(url + scheduleUrl)
                 .build();
 
         client.newCall(request).enqueue(callback);
@@ -71,7 +75,8 @@ public class ScheduleHelper {
             while ((s = br.readLine()) != null) json.append(s).append("\n");
             br.close();
         } catch (IOException e) {
-            downloadSchedule(callback);
+            e.printStackTrace();
+            //downloadSchedule(callback);
             return;
         }
 

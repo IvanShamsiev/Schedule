@@ -57,7 +57,7 @@ public class Lesson implements Parcelable {
         return teacher;
     }
 
-    @NonNull
+    /*@NonNull
     @Override
     public String toString() {
         return "Lesson { " +
@@ -71,7 +71,7 @@ public class Lesson implements Parcelable {
                 ", post='" + post + '\'' +
                 ", teacher='" + teacher + '\'' +
                 " }";
-    }
+    }*/
 
     // For parcelable
     private Lesson(Parcel source) {

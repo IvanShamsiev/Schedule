@@ -92,7 +92,7 @@ public class DayFragment extends Fragment {
             Calendar currentDate = (Calendar) MainActivity.currentDate.clone();
             currentDate.add(Calendar.DATE, position - middlePos);
 
-            return MainActivity.dayOfWeek[currentDate.get(Calendar.DAY_OF_WEEK)-1];
+            return MainActivity.dayOfWeek.get(currentDate.get(Calendar.DAY_OF_WEEK)-1);
         }
 
         @Override

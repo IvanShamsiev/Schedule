@@ -8,8 +8,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +50,21 @@ public class SheetsHelper {
     private static final SimpleDateFormat dateFormat =
             new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-    public static HashMap<String, HashMap<Integer, List<Lesson>>> getGroupsMap(HSSFSheet courseSheet) {
+    public static HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> getCoursesMap(InputStream inputStream) {
+
+        if (inputStream == null) return null;
+
+        HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap = new HashMap<>();
+
+        HSSFWorkbook workbook = readWorkbook(inputStream);
+
+        for (Sheet courseSheet : workbook)
+            coursesMap.put(courseSheet.getSheetName(), getGroupsMap((HSSFSheet) courseSheet));
+
+        return coursesMap;
+    }
+
+    private static HashMap<String, HashMap<Integer, List<Lesson>>> getGroupsMap(HSSFSheet courseSheet) {
         int column = 0;
 
         HashMap<String, HashMap<Integer, List<Lesson>>> groupsMap = new HashMap<>();
@@ -132,14 +147,12 @@ public class SheetsHelper {
         return new Lesson(beginTime, endTime, even, name, location, type, chair, post, teacher);
     }
 
-    private static HSSFWorkbook readWorkbook(String filename) {
+    private static HSSFWorkbook readWorkbook(InputStream inputStream) {
         try {
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filename));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
-            return wb;
+            POIFSFileSystem fs = new POIFSFileSystem(inputStream);
+            return new HSSFWorkbook(fs);
         }
         catch (Exception e) {
-            System.out.println("Неудача");
             e.printStackTrace();
             return null;
         }

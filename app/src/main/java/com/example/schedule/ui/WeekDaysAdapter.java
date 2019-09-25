@@ -37,7 +37,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
 
     @Override
     public void onBindViewHolder(@NonNull WeekDayHolder holder, int position) {
-        WeekDay weekDay = new WeekDay(MainActivity.dayOfWeek[position + 1], week.get(position + 2),
+        WeekDay weekDay = new WeekDay(MainActivity.dayOfWeek.get(position + 1), week.get(position + 2),
                 ScheduleHelper.isEven(MainActivity.currentDate) == isEven &&
                         MainActivity.currentDate.get(Calendar.DAY_OF_WEEK) == (position + 2));
 

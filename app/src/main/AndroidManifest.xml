@@ -9,7 +9,14 @@
         android:roundIcon="@drawable/kit"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.StartActivity"></activity>
+        <activity android:name=".ui.StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.AboutLessonActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -17,12 +24,6 @@
             android:name=".ui.FullScheduleActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.ScheduleChanger" />
         <activity android:name=".ui.PreferencesActivity" />
