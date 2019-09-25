@@ -34,7 +34,7 @@ public class ScheduleHelper {
 
     public static String getStringSchedule() { return stringSchedule; }
 
-    public static Schedule getInstance() { // false: short; true: full
+    public static Schedule getSchedule() { // false: short; true: full
         return mainSchedule;
     }
 
@@ -65,19 +65,13 @@ public class ScheduleHelper {
         client.newCall(request).enqueue(callback);
     }
 
-    public static void loadSchedule(FileInputStream inputStream, Callback callback) {
+    public static void loadSchedule(FileInputStream inputStream) throws IOException {
         StringBuilder json = new StringBuilder();
 
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-            String s;
-            while ((s = br.readLine()) != null) json.append(s).append("\n");
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            //downloadSchedule(callback);
-            return;
-        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        String s;
+        while ((s = br.readLine()) != null) json.append(s).append("\n");
+        br.close();
 
         setSchedule(json.toString());
     }

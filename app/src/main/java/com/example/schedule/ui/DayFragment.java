@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.example.schedule.ui.MainActivity.months;
-import static com.example.schedule.ui.MainActivity.schedule;
 import static com.example.schedule.ui.MainActivity.weekEvenStyle;
 
 public class DayFragment extends Fragment {
@@ -52,8 +51,8 @@ public class DayFragment extends Fragment {
                 LinearLayoutManager.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        if (schedule == null) return rootView;
-        List<Lesson> lessons = schedule.getLessons(currentDate);
+        if (ScheduleHelper.getSchedule() == null) return rootView;
+        List<Lesson> lessons = ScheduleHelper.getSchedule().getLessons(currentDate);
 
         if (lessons.size() != 0) recyclerView.setAdapter(new LessonAdapter(lessons));
         else {

@@ -24,7 +24,6 @@ public class Schedule {
         if (date.get(Calendar.DAY_OF_WEEK) - 1 == 0) return new ArrayList<>();
 
         List<Lesson> lessons = week.get(date.get(Calendar.DAY_OF_WEEK) - 1);
-        System.out.println(date.get(Calendar.DAY_OF_WEEK));
 
         List<Lesson> newList = new ArrayList<>();
         for (Lesson l: lessons)

@@ -15,7 +15,6 @@ import com.example.schedule.model.Lesson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDayHolder> {
@@ -38,7 +37,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
     public void onBindViewHolder(@NonNull WeekDayHolder holder, int position) {
 
         List<Lesson> lessons = new ArrayList<>();
-        for (Lesson l: ScheduleHelper.getInstance().getWeek().get(position + 1))
+        for (Lesson l: ScheduleHelper.getSchedule().getWeek().get(position + 1))
             if (isEven == l.getEven().equals("Нижняя")) lessons.add(l);
 
         WeekDay weekDay = new WeekDay(MainActivity.dayOfWeek.get(position + 1), lessons,

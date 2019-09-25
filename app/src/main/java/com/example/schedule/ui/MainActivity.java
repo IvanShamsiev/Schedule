@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
-import com.example.schedule.model.Schedule;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,9 +37,6 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     // Для всех
-
-    // Main schedule
-    public static Schedule schedule;
 
     // Calendars for navigationTitle and viewPager
     public static Calendar currentDate;
@@ -61,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
     public static final List<String> dayOfWeek = Arrays.asList(
             "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
+
+    public static final int startActivityRequestCode = 2;
 
 
     // UI
@@ -85,8 +83,35 @@ public class MainActivity extends AppCompatActivity {
         currentDate = new GregorianCalendar();
         pageDate = new GregorianCalendar();
 
-        // Set viewPager
+        // Set UI
         viewPager = findViewById(R.id.viewPager);
+        navigationLayout = findViewById(R.id.navigationLayout);
+        navigationTitle = findViewById(R.id.twTitle);
+
+
+        if (!loadSchedule()) return;
+
+        loadActivity();
+    }
+
+    private boolean loadSchedule() {
+        try {
+            ScheduleHelper.loadSchedule(openFileInput(scheduleFileName));
+            return true;
+        }
+        catch (IOException e) {
+            onFileNotAvailable();
+            return false;
+        }
+    }
+
+    private void onFileNotAvailable() {
+        startActivityForResult(new Intent(this, StartActivity.class), startActivityRequestCode);
+    }
+
+    private void loadActivity() {
+
+        // Set viewPager
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int page) {
@@ -130,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Set navigation layout
-        navigationLayout = findViewById(R.id.navigationLayout);
-        navigationTitle = findViewById(R.id.twTitle);
         ImageButton btnLeft = findViewById(R.id.btnLeft);
         ImageButton btnRight = findViewById(R.id.btnRight);
         btnLeft.setOnClickListener(btn -> viewPager.setCurrentItem(currentPos - 1));
@@ -140,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Update schedule state
-        updateScheduleState();
+        setAdapter();
     }
 
     @Override
@@ -164,7 +187,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(downloadCallback);
+        //if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(downloadCallback);
+        if (requestCode == startActivityRequestCode && resultCode == 1) loadSchedule();
     }
 
 
@@ -180,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         menu.findItem(R.id.reloadSchedule).setOnMenuItemClickListener(item -> {
-            ScheduleHelper.downloadSchedule(downloadCallback);
+            //ScheduleHelper.downloadSchedule(downloadCallback);
             return true;
         });
         menu.findItem(R.id.changeSchedule).setOnMenuItemClickListener(item -> {
@@ -190,21 +214,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-
-    private void updateScheduleState() {
-        /*try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
-        catch (FileNotFoundException e) { ScheduleHelper.downloadSchedule(downloadCallback); }*/
-
-        try { ScheduleHelper.loadSchedule(openFileInput(scheduleFileName), downloadCallback); }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        schedule = ScheduleHelper.getInstance();
-
-        setAdapter();
-    }
 
     private void setAdapter() {
         viewPager.removeAllViews();
@@ -229,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    Callback downloadCallback = new Callback() {
+    /*Callback downloadCallback = new Callback() {
 
         Handler onFailure = new Handler(msg -> {
             Toast.makeText(MainActivity.this, "Не удалось загрузить расписание",
@@ -260,6 +269,6 @@ public class MainActivity extends AppCompatActivity {
 
             onUpdateSchedule.sendEmptyMessage(0);
         }
-    };
+    };*/
 
 }

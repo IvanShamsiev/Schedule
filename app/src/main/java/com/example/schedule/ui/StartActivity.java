@@ -38,8 +38,6 @@ import static com.example.schedule.ui.MainActivity.scheduleFileName;
 
 public class StartActivity extends AppCompatActivity {
 
-    HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,16 +55,14 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
-    static class Sch {
-        HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> week;
-    }
-
     Callback getBranchesCallback = new Callback() {
         LinkedHashMap<String, String> branchesEntries;
 
         Handler getBranchesHandler = new Handler(msg -> {
             new AlertDialog.Builder(StartActivity.this)
-                    .setItems(branchesEntries.keySet().toArray(new String[]{}), (dialogInterface, i) -> StartHelper.getBranch(new ArrayList<>(branchesEntries.values()).get(i), getBranchCallback))
+                    .setItems(branchesEntries.keySet().toArray(new String[]{}),
+                            (dialogInterface, i) -> StartHelper.getBranch(
+                                    new ArrayList<>(branchesEntries.values()).get(i), getBranchCallback))
                     .show();
             return true;
         });
@@ -82,8 +78,8 @@ public class StartActivity extends AppCompatActivity {
             String branchesJson;
             try {branchesJson = response.body().string();}
             catch (IOException | NullPointerException e) {
-                Toast.makeText(StartActivity.this, "Произошла ошибка при чтении списка отделений", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+                Toast.makeText(StartActivity.this, "Произошла ошибка при чтении списка отделений",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 

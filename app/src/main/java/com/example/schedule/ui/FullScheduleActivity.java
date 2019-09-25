@@ -41,7 +41,7 @@ public class FullScheduleActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
 
-        schedule = ScheduleHelper.getInstance();
+        schedule = ScheduleHelper.getSchedule();
 
         twWeekType = findViewById(R.id.twWeekType);
         switchBtn = findViewById(R.id.switchBtn);
