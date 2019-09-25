@@ -53,6 +53,13 @@ public class StartActivity extends AppCompatActivity {
             Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
         });
+
+        setResult(RESULT_CANCELED);
+    }
+
+    private void onSuccess() {
+        setResult(RESULT_OK);
+        finish();
     }
 
     Callback getBranchesCallback = new Callback() {
@@ -116,15 +123,16 @@ public class StartActivity extends AppCompatActivity {
                         System.out.println(json);
                         try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
                         catch (FileNotFoundException e) { e.printStackTrace(); }
-                        Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                        startActivity(intent);
+
+                        onSuccess();
                     })
                     .show();
         }
 
         @Override
         public void onFailure(Call call, IOException e) {
-
+            Toast.makeText(StartActivity.this, "Не удалось загрузить список групп",
+                    Toast.LENGTH_SHORT).show();
         }
 
         @Override

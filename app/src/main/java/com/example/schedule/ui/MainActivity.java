@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,12 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Constants
     public static final String scheduleFileName = "schedule.json";
-    public static final String scheduleUrl = "getSchedule.php";
     public static final String branchesUrl = "getBranches.php";
-    public static final String changeScheduleName = "changeNewSchedule.php";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
-    public static final String[] months = {"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
-            "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"};
     public static final List<String> dayOfWeek = Arrays.asList(
             "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
 
@@ -57,18 +54,20 @@ public class MainActivity extends AppCompatActivity {
 
     // UI
     private ViewPager2 viewPager;
+    private DayAdapter dayAdapter;
     private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
 
     // UI for navigation layout
     private LinearLayout navigationLayout;
     private TextView navigationTitle;
-    private static int currentPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        System.out.println(new GregorianCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
 
         // Ser prefs
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,19 +82,16 @@ public class MainActivity extends AppCompatActivity {
         navigationTitle = findViewById(R.id.twTitle);
 
 
-        if (!loadSchedule()) return;
-
-        loadActivity();
+        loadSchedule();
     }
 
-    private boolean loadSchedule() {
+    private void loadSchedule() {
         try {
             ScheduleHelper.loadSchedule(openFileInput(scheduleFileName));
-            return true;
+            loadActivity();
         }
         catch (IOException e) {
             onFileNotAvailable();
-            return false;
         }
     }
 
@@ -106,17 +102,19 @@ public class MainActivity extends AppCompatActivity {
     private void loadActivity() {
 
         // Set viewPager
+        dayAdapter = new DayAdapter();
+        viewPager.setAdapter(dayAdapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, position - DayAdapter.middlePos);
-                currentPos = position;
                 if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
                 else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
             }
         });
+        viewPager.setCurrentItem(DayAdapter.middlePos, false);
 
 
         // Set dialog for change schedule
@@ -137,8 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Set dialog for peek date for schedule
         DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+            Calendar newPageDate = (Calendar) currentDate.clone();
+            newPageDate.set(year, month, dayOfMonth);
+            int daysBetween = daysBetween(newPageDate.getTime(), currentDate.getTime());
+            viewPager.setCurrentItem(DayAdapter.middlePos - daysBetween);
             pageDate.set(year, month, dayOfMonth);
-            setAdapter();
         };
         int year = currentDate.get(Calendar.YEAR);
         int month = currentDate.get(Calendar.MONTH);
@@ -151,13 +152,11 @@ public class MainActivity extends AppCompatActivity {
         // Set navigation layout
         ImageButton btnLeft = findViewById(R.id.btnLeft);
         ImageButton btnRight = findViewById(R.id.btnRight);
-        btnLeft.setOnClickListener(btn -> viewPager.setCurrentItem(currentPos - 1));
-        btnRight.setOnClickListener(btn -> viewPager.setCurrentItem(currentPos + 1));
+        btnLeft.setOnClickListener(btn -> viewPager.setCurrentItem(viewPager.getCurrentItem() - 1));
+        btnRight.setOnClickListener(btn -> viewPager.setCurrentItem(viewPager.getCurrentItem() + 1));
 
 
 
-        // Update schedule state
-        setAdapter();
     }
 
     @Override
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             navigationTitle.setText(day);
         } else setTitle(day);
 
-        setAdapter();
+
     }
 
 
@@ -182,7 +181,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(downloadCallback);
-        if (requestCode == startActivityRequestCode && resultCode == 1) loadSchedule();
+        if (requestCode == startActivityRequestCode) {
+            if (resultCode == RESULT_OK) loadSchedule();
+            if (resultCode == RESULT_CANCELED) finish();
+        }
     }
 
 
@@ -210,10 +212,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setAdapter() {
-        viewPager.setAdapter(new DayAdapter());
+        dayAdapter.notifyDataSetChanged();
+
+
+        /*viewPager.setAdapter(new DayAdapter());
         int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
         int currentStartPage = DayAdapter.middlePos - leftDays;
-        viewPager.setCurrentItem(currentStartPage, false);
+        viewPager.setCurrentItem(currentStartPage, false);*/
 
 
         if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));

@@ -18,12 +18,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.schedule.ui.MainActivity.months;
 import static com.example.schedule.ui.MainActivity.weekEvenStyle;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
 
-    private static int pagesCount = 2000;
+    private static int pagesCount = Integer.MAX_VALUE;
     public static int middlePos = pagesCount / 2;
 
     @NonNull
@@ -70,8 +69,10 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
 
         void bind(Calendar date) {
 
+            String month = date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+            month = month.substring(0, 1).toUpperCase() + month.substring(1);
             textDate.setText(String.format(Locale.getDefault(), "%d %s",
-                    date.get(Calendar.DAY_OF_MONTH), months[date.get(Calendar.MONTH)]));
+                    date.get(Calendar.DAY_OF_MONTH), month));
 
             String upWeek = weekEvenStyle ? "Верхняя неделя" : "Нечётная неделя";
             String downWeek = weekEvenStyle ? "Нижняя неделя" : "Чётная неделя";
