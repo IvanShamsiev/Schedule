@@ -60,6 +60,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
 
+    implementation "androidx.viewpager2:viewpager2:1.0.0-beta04"
+
 
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 }

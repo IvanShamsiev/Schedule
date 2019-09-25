@@ -4,12 +4,11 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -22,17 +21,12 @@ import android.widget.Toast;
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // UI
-    private ViewPager viewPager;
+    private ViewPager2 viewPager;
     private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
 
@@ -112,18 +106,18 @@ public class MainActivity extends AppCompatActivity {
     private void loadActivity() {
 
         // Set viewPager
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onPageSelected(int page) {
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
                 pageDate = (Calendar) currentDate.clone();
-                pageDate.add(Calendar.DATE, page - DayFragment.middlePos);
-                currentPos = page;
+                pageDate.add(Calendar.DATE, position - DayAdapter.middlePos);
+                currentPos = position;
                 if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
                 else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
             }
-            @Override public void onPageScrolled(int i, float v, int i1) { }
-            @Override public void onPageScrollStateChanged(int i) { }
         });
+
 
         // Set dialog for change schedule
         changeScheduleDialog = new AlertDialog.Builder(this)
@@ -216,12 +210,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setAdapter() {
-        viewPager.removeAllViews();
-        viewPager.setAdapter(new DayFragment.DaysPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new DayAdapter());
         int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
-        int currentStartPage = DayFragment.middlePos - leftDays;
-        viewPager.setCurrentItem(currentStartPage);
-
+        int currentStartPage = DayAdapter.middlePos - leftDays;
+        viewPager.setCurrentItem(currentStartPage, false);
 
 
         if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
