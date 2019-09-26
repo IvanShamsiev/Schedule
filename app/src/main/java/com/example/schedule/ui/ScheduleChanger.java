@@ -29,9 +29,9 @@ public class ScheduleChanger extends AppCompatActivity {
         editSchedule = findViewById(R.id.changed_schedule);
         sendButton = findViewById(R.id.setSchedule);
 
-        ScheduleHelper.downloadSchedule(onDownloadCallback);
+        //ScheduleHelper.downloadSchedule(onDownloadCallback);
     }
-
+/*
     Callback onDownloadCallback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -71,5 +71,5 @@ public class ScheduleChanger extends AppCompatActivity {
         setResult(1);
         finish();
         return true;
-    });
+    });*/
 }

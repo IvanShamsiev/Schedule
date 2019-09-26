@@ -21,11 +21,14 @@ public class Schedule {
 
     public List<Lesson> getLessons(Calendar date) {
 
-        if (date.get(Calendar.DAY_OF_WEEK) - 1 == 0) return new ArrayList<>();
 
         List<Lesson> lessons = week.get(date.get(Calendar.DAY_OF_WEEK) - 1);
 
         List<Lesson> newList = new ArrayList<>();
+
+        if (lessons == null) return newList;
+
+
         for (Lesson l: lessons)
             if (ScheduleHelper.isEven(date) == l.getEven().equals("Нижняя"))
                 newList.add(l);

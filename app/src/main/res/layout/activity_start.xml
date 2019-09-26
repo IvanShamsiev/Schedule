@@ -12,54 +12,36 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Выберите тип обучения"
-        android:textAlignment="center"
-        android:textSize="12pt"
+        android:text="На этой странице вы можете установить расписание для этого приложения.\n\nПриложение преобразует расписание в виде таблицы в нормальный вид, удобный для использования в приложении.\n\nВы можете скачать расписание с сервера КФУ, либо выбрать из файловой системы\n\nДля скачивания расписания с сервера необходимо подключение к интернету. Скачивание и перевод таблиц может занять от 1 до 10 секунд.\n\nПриятного использования приложения."
+        android:textAlignment="viewStart"
+        android:textSize="8pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnUnder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:text="Бакалавриат / Специалитет"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
-    <Button
-        android:id="@+id/btnMagistracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Магистратура"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUnder" />
+        <Button
+            android:id="@+id/btnDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Скачать расписание с сервера" />
 
-    <Button
-        android:id="@+id/btnVocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Среднее профессиональное"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMagistracy" />
+        <Button
+            android:id="@+id/btnChoose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Выбрать таблицу из файловой системы" />
 
-    <Button
-        android:id="@+id/btnLoad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Загрузить расписание"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnVocation" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

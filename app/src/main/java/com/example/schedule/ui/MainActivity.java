@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     // UI
     private ViewPager2 viewPager;
-    private DayAdapter dayAdapter;
     private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
 
@@ -66,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        System.out.println(new GregorianCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
 
         // Ser prefs
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -102,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadActivity() {
 
         // Set viewPager
-        dayAdapter = new DayAdapter();
-        viewPager.setAdapter(dayAdapter);
+        viewPager.setAdapter(new DayAdapter());
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -201,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         });
         menu.findItem(R.id.reloadSchedule).setOnMenuItemClickListener(item -> {
             //ScheduleHelper.downloadSchedule(downloadCallback);
+            startActivityForResult(new Intent(this, StartActivity.class), startActivityRequestCode);
             return true;
         });
         menu.findItem(R.id.changeSchedule).setOnMenuItemClickListener(item -> {
@@ -211,19 +208,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setAdapter() {
-        dayAdapter.notifyDataSetChanged();
+    /*private void setAdapter() {
+        //dayAdapter.notifyDataSetChanged();
 
 
-        /*viewPager.setAdapter(new DayAdapter());
+        viewPager.setAdapter(new DayAdapter());
         int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
         int currentStartPage = DayAdapter.middlePos - leftDays;
-        viewPager.setCurrentItem(currentStartPage, false);*/
+        viewPager.setCurrentItem(currentStartPage, false);
 
 
         if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
         else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
-    }
+    }*/
 
     public static int daysBetween(Date d1, Date d2) {
         return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));

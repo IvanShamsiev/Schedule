@@ -6,6 +6,7 @@ import com.example.schedule.ui.MainActivity;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -24,12 +25,7 @@ public class SheetsHelper {
 
     private static int lessonMinutesCount = 90;
 
-    private static int lessonsCount = 8;
-    private static int rowsForLesson = 2;
-
-    private static int cycleColumnsCount = 10;
     private static int leftRows = 2;
-    private static int cycleRowsCount = 16;
 
     private static int groupRow = 0;
     private static int groupColumn = 3;
@@ -69,32 +65,54 @@ public class SheetsHelper {
 
         HashMap<String, HashMap<Integer, List<Lesson>>> groupsMap = new HashMap<>();
 
+        while (true) {
+            if (!courseSheet.getRow(leftRows).getCell(column).toString().equals("Понедельник")) column++;
+            else break;
+        }
         while (courseSheet.getRow(0).getCell(column) != null) {
             HashMap<Integer, List<Lesson>> week = new HashMap<>(6);
 
-            String groupName = courseSheet.getRow(groupRow).getCell(column + groupColumn).getStringCellValue();
+            Cell groupCell = courseSheet.getRow(groupRow).getCell(column + groupColumn);
 
-            for (int row = leftRows; row < 6 * lessonsCount * rowsForLesson + leftRows; row += cycleRowsCount) {
-                String dayOfWeek = courseSheet.getRow(row + dayRow).getCell(column + dayColumn).toString();
+            if (groupCell == null || groupCell.toString().isEmpty()) break;
 
-                List<Lesson> lessons = new ArrayList<>();
+            String groupName;
+            if (groupCell.getCellType() == CellType.NUMERIC) groupName = "" + (int) groupCell.getNumericCellValue();
+            else groupName = groupCell.toString();
 
-                for (int lessonNum = 0; lessonNum < lessonsCount; lessonNum++) {
-                    if (courseSheet.getRow(row + lessonNum * 2).getCell(column) == null) break;
+            int row = leftRows;
+            String dayOfWeek = null;
+            List<Lesson> lessons = new ArrayList<>();
+            while (true) {
+                if (courseSheet.getRow(row) == null || courseSheet.getRow(row).getCell(column) == null) break;
 
-                    Lesson lessonUneven = getLesson(courseSheet, row + lessonNum * 2, column);
-                    Lesson lessonEven = getLesson(courseSheet, row + lessonNum * 2 + 1, column);
-
-                    if (lessonUneven != null) lessons.add(lessonUneven);
-                    if (lessonEven != null) lessons.add(lessonEven);
+                String currentDayOfWeek = courseSheet.getRow(row + dayRow).getCell(column + dayColumn).toString();
+                if (currentDayOfWeek != null && !currentDayOfWeek.isEmpty()) {
+                    if (dayOfWeek == null) dayOfWeek = currentDayOfWeek;
+                    else {
+                        week.put(MainActivity.dayOfWeek.indexOf(dayOfWeek), lessons);
+                        lessons = new ArrayList<>();
+                        dayOfWeek = currentDayOfWeek + "";
+                    }
                 }
 
-                week.put(MainActivity.dayOfWeek.indexOf(dayOfWeek), lessons);
+                Lesson lesson = getLesson(courseSheet, row, column);
+                if (lesson != null) lessons.add(lesson);
+
+                row++;
             }
 
-            groupsMap.put(groupName, week);
+            boolean isEmpty = true;
 
-            column += cycleColumnsCount;
+            if (!week.isEmpty()) for (List<Lesson> list: week.values()) if (!list.isEmpty()) isEmpty = false;
+
+            if (!isEmpty) groupsMap.put(groupName, week);
+
+            column++;
+            while (true) {
+                if (courseSheet.getRow(leftRows).getCell(column) != null && !courseSheet.getRow(leftRows).getCell(column).toString().equals("Понедельник")) column++;
+                else break;
+            }
         }
 
         return groupsMap;
@@ -114,7 +132,11 @@ public class SheetsHelper {
             beginTime = dateFormat.format(beginDate);
             endTime = dateFormat.format(endDate);
         } else {
-            String[] time = lessonRow.getCell(column + timeColumn).toString().split(":");
+            String timeCell = lessonRow.getCell(column + timeColumn).toString();
+            if (timeCell.contains(";")) timeCell = timeCell.replace(".", ":");
+            if (timeCell.contains(".")) timeCell = timeCell.replace(".", ":");
+            if (timeCell.contains(",")) timeCell = timeCell.replace(".", ":");
+            String[] time = timeCell.split(":");
             Calendar date = new GregorianCalendar();
             date.set(Calendar.AM_PM, Calendar.AM);
             date.set(Calendar.HOUR, Integer.parseInt(time[0]));
