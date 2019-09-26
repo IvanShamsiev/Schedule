@@ -82,22 +82,21 @@ public class SheetsHelper {
 
             int row = leftRows;
             String dayOfWeek = null;
-            List<Lesson> lessons = new ArrayList<>();
             while (true) {
                 if (courseSheet.getRow(row) == null || courseSheet.getRow(row).getCell(column) == null) break;
 
                 String currentDayOfWeek = courseSheet.getRow(row + dayRow).getCell(column + dayColumn).toString();
                 if (currentDayOfWeek != null && !currentDayOfWeek.isEmpty()) {
                     if (dayOfWeek == null) dayOfWeek = currentDayOfWeek;
-                    else {
-                        week.put(MainActivity.dayOfWeek.indexOf(dayOfWeek), lessons);
-                        lessons = new ArrayList<>();
-                        dayOfWeek = currentDayOfWeek + "";
-                    }
+                    else dayOfWeek = currentDayOfWeek + "";
                 }
 
                 Lesson lesson = getLesson(courseSheet, row, column);
-                if (lesson != null) lessons.add(lesson);
+                if (lesson != null) {
+                    if (week.get(MainActivity.dayOfWeek.indexOf(dayOfWeek)) == null)
+                        week.put(MainActivity.dayOfWeek.indexOf(dayOfWeek), new ArrayList<>());
+                    week.get(MainActivity.dayOfWeek.indexOf(dayOfWeek)).add(lesson);
+                }
 
                 row++;
             }

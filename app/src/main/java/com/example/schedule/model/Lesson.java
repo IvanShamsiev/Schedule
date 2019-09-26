@@ -86,6 +86,12 @@ public class Lesson implements Parcelable {
                 " }";
     }
 
+    /*@NonNull
+    @Override
+    public String toString() {
+        return "L";
+    }*/
+
     // For parcelable
     private Lesson(Parcel source) {
         String[] strings = new String[9];
