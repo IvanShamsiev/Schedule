@@ -76,7 +76,8 @@ public class StartActivity extends AppCompatActivity {
                 Uri fileUri = data.getData();
                 InputStream inputStream = getContentResolver().openInputStream(fileUri);
                 new Thread(() -> {
-                    coursesMap = SheetsHelper.getCoursesMap(inputStream);
+                    try { coursesMap = SheetsHelper.getCoursesMap(inputStream); }
+                    catch (Exception e) { Toast.makeText(this, "Не удалось прочитать таблицу", Toast.LENGTH_SHORT).show();}
                     getBranchHandler.sendEmptyMessage(0);
                 }).start();
 
@@ -116,7 +117,7 @@ public class StartActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onResponse(Call call, Response response) throws IOException {
+        public void onResponse(Call call, Response response) {
             String branchesJson;
             try {branchesJson = response.body().string();}
             catch (IOException | NullPointerException e) {
@@ -140,8 +141,9 @@ public class StartActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onResponse(Call call, Response response) throws IOException {
-            coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream());
+        public void onResponse(Call call, Response response) {
+            try { coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream()); }
+            catch (Exception e) { Toast.makeText(StartActivity.this, "Не удалось прочитать таблицу", Toast.LENGTH_SHORT).show();}
             getBranchHandler.sendEmptyMessage(0);
         }
     };
@@ -149,7 +151,8 @@ public class StartActivity extends AppCompatActivity {
     HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap;
 
     Handler getBranchHandler = new Handler(msg -> {
-        openCoursesDialog(new TreeMap<>(coursesMap));
+        if (coursesMap == null) Toast.makeText(this, "Не удалось прочитать расписание", Toast.LENGTH_SHORT).show();
+        else openCoursesDialog(new TreeMap<>(coursesMap));
         return true;
     });
 
@@ -167,7 +170,6 @@ public class StartActivity extends AppCompatActivity {
                     HashMap<Integer, List<Lesson>> weekMap = new ArrayList<>(groupsMap.values()).get(i);
                     String json = new Gson().toJson(weekMap);
                     json = "{\"week\":" + json + "}";
-                    System.out.println(json);
                     try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
                     catch (FileNotFoundException e) { e.printStackTrace(); }
 

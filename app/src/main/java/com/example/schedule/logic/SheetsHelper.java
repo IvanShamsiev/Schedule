@@ -3,13 +3,13 @@ package com.example.schedule.logic;
 import com.example.schedule.model.Lesson;
 import com.example.schedule.ui.MainActivity;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -52,15 +52,15 @@ public class SheetsHelper {
 
         HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap = new HashMap<>();
 
-        HSSFWorkbook workbook = readWorkbook(inputStream);
+        Workbook workbook = readWorkbook(inputStream);
 
         for (Sheet courseSheet : workbook)
-            coursesMap.put(courseSheet.getSheetName(), getGroupsMap((HSSFSheet) courseSheet));
+            coursesMap.put(courseSheet.getSheetName(), getGroupsMap(courseSheet));
 
         return coursesMap;
     }
 
-    private static HashMap<String, HashMap<Integer, List<Lesson>>> getGroupsMap(HSSFSheet courseSheet) {
+    private static HashMap<String, HashMap<Integer, List<Lesson>>> getGroupsMap(Sheet courseSheet) {
         int column = 0;
 
         HashMap<String, HashMap<Integer, List<Lesson>>> groupsMap = new HashMap<>();
@@ -118,7 +118,7 @@ public class SheetsHelper {
         return groupsMap;
     }
 
-    private static Lesson getLesson(HSSFSheet sheet, int row, int column) {
+    private static Lesson getLesson(Sheet sheet, int row, int column) {
 
         Row lessonRow = sheet.getRow(row);
 
@@ -178,11 +178,8 @@ public class SheetsHelper {
         return new Lesson(beginTime, endTime, even, name, location, type, chair, post, teacher);
     }
 
-    private static HSSFWorkbook readWorkbook(InputStream inputStream) {
-        try {
-            POIFSFileSystem fs = new POIFSFileSystem(inputStream);
-            return new HSSFWorkbook(fs);
-        }
+    private static Workbook readWorkbook(InputStream inputStream) {
+        try { return WorkbookFactory.create(inputStream); }
         catch (Exception e) {
             e.printStackTrace();
             return null;
