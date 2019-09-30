@@ -1,21 +1,17 @@
 package com.example.schedule.ui;
 
-import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -47,7 +43,7 @@ public class PreferencesActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
-        private static final int FILE_PERMISSION_REQUEST_CODE = 1;
+        //private static final int FILE_PERMISSION_REQUEST_CODE = 1;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -79,7 +75,7 @@ public class PreferencesActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Toast.makeText(getContext(), "Не удалось проверить обновление", Toast.LENGTH_SHORT).show();
+                    MainActivity.showToast(getContext(), "Не удалось проверить обновление");
                 }
 
                 @Override
@@ -92,7 +88,7 @@ public class PreferencesActivity extends AppCompatActivity {
                         updCheckHandler.sendEmptyMessage(0);
                     }
                     catch (IOException e) {
-                        Toast.makeText(getContext(), "Не удалось прочитать ответ сервера", Toast.LENGTH_SHORT).show();
+                        MainActivity.showToast(getContext(), "Не удалось прочитать ответ сервера");
                         e.printStackTrace();
                     }
                 }

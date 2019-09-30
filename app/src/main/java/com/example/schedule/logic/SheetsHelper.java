@@ -80,8 +80,6 @@ public class SheetsHelper {
             if (groupCell.getCellType() == CellType.NUMERIC) groupName = "" + (int) groupCell.getNumericCellValue();
             else groupName = groupCell.toString();
 
-            System.out.println(groupName);
-
             int row = leftRows;
             String dayOfWeek = null;
             while (true) {
@@ -181,6 +179,7 @@ public class SheetsHelper {
     }
 
     private static Workbook readWorkbook(InputStream inputStream) {
+
         try { return WorkbookFactory.create(inputStream); }
         catch (Exception e) {
             e.printStackTrace();

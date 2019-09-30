@@ -1,28 +1,19 @@
 package com.example.schedule.ui;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -31,18 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.schedule.BuildConfig;
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -240,6 +228,23 @@ public class MainActivity extends AppCompatActivity {
 
     public static int daysBetween(Date d1, Date d2) {
         return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+
+
+
+
+    private static Handler toastHandler = new Handler(msg -> {
+        Toast.makeText((Context) ((Object[]) msg.obj)[0], (String) ((Object[]) msg.obj)[1], Toast.LENGTH_SHORT).show();
+        return true;
+    });
+
+
+    public static void showToast(Context ctx, String str) {
+
+        Message msg = new Message();
+        msg.obj = new Object[] {ctx, str};
+        toastHandler.sendMessage(msg);
     }
 
 

@@ -4,10 +4,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.example.schedule.ui.MainActivity.scheduleFileName;
+import static com.example.schedule.ui.MainActivity.showToast;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -72,12 +75,12 @@ public class StartActivity extends AppCompatActivity {
                 InputStream inputStream = getContentResolver().openInputStream(fileUri);
                 new Thread(() -> {
                     try { coursesMap = SheetsHelper.getCoursesMap(inputStream); }
-                    catch (Exception e) { Toast.makeText(this, "Не удалось прочитать таблицу", Toast.LENGTH_SHORT).show();}
+                    catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
                     getBranchHandler.sendEmptyMessage(0);
                 }).start();
 
             } catch (Exception e) {
-                Toast.makeText(this, "Не удалось прочитать таблицу", Toast.LENGTH_SHORT).show();
+                showToast(StartActivity.this, "Не удалось прочитать таблицу");
             }
         }
     }
@@ -107,8 +110,7 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            Toast.makeText(StartActivity.this, "Не удалось загрузить список отделений",
-                    Toast.LENGTH_SHORT).show();
+            showToast(StartActivity.this, "Не удалось загрузить список отделений");
         }
 
         @Override
@@ -116,8 +118,7 @@ public class StartActivity extends AppCompatActivity {
             String branchesJson;
             try {branchesJson = response.body().string();}
             catch (IOException | NullPointerException e) {
-                Toast.makeText(StartActivity.this, "Произошла ошибка при чтении списка отделений",
-                        Toast.LENGTH_SHORT).show();
+                showToast(StartActivity.this, "Произошла ошибка при чтении списка отделений");
                 return;
             }
 
@@ -131,14 +132,13 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            Toast.makeText(StartActivity.this, "Не удалось загрузить список групп",
-                    Toast.LENGTH_SHORT).show();
+            showToast(StartActivity.this, "Не удалось загрузить список групп");
         }
 
         @Override
         public void onResponse(Call call, Response response) {
             try { coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream()); }
-            catch (Exception e) { Toast.makeText(StartActivity.this, "Не удалось прочитать таблицу", Toast.LENGTH_SHORT).show();}
+            catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
             getBranchHandler.sendEmptyMessage(0);
         }
     };

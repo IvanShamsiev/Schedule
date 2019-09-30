@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+
+
+-keepnames class ** { *; }
+
+-keep public class org.apache.poi.hssf.** { *; }
+-keep public class com.google.gson.** { *; }
+
+-keep public class com.example.schedule.** { *; }
