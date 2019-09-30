@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.example.schedule.ScheduleApplication.dayOfWeek;
+
 public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDayHolder> {
 
     private boolean isEven;
@@ -40,7 +42,7 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
         for (Lesson l: ScheduleHelper.getSchedule().getWeek().get(position + 1))
             if (isEven == l.getEven().equals("Нижняя")) lessons.add(l);
 
-        WeekDay weekDay = new WeekDay(MainActivity.dayOfWeek.get(position + 1), lessons,
+        WeekDay weekDay = new WeekDay(dayOfWeek.get(position + 1), lessons,
                 ScheduleHelper.isEven(MainActivity.currentDate) == isEven &&
                         MainActivity.currentDate.get(Calendar.DAY_OF_WEEK) - 1 == (position + 1));
 

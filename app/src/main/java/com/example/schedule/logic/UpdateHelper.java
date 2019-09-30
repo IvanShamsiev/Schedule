@@ -1,9 +1,10 @@
 package com.example.schedule.logic;
 
-import com.example.schedule.ui.MainActivity;
-
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
+
+import static com.example.schedule.ScheduleApplication.checkUpdateUrl;
+import static com.example.schedule.ScheduleApplication.url;
 
 public class UpdateHelper {
 
@@ -12,7 +13,7 @@ public class UpdateHelper {
         OkHttpClient client = new OkHttpClient();
 
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(MainActivity.url + MainActivity.checkUpdateUrl)
+                .url(url + checkUpdateUrl)
                 .build();
 
         client.newCall(request).enqueue(callback);

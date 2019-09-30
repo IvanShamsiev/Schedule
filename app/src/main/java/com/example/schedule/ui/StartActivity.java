@@ -4,12 +4,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,7 +32,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.example.schedule.ui.MainActivity.scheduleFileName;
+import static com.example.schedule.ScheduleApplication.scheduleFileName;
 import static com.example.schedule.ui.MainActivity.showToast;
 
 public class StartActivity extends AppCompatActivity {
@@ -62,7 +60,9 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        setResult(RESULT_CANCELED);
+
+        if (ScheduleHelper.getSchedule() != null) setResult(RESULT_OK);
+        else setResult(RESULT_CANCELED);
     }
 
     @Override

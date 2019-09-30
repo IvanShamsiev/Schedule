@@ -1,6 +1,5 @@
 package com.example.schedule.ui;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,11 +24,12 @@ import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
+
+import static com.example.schedule.ScheduleApplication.dayOfWeek;
+import static com.example.schedule.ScheduleApplication.scheduleFileName;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,21 +44,11 @@ public class MainActivity extends AppCompatActivity {
     public static boolean weekEvenStyle; // false: В-Н; true: Ч-Н
     public static boolean showNavigationLayout; // false: hide, true: show
 
-    // Constants
-    public static final String scheduleFileName = "schedule.json";
-    public static final String branchesUrl = "getBranches.php";
-    public static final String checkUpdateUrl = "checkUpdate.php";
-    public static final String updateUrl = "update.php";
-    public static final String url = "https://schedule2171112.000webhostapp.com/";
-    public static final List<String> dayOfWeek = Arrays.asList(
-            "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
-
+    // Request code for StartActivity
     public static final int startActivityRequestCode = 2;
-
 
     // UI
     private ViewPager2 viewPager;
-    private AlertDialog changeScheduleDialog;
     private DatePickerDialog dataChoiceDialog;
 
     // UI for navigation layout
@@ -116,22 +105,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         viewPager.setCurrentItem(DayAdapter.middlePos, false);
-
-
-        // Set dialog for change schedule
-        changeScheduleDialog = new AlertDialog.Builder(this)
-                .setTitle("Введите пароль")
-                .setView(getLayoutInflater().inflate(R.layout.change_schedule_dialog, null))
-                .setPositiveButton("Ок", (dialog, which) -> {
-                    EditText editTextPass = ((AlertDialog) dialog).findViewById(R.id.editTextPass);
-                    String pass = editTextPass.getText().toString();
-                    if (pass.equals("02281488")) {
-                        Intent changeSchedule = new Intent(this, ScheduleChanger.class);
-                        startActivityForResult(changeSchedule, 0);
-                    } else Toast.makeText(this, "Неверный пароль", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Отмена", (dialog, which) -> dialog.cancel())
-                .create();
 
 
         // Set dialog for peek date for schedule
@@ -203,10 +176,6 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(new Intent(this, StartActivity.class), startActivityRequestCode);
             return true;
         });
-        menu.findItem(R.id.changeSchedule).setOnMenuItemClickListener(item -> {
-            changeScheduleDialog.show();
-            return true;
-        });
 
 
         return true;
@@ -234,6 +203,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
+
+
     private static Handler toastHandler = new Handler(msg -> {
         Toast.makeText((Context) ((Object[]) msg.obj)[0], (String) ((Object[]) msg.obj)[1], Toast.LENGTH_SHORT).show();
         return true;
@@ -246,44 +219,5 @@ public class MainActivity extends AppCompatActivity {
         msg.obj = new Object[] {ctx, str};
         toastHandler.sendMessage(msg);
     }
-
-
-
-
-
-
-
-    /*Callback downloadCallback = new Callback() {
-
-        Handler onFailure = new Handler(msg -> {
-            Toast.makeText(MainActivity.this, "Не удалось загрузить расписание",
-                    Toast.LENGTH_SHORT).show();
-            return true;
-        });
-
-        Handler onUpdateSchedule = new Handler(msg -> {
-            updateScheduleState();
-            Toast.makeText(MainActivity.this, "Расписание успешно обновлено!",
-                    Toast.LENGTH_SHORT).show();
-            return true;
-        });
-
-        @Override
-        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-            onFailure.sendEmptyMessage(0);
-        }
-
-        @Override
-        public void onResponse(@NonNull Call call, @NonNull Response response) {
-            String json;
-            try {json = response.body().string();}
-            catch (IOException | NullPointerException e) {e.printStackTrace(); return;}
-
-            try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
-            catch (FileNotFoundException e) { e.printStackTrace(); }
-
-            onUpdateSchedule.sendEmptyMessage(0);
-        }
-    };*/
 
 }

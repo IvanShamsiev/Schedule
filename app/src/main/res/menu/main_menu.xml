@@ -22,7 +22,4 @@
         android:id="@+id/reloadSchedule"
         android:icon="@android:drawable/ic_menu_upload"
         android:title="@string/reloadSchedule"/>
-    <item
-        android:id="@+id/changeSchedule"
-        android:title="@string/changeSchedule"/>
 </menu>

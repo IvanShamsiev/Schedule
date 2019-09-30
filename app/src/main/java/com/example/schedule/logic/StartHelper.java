@@ -3,8 +3,8 @@ package com.example.schedule.logic;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 
-import static com.example.schedule.ui.MainActivity.branchesUrl;
-import static com.example.schedule.ui.MainActivity.url;
+import static com.example.schedule.ScheduleApplication.branchesUrl;
+import static com.example.schedule.ScheduleApplication.url;
 
 public class StartHelper {
 

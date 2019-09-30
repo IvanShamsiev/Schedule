@@ -1,5 +1,6 @@
 package com.example.schedule.logic;
 
+import com.example.schedule.ScheduleApplication;
 import com.example.schedule.model.Lesson;
 import com.example.schedule.ui.MainActivity;
 
@@ -93,9 +94,9 @@ public class SheetsHelper {
 
                 Lesson lesson = getLesson(courseSheet, row, column);
                 if (lesson != null) {
-                    if (week.get(MainActivity.dayOfWeek.indexOf(dayOfWeek)) == null)
-                        week.put(MainActivity.dayOfWeek.indexOf(dayOfWeek), new ArrayList<>());
-                    week.get(MainActivity.dayOfWeek.indexOf(dayOfWeek)).add(lesson);
+                    if (week.get(ScheduleApplication.dayOfWeek.indexOf(dayOfWeek)) == null)
+                        week.put(ScheduleApplication.dayOfWeek.indexOf(dayOfWeek), new ArrayList<>());
+                    week.get(ScheduleApplication.dayOfWeek.indexOf(dayOfWeek)).add(lesson);
                 }
 
                 row++;
