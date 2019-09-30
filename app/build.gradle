@@ -10,6 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true // For vector drawables
+        //multiDexEnabled true // For support 19 version
     }
     buildTypes {
         release {
@@ -17,6 +18,7 @@ android {
             // For reduction apk size
             minifyEnabled true
             shrinkResources true
+
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -45,7 +47,9 @@ dependencies {
     //implementation 'com.squareup.retrofit2:converter-gson:2.6.2'// Подключаем конвертор JSONов
 
     // https://mvnrepository.com/artifact/org.apache.poi/poi
-    implementation 'org.apache.poi:poi:4.0.0' // Для работы с xmlx таблицами
+    implementation 'org.apache.poi:poi:4.0.0' // Для работы с xml таблицами
+    //implementation 'org.apache.poi:poi-ooxml:4.0.0' // Для работы с xmlx таблицами
+    //implementation 'com.android.support:multidex:1.0.3' // Для поддержки больших импортов
 
     implementation 'com.google.code.gson:gson:2.8.5'// Подключаем конвертор JSONов
 

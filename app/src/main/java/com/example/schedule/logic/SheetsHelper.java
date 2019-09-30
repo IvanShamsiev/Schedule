@@ -74,11 +74,13 @@ public class SheetsHelper {
 
             Cell groupCell = courseSheet.getRow(groupRow).getCell(column + groupColumn);
 
-            if (groupCell == null || groupCell.toString().isEmpty()) break;
+            if (groupCell == null || groupCell.toString().trim().isEmpty()) break;
 
             String groupName;
             if (groupCell.getCellType() == CellType.NUMERIC) groupName = "" + (int) groupCell.getNumericCellValue();
             else groupName = groupCell.toString();
+
+            System.out.println(groupName);
 
             int row = leftRows;
             String dayOfWeek = null;
@@ -86,7 +88,7 @@ public class SheetsHelper {
                 if (courseSheet.getRow(row) == null || courseSheet.getRow(row).getCell(column) == null) break;
 
                 String currentDayOfWeek = courseSheet.getRow(row + dayRow).getCell(column + dayColumn).toString();
-                if (currentDayOfWeek != null && !currentDayOfWeek.isEmpty()) {
+                if (currentDayOfWeek != null && !currentDayOfWeek.trim().isEmpty()) {
                     if (dayOfWeek == null) dayOfWeek = currentDayOfWeek;
                     else dayOfWeek = currentDayOfWeek + "";
                 }
@@ -121,7 +123,7 @@ public class SheetsHelper {
 
         Row lessonRow = sheet.getRow(row);
 
-        if (lessonRow.getCell(column + nameColumn) == null || lessonRow.getCell(column + nameColumn).toString().isEmpty()) return null;
+        if (lessonRow.getCell(column + nameColumn) == null || lessonRow.getCell(column + nameColumn).toString().trim().isEmpty()) return null;
 
         String beginTime, endTime;
         if (lessonRow.getCell(column + timeColumn).getCellType() == CellType.NUMERIC) {
@@ -159,13 +161,14 @@ public class SheetsHelper {
         if (lessonRow.getCell(column + locationTwoColumn).getCellType() == CellType.NUMERIC)
             locationTwo = "" + (int) lessonRow.getCell(column + locationTwoColumn).getNumericCellValue();
         else locationTwo = lessonRow.getCell(column + locationTwoColumn).toString();
-        String location = locationOne + (locationTwo.isEmpty() ? "" : (" " + locationTwo));
+        String location = locationOne + (locationTwo.trim().isEmpty() ? "" : (" " + locationTwo));
 
         String type = lessonRow.getCell(column + typeColumn).toString();
         switch (type) {
             case "лек": type = "Лекция"; break;
             case "пр": type = "Практика"; break;
             case "лаб": type = "Лаба"; break;
+            default: if (type.length() >= 2) type = type.substring(0, 1).toUpperCase() + type.substring(1); break;
         }
 
         String chair = lessonRow.getCell(column + chairColumn).toString();

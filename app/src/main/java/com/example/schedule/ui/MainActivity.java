@@ -1,15 +1,28 @@
 package com.example.schedule.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -18,9 +31,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.schedule.BuildConfig;
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -31,7 +46,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Для всех
+    // Для всех fff
 
     // Calendars for navigationTitle and viewPager
     public static Calendar currentDate;
@@ -45,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     // Constants
     public static final String scheduleFileName = "schedule.json";
     public static final String branchesUrl = "getBranches.php";
+    public static final String checkUpdateUrl = "checkUpdate.php";
+    public static final String updateUrl = "update.php";
     public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final List<String> dayOfWeek = Arrays.asList(
             "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
@@ -86,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             ScheduleHelper.loadSchedule(openFileInput(scheduleFileName));
             loadActivity();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             onFileNotAvailable();
         }
     }
@@ -106,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageSelected(position);
                 pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, position - DayAdapter.middlePos);
-                if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
+                if (showNavigationLayout)
+                    navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
                 else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
             }
         });
@@ -144,13 +161,11 @@ public class MainActivity extends AppCompatActivity {
         dataChoiceDialog.setTitle("Выберите дату");
 
 
-
         // Set navigation layout
         ImageButton btnLeft = findViewById(R.id.btnLeft);
         ImageButton btnRight = findViewById(R.id.btnRight);
         btnLeft.setOnClickListener(btn -> viewPager.setCurrentItem(viewPager.getCurrentItem() - 1));
         btnRight.setOnClickListener(btn -> viewPager.setCurrentItem(viewPager.getCurrentItem() + 1));
-
 
 
     }
@@ -204,9 +219,10 @@ public class MainActivity extends AppCompatActivity {
             changeScheduleDialog.show();
             return true;
         });
+
+
         return true;
     }
-
 
     /*private void setAdapter() {
         //dayAdapter.notifyDataSetChanged();

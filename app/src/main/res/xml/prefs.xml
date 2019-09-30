@@ -17,4 +17,8 @@
 
     </PreferenceCategory>
 
+    <Preference
+        android:key="check_update_app_pref"
+        android:title="Проверить обновление приложения" />
+
 </PreferenceScreen>
