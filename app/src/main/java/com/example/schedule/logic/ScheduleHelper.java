@@ -29,8 +29,10 @@ public class ScheduleHelper {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String s;
-        while ((s = br.readLine()) != null) json.append(s).append("\n");
+        while ((s = br.readLine()) != null) json.append(s);
         br.close();
+
+        if (json.toString().isEmpty()) throw new IOException("Пустой файл с расписанием");
 
         setSchedule(json.toString());
     }
