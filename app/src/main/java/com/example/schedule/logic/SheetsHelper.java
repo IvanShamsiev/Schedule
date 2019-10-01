@@ -2,7 +2,6 @@ package com.example.schedule.logic;
 
 import com.example.schedule.ScheduleApplication;
 import com.example.schedule.model.Lesson;
-import com.example.schedule.ui.MainActivity;
 
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -87,7 +86,7 @@ public class SheetsHelper {
                 if (courseSheet.getRow(row) == null || courseSheet.getRow(row).getCell(column) == null) break;
 
                 String currentDayOfWeek = courseSheet.getRow(row + dayRow).getCell(column + dayColumn).toString();
-                if (currentDayOfWeek != null && !currentDayOfWeek.trim().isEmpty()) {
+                if (!currentDayOfWeek.trim().isEmpty()) {
                     if (dayOfWeek == null) dayOfWeek = currentDayOfWeek;
                     else dayOfWeek = currentDayOfWeek + "";
                 }
@@ -156,7 +155,7 @@ public class SheetsHelper {
         String name = lessonRow.getCell(column + nameColumn).toString();
 
         String locationOne = lessonRow.getCell(column + locationOneColumn).toString();
-        String locationTwo = "";
+        String locationTwo;
         if (lessonRow.getCell(column + locationTwoColumn).getCellType() == CellType.NUMERIC)
             locationTwo = "" + (int) lessonRow.getCell(column + locationTwoColumn).getNumericCellValue();
         else locationTwo = lessonRow.getCell(column + locationTwoColumn).toString();

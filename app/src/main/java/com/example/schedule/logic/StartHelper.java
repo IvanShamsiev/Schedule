@@ -19,7 +19,6 @@ public class StartHelper {
     }
 
     public static void getBranch(String branchUrl, Callback callback) {
-
         OkHttpClient client = new OkHttpClient();
 
         okhttp3.Request request = new okhttp3.Request.Builder()

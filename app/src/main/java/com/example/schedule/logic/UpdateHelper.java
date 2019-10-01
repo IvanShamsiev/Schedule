@@ -22,7 +22,6 @@ import static com.example.schedule.ScheduleApplication.url;
 public class UpdateHelper {
 
     public static void checkUpdate(Callback callback) {
-
         OkHttpClient client = new OkHttpClient();
 
         okhttp3.Request request = new okhttp3.Request.Builder()

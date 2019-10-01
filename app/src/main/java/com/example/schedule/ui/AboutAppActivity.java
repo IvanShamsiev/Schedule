@@ -71,14 +71,15 @@ public class AboutAppActivity extends AppCompatActivity {
                 super(itemView);
 
                 textView = itemView.findViewById(R.id.textView);
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
             }
 
             void bind(int pos) {
                 textView.setText(Html.fromHtml(lines.get(pos)));
-                textView.setMovementMethod(LinkMovementMethod.getInstance());
             }
         }
     }
+
 
     public static Intent newIntent(Context ctx) {
         return new Intent(ctx, AboutAppActivity.class);

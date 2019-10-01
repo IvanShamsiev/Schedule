@@ -18,8 +18,8 @@ import com.example.schedule.logic.SheetsHelper;
 import com.example.schedule.logic.StartHelper;
 import com.example.schedule.model.Lesson;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -164,10 +164,11 @@ public class StartActivity extends AppCompatActivity {
         new AlertDialog.Builder(StartActivity.this)
                 .setItems(groupsMap.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
                     HashMap<Integer, List<Lesson>> weekMap = new ArrayList<>(groupsMap.values()).get(i);
-                    String json = new Gson().toJson(weekMap);
-                    json = "{\"week\":" + json + "}";
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.add("week", new Gson().toJsonTree(weekMap));
+                    String json = jsonObject.toString();
                     try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
-                    catch (FileNotFoundException e) { e.printStackTrace(); }
+                    catch (IOException e) { e.printStackTrace(); }
 
                     onSuccess();
                 })

@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
-import static com.example.schedule.ScheduleApplication.dayOfWeek;
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
 
 public class MainActivity extends AppCompatActivity {
@@ -93,9 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageSelected(position);
                 pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, position - DayAdapter.middlePos);
-                if (showNavigationLayout)
-                    navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
-                else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
+
+                String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+                day = day.substring(0, 1).toUpperCase() + day.substring(1);
+                if (showNavigationLayout) navigationTitle.setText(day);
+                else setTitle(day);
             }
         });
         viewPager.setCurrentItem(DayAdapter.middlePos, false);
@@ -132,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
         showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
         navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
 
-        String day = dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1);
+        String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+        day = day.substring(0, 1).toUpperCase() + day.substring(1);
         if (showNavigationLayout) {
             setTitle(R.string.app_name);
             navigationTitle.setText(day);
