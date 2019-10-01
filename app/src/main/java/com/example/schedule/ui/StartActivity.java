@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -174,5 +175,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
+    public static Intent newIntent(Context ctx) {
+        return new Intent(ctx, StartActivity.class);
+    }
 
 }

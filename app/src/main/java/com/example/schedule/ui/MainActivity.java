@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onFileNotAvailable() {
-        startActivityForResult(new Intent(this, StartActivity.class), startActivityRequestCode);
+        startActivityForResult(StartActivity.newIntent(this), startActivityRequestCode);
     }
 
     private void loadActivity() {
@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         btnLeft.setOnClickListener(btn -> viewPager.setCurrentItem(viewPager.getCurrentItem() - 1));
         btnRight.setOnClickListener(btn -> viewPager.setCurrentItem(viewPager.getCurrentItem() + 1));
 
-
     }
 
     @Override
@@ -139,14 +138,13 @@ public class MainActivity extends AppCompatActivity {
             navigationTitle.setText(day);
         } else setTitle(day);
 
-
+        if (viewPager != null && viewPager.getAdapter() != null) viewPager.getAdapter().notifyDataSetChanged();
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //if (requestCode == 0 && resultCode == 1) ScheduleHelper.downloadSchedule(downloadCallback);
         if (requestCode == startActivityRequestCode) {
             if (resultCode == RESULT_OK) loadSchedule();
             if (resultCode == RESULT_CANCELED) finish();
@@ -166,8 +164,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         menu.findItem(R.id.reloadSchedule).setOnMenuItemClickListener(item -> {
-            //ScheduleHelper.downloadSchedule(downloadCallback);
-            startActivityForResult(new Intent(this, StartActivity.class), startActivityRequestCode);
+            startActivityForResult(StartActivity.newIntent(this), startActivityRequestCode);
             return true;
         });
 
