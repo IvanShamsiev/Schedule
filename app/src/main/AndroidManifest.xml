@@ -2,11 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.schedule">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
 
     <application
         android:name=".ScheduleApplication"
@@ -16,8 +14,7 @@
         android:roundIcon="@drawable/kit"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.StartActivity">
-        </activity>
+        <activity android:name=".ui.AboutAppActivity"></activity>
         <activity
             android:name=".ui.AboutLessonActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -32,7 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.StartActivity" />
         <activity android:name=".ui.PreferencesActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -40,7 +39,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths_app" />
+                android:resource="@xml/provider_paths" />
         </provider>
     </application>
 

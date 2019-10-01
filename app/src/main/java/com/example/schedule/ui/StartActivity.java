@@ -33,7 +33,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
-import static com.example.schedule.ui.MainActivity.showToast;
+import static com.example.schedule.ScheduleApplication.showToast;
 
 public class StartActivity extends AppCompatActivity {
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="Визуальное оформление"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/week_style_entries"
+            android:entryValues="@array/week_style_values"
+            android:key="week_even_style"
+            android:title="Стиль чётности недели"
+            app:iconSpaceReserved="false"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="show_navigation_layout"
+            android:title="Показывать меню навигации"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title=""
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="about_app_pref"
+            android:title="О приложении"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="check_update_app_pref"
+            android:title="Проверить обновление приложения"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

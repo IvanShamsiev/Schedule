@@ -1,7 +1,6 @@
 package com.example.schedule.ui;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -11,14 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
@@ -32,8 +28,6 @@ import static com.example.schedule.ScheduleApplication.dayOfWeek;
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
 
 public class MainActivity extends AppCompatActivity {
-
-    // Для всех fff
 
     // Calendars for navigationTitle and viewPager
     public static Calendar currentDate;
@@ -60,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Ser prefs
+        // Ser preferences
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Set dates
@@ -181,43 +175,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /*private void setAdapter() {
-        //dayAdapter.notifyDataSetChanged();
 
 
-        viewPager.setAdapter(new DayAdapter());
-        int leftDays = daysBetween(pageDate.getTime(), currentDate.getTime());
-        int currentStartPage = DayAdapter.middlePos - leftDays;
-        viewPager.setCurrentItem(currentStartPage, false);
-
-
-        if (showNavigationLayout) navigationTitle.setText(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
-        else setTitle(dayOfWeek.get(pageDate.get(Calendar.DAY_OF_WEEK) - 1));
-    }*/
 
     public static int daysBetween(Date d1, Date d2) {
         return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
-    }
-
-
-
-
-
-
-
-
-
-    private static Handler toastHandler = new Handler(msg -> {
-        Toast.makeText((Context) ((Object[]) msg.obj)[0], (String) ((Object[]) msg.obj)[1], Toast.LENGTH_SHORT).show();
-        return true;
-    });
-
-
-    public static void showToast(Context ctx, String str) {
-
-        Message msg = new Message();
-        msg.obj = new Object[] {ctx, str};
-        toastHandler.sendMessage(msg);
     }
 
 }
