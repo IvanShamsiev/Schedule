@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'// Подключаем конвертор JSONов
 
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.2.0' // OkHttp - для работы с сервером
+    implementation 'com.squareup.okhttp3:okhttp:3.12.6' // OkHttp - для работы с сервером
 
     implementation "androidx.viewpager2:viewpager2:1.0.0-beta04" // Новый ViewPager
 }

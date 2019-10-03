@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
 import java.io.FileInputStream;
@@ -51,6 +52,24 @@ public class ScheduleApplication extends Application {
             e.printStackTrace();
         }
 
+    }
+
+
+
+    static AlertDialog loadDialog;
+
+    public static void createLoadDialog(Context context) {
+        loadDialog = new AlertDialog.Builder(context)
+                .setView(R.layout.dialog_load)
+                .create();
+    }
+
+    public static void showLoadDialog() {
+        if (loadDialog != null) loadDialog.show();
+    }
+
+    public static void closeLoadDialog() {
+        if (loadDialog != null) loadDialog.cancel();
     }
 
 

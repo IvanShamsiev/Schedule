@@ -18,13 +18,15 @@ import com.example.schedule.ScheduleApplication;
 import com.example.schedule.logic.UpdateHelper;
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.example.schedule.ScheduleApplication.closeLoadDialog;
+import static com.example.schedule.ScheduleApplication.createLoadDialog;
+import static com.example.schedule.ScheduleApplication.showLoadDialog;
 
 public class PreferencesActivity extends AppCompatActivity {
     @Override
@@ -32,6 +34,8 @@ public class PreferencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setTitle("Настройки");
+
+        createLoadDialog(this);
 
         // Display the fragment as the main content.
         getSupportFragmentManager().beginTransaction()
@@ -49,6 +53,7 @@ public class PreferencesActivity extends AppCompatActivity {
 
             Preference updateAppPref = findPreference("check_update_app_pref");
             updateAppPref.setOnPreferenceClickListener(pref -> {
+                showLoadDialog();
                 UpdateHelper.checkUpdate(checkUpdateCallback);
                 return true;
             });
@@ -77,12 +82,14 @@ public class PreferencesActivity extends AppCompatActivity {
                 });
 
                 @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                public void onFailure(Call call, IOException e) {
+                    closeLoadDialog();
                     ScheduleApplication.showToast(getContext(), "Не удалось проверить обновление");
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) {
+                public void onResponse(Call call, Response response) {
+                    closeLoadDialog();
                     try {
                         String str = response.body().string();
                         String[] fromJson = new Gson().fromJson(str, String[].class);

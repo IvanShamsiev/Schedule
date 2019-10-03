@@ -33,7 +33,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.schedule.ScheduleApplication.closeLoadDialog;
+import static com.example.schedule.ScheduleApplication.createLoadDialog;
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
+import static com.example.schedule.ScheduleApplication.showLoadDialog;
 import static com.example.schedule.ScheduleApplication.showToast;
 
 public class StartActivity extends AppCompatActivity {
@@ -45,8 +48,13 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        createLoadDialog(this);
+
         Button btnDownload = findViewById(R.id.btnDownload);
-        btnDownload.setOnClickListener(btn -> StartHelper.getBranches(getBranchesCallback));
+        btnDownload.setOnClickListener(btn -> {
+            showLoadDialog();
+            StartHelper.getBranches(getBranchesCallback);
+        });
 
         Button btnChoose = findViewById(R.id.btnChoose);
         btnChoose.setOnClickListener(btn -> {
@@ -103,7 +111,10 @@ public class StartActivity extends AppCompatActivity {
             new AlertDialog.Builder(StartActivity.this)
                     .setItems(map.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
                         Object value = new ArrayList<>(map.values()).get(i);
-                        if (value instanceof String) StartHelper.getBranch((String) value, getBranchCallback);
+                        if (value instanceof String) {
+                            showLoadDialog();
+                            StartHelper.getBranch((String) value, getBranchCallback);
+                        }
                         else showDialog(new LinkedHashMap<>((Map) value));
                     })
                     .show();
@@ -111,11 +122,13 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, IOException e) {
+            closeLoadDialog();
             showToast(StartActivity.this, "Не удалось загрузить список отделений");
         }
 
         @Override
         public void onResponse(Call call, Response response) {
+            closeLoadDialog();
             String branchesJson;
             try {branchesJson = response.body().string();}
             catch (IOException | NullPointerException e) {
@@ -133,15 +146,18 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, IOException e) {
+            closeLoadDialog();
             showToast(StartActivity.this, "Не удалось загрузить список групп");
         }
 
         @Override
         public void onResponse(Call call, Response response) {
             try { coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream()); }
-            catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
+            catch (Exception e) { closeLoadDialog(); showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
+            closeLoadDialog();
             getBranchHandler.sendEmptyMessage(0);
         }
+
     };
 
     HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap;

@@ -61,8 +61,6 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
     }
 
 
-
-
     class WeekDayHolder extends RecyclerView.ViewHolder {
 
         TextView twDayOfWeek;
@@ -79,8 +77,6 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
 
             twDayOfWeek.setText(weekDay.getDayOfWeek());
 
-
-
             if (weekDay.isToday())
                 twDayOfWeek.setTextColor(itemView.getResources().getColor(R.color.colorAccent));
             else
@@ -95,8 +91,6 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
             }
         }
     }
-
-
 
 
     private class WeekDay {

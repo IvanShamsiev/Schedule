@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 pageDate.add(Calendar.DATE, position - DayAdapter.middlePos);
 
                 String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-                day = day.substring(0, 1).toUpperCase() + day.substring(1);
+                if (day.length() > 0) day = day.substring(0, 1).toUpperCase() + day.substring(1);
                 if (showNavigationLayout) navigationTitle.setText(day);
                 else setTitle(day);
             }
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
 
         String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-        day = day.substring(0, 1).toUpperCase() + day.substring(1);
+        if (day.length() > 0) day = day.substring(0, 1).toUpperCase() + day.substring(1);
         if (showNavigationLayout) {
             setTitle(R.string.app_name);
             navigationTitle.setText(day);
