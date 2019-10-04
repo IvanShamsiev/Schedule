@@ -6,8 +6,8 @@ android {
         applicationId "com.example.schedule"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true // For vector drawables
         //multiDexEnabled true // For support 19 version

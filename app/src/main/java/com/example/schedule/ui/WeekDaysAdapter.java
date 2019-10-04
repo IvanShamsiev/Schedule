@@ -39,8 +39,11 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
     public void onBindViewHolder(@NonNull WeekDayHolder holder, int position) {
 
         List<Lesson> lessons = new ArrayList<>();
-        for (Lesson l: ScheduleHelper.getSchedule().getWeek().get(position + 1))
-            if (isEven == l.getEven().equals("Нижняя")) lessons.add(l);
+        List<Lesson> day = ScheduleHelper.getSchedule().getWeek().get(position + 1);
+
+        if (day != null)
+            for (Lesson l: day)
+                if (isEven == l.getEven().equals("Нижняя")) lessons.add(l);
 
         WeekDay weekDay = new WeekDay(dayOfWeek.get(position + 1), lessons,
                 ScheduleHelper.isEven(MainActivity.currentDate) == isEven &&
