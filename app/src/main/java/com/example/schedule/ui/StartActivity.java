@@ -33,26 +33,25 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.example.schedule.ScheduleApplication.closeLoadDialog;
-import static com.example.schedule.ScheduleApplication.createLoadDialog;
-import static com.example.schedule.ScheduleApplication.scheduleFileName;
-import static com.example.schedule.ScheduleApplication.showLoadDialog;
 import static com.example.schedule.ScheduleApplication.showToast;
+import static com.example.schedule.ScheduleApplication.scheduleFileName;
 
 public class StartActivity extends AppCompatActivity {
 
     private static final int CHOSE_FILE_CODE = 1;
+
+    private LoadDialog loadDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        createLoadDialog(this);
+        loadDialog = new LoadDialog(getSupportFragmentManager());
 
         Button btnDownload = findViewById(R.id.btnDownload);
         btnDownload.setOnClickListener(btn -> {
-            showLoadDialog();
+            loadDialog.show("Загрузка списка групп");
             StartHelper.getBranches(getBranchesCallback);
         });
 
@@ -83,8 +82,10 @@ public class StartActivity extends AppCompatActivity {
                 Uri fileUri = data.getData();
                 InputStream inputStream = getContentResolver().openInputStream(fileUri);
                 new Thread(() -> {
+                    loadDialog.show("Чтение таблицы");
                     try { coursesMap = SheetsHelper.getCoursesMap(inputStream); }
                     catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
+                    finally { loadDialog.close(); }
                     getBranchHandler.sendEmptyMessage(0);
                 }).start();
 
@@ -112,7 +113,7 @@ public class StartActivity extends AppCompatActivity {
                     .setItems(map.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
                         Object value = new ArrayList<>(map.values()).get(i);
                         if (value instanceof String) {
-                            showLoadDialog();
+                            loadDialog.show("Загрузка таблицы");
                             StartHelper.getBranch((String) value, getBranchCallback);
                         }
                         else showDialog(new LinkedHashMap<>((Map) value));
@@ -122,13 +123,13 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            closeLoadDialog();
+            loadDialog.close();
             showToast(StartActivity.this, "Не удалось загрузить список отделений");
         }
 
         @Override
         public void onResponse(Call call, Response response) {
-            closeLoadDialog();
+            loadDialog.close();
             String branchesJson;
             try {branchesJson = response.body().string();}
             catch (IOException | NullPointerException e) {
@@ -146,15 +147,16 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            closeLoadDialog();
+            loadDialog.close();
             showToast(StartActivity.this, "Не удалось загрузить список групп");
         }
 
         @Override
         public void onResponse(Call call, Response response) {
+            loadDialog.changeText("Чтение таблицы");
             try { coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream()); }
-            catch (Exception e) { closeLoadDialog(); showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
-            closeLoadDialog();
+            catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
+            finally { loadDialog.close(); }
             getBranchHandler.sendEmptyMessage(0);
         }
 
@@ -190,6 +192,7 @@ public class StartActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
 
 
     public static Intent newIntent(Context ctx) {

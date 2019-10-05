@@ -6,8 +6,8 @@ android {
         applicationId "com.example.schedule"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true // For vector drawables
         //multiDexEnabled true // For support 19 version
@@ -51,11 +51,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    //implementation 'com.squareup.retrofit2:converter-gson:2.6.2'// Подключаем конвертор JSONов
-
     // https://mvnrepository.com/artifact/org.apache.poi/poi
-    implementation 'org.apache.poi:poi:4.0.0' // Для работы с xml таблицами
-    //implementation 'org.apache.poi:poi-ooxml:4.0.0' // Для работы с xmlx таблицами
+    implementation 'org.apache.poi:poi:4.0.0' // Для работы с xls таблицами
+    //implementation 'org.apache.poi:poi-ooxml:4.0.0' // Для работы с xlsx таблицами
+
     //implementation 'com.android.support:multidex:1.0.3' // Для поддержки больших импортов
 
     implementation 'com.google.code.gson:gson:2.8.5'// Подключаем конвертор JSONов

@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:name=".ScheduleApplication"
+        android:name="com.schedule.com.example.schedule.ScheduleApplication"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:roundIcon="@drawable/icon_round"
@@ -15,12 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.AboutLessonActivity"
+            android:name="com.example.schedule.ui.AboutLessonActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".ui.FullScheduleActivity"
+            android:name="com.example.schedule.ui.FullScheduleActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.MainActivity">
+        <activity android:name="com.example.schedule.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -28,9 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.StartActivity" />
-        <activity android:name=".ui.PreferencesActivity" />
-        <activity android:name=".ui.AboutAppActivity" />
+        <activity android:name="com.example.schedule.ui.StartActivity" />
+        <activity android:name="com.example.schedule.ui.PreferencesActivity" />
+        <activity android:name="com.example.schedule.ui.AboutAppActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

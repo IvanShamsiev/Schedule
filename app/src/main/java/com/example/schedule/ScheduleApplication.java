@@ -10,8 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,6 +32,11 @@ public class ScheduleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        checkScheduleVersion();
+    }
+
+
+    private void checkScheduleVersion() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int version = sharedPreferences.getInt(SCHEDULE_VERSION_PREF, -1);
         if (version == CURRENT_SCHEDULE_VERSION) return;
@@ -51,28 +54,7 @@ public class ScheduleApplication extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
-    static AlertDialog loadDialog;
-
-    public static void createLoadDialog(Context context) {
-        loadDialog = new AlertDialog.Builder(context)
-                .setView(R.layout.dialog_load)
-                .create();
-    }
-
-    public static void showLoadDialog() {
-        if (loadDialog != null) loadDialog.show();
-    }
-
-    public static void closeLoadDialog() {
-        if (loadDialog != null) loadDialog.cancel();
-    }
-
-
 
 
 
@@ -83,9 +65,10 @@ public class ScheduleApplication extends Application {
     });
 
     public static void showToast(Context ctx, String str) {
-
         Message msg = new Message();
         msg.obj = new Object[] {ctx, str};
         toastHandler.sendMessage(msg);
     }
+
+
 }
