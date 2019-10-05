@@ -1,4 +1,4 @@
-package com.example.schedule.ui;
+package com.example.schedule.util;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.model.Lesson;
+import com.example.schedule.ui.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;

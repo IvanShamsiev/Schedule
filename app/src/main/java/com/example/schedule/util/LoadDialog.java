@@ -1,4 +1,4 @@
-package com.example.schedule.ui;
+package com.example.schedule.util;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

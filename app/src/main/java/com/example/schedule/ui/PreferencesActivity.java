@@ -13,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.schedule.BuildConfig;
 import com.example.schedule.R;
 import com.example.schedule.logic.UpdateHelper;
+import com.example.schedule.util.LoadDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
+import com.example.schedule.util.DayAdapter;
 
 import java.io.IOException;
 import java.util.Calendar;

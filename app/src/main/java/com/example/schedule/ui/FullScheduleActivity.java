@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.model.Schedule;
+import com.example.schedule.util.WeekDaysAdapter;
 
 public class FullScheduleActivity extends AppCompatActivity {
 

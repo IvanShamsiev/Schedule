@@ -1,4 +1,4 @@
-package com.example.schedule.ui;
+package com.example.schedule.util;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.schedule.R;
 import com.example.schedule.model.Lesson;
+import com.example.schedule.ui.AboutLessonActivity;
 
 import java.util.List;
 

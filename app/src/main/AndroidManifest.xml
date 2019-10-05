@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:name="com.schedule.com.example.schedule.ScheduleApplication"
+        android:name="com.example.schedule.ScheduleApplication"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:roundIcon="@drawable/icon_round"
