@@ -63,4 +63,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.6' // OkHttp - для работы с сервером
 
     implementation "androidx.viewpager2:viewpager2:1.0.0-beta04" // Новый ViewPager
+
+
 }

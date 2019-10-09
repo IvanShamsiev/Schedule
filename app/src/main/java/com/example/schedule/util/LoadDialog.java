@@ -1,6 +1,8 @@
 package com.example.schedule.util;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +31,16 @@ public class LoadDialog {
         loadDialog.show(fragmentManager, "loadDialog");
     }
 
-    public void changeText(String text) {
+    private Handler changeHandler = new Handler(msg -> {
         if (loadDialog.getDialog() != null)
-            ((TextView) loadDialog.getDialog().findViewById(R.id.textView)).setText(text);
+            ((TextView) loadDialog.getDialog().findViewById(R.id.textView)).setText((String) msg.obj);
+        return true;
+    });
+
+    public void changeText(String text) {
+        /*if (loadDialog.getDialog() != null)
+            ((TextView) loadDialog.getDialog().findViewById(R.id.textView)).setText(text);*/
+        changeHandler.sendMessage(changeHandler.obtainMessage(0, text));
     }
 
     public void close() {
