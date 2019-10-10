@@ -161,8 +161,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.typeWeeks).setIntent(
                 new Intent(this, FullScheduleActivity.class));
-        menu.findItem(R.id.preferences).setIntent(
-                new Intent(this, PreferencesActivity.class));
+        menu.findItem(R.id.preferences).setIntent(PreferencesActivity.newIntent(this));
         menu.findItem(R.id.calendar).setOnMenuItemClickListener(item -> {
             dataChoiceDialog.show();
             return true;

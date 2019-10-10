@@ -15,7 +15,7 @@
     <string name="location">Аудитория</string>
     <string name="type">Тип пары</string>
 
-    <string name="vk">&lt;a href="https://vk.com/IvanShamsiev">vk.com/IvanShamsiev&lt;/a></string>
+    <string name="vk">&lt;a href="https://vk.com/kpfu_schedule">vk.com/kpfu_schedule&lt;/a></string>
 
     <string-array name="week_style_entries">
         <item>Верхняя - Нижняя</item>

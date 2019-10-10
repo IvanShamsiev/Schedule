@@ -34,6 +34,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.schedule.ScheduleApplication.serverApp;
+import static com.example.schedule.ScheduleApplication.serverKpfu;
 import static com.example.schedule.ScheduleApplication.showToast;
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
 
@@ -53,10 +55,10 @@ public class StartActivity extends AppCompatActivity {
         Button btnDownload = findViewById(R.id.btnDownload);
         btnDownload.setOnClickListener(btn -> {
             loadDialog.show("Загрузка списка групп");
-            StartHelper.getBranches(getBranchesCallback);
+            StartHelper.getBranches(getBranchesCallback, serverKpfu);
         });
 
-        Button btnChoose = findViewById(R.id.btnChoose);
+        Button btnChoose = findViewById(R.id.btnChooseFromFile);
         btnChoose.setOnClickListener(btn -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
@@ -68,6 +70,15 @@ public class StartActivity extends AppCompatActivity {
                 Toast.makeText(this, "Серьёзно? Установи файловый менеджер", Toast.LENGTH_SHORT).show();
             }
         });
+
+        Button btnDownloadFromAppServer = findViewById(R.id.btnDownloadFromAppServer);
+        btnDownloadFromAppServer.setOnClickListener(btn -> {
+            loadDialog.show("Загрузка списка групп");
+            StartHelper.getBranches(getBranchesCallback, serverApp);
+        });
+
+        Button btnSettings = findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(btn -> startActivity(PreferencesActivity.newIntent(this)));
 
 
         if (ScheduleHelper.getSchedule() != null) setResult(RESULT_OK);

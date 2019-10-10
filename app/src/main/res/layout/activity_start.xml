@@ -8,28 +8,49 @@
     tools:context="com.example.schedule.ui.StartActivity">
 
 
+    <Button
+        android:id="@+id/btnDownload"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Скачать расписание"
+        android:textSize="12pt"
+        android:layout_marginBottom="176dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnDownload">
 
         <Button
-            android:id="@+id/btnDownload"
+            android:id="@+id/btnChooseFromFile"
+            style="@style/AppTheme.StartButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Скачать расписание с сервера" />
-
-        <Button
-            android:id="@+id/btnChoose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="Выбрать таблицу из файловой системы" />
+
+        <Button
+            android:id="@+id/btnDownloadFromAppServer"
+            style="@style/AppTheme.StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Скачать расписание с сервера приложения" />
+
+        <Button
+            android:id="@+id/btnSettings"
+            style="@style/AppTheme.StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Открыть настройки приложения"  />
 
     </LinearLayout>
 

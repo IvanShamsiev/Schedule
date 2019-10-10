@@ -42,7 +42,7 @@ public class AboutAppActivity extends AppCompatActivity {
             lines = Arrays.asList(
                     "Название приложения: " + getString(R.string.app_name),
                     "Версия приложения: " + BuildConfig.VERSION_NAME,
-                    "ВК для связи: " + getString(R.string.vk)
+                    "Наша группа в ВК: " + getString(R.string.vk)
             );
         }
 

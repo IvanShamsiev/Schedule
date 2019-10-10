@@ -1,5 +1,7 @@
 package com.example.schedule.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
@@ -118,5 +120,9 @@ public class PreferencesActivity extends AppCompatActivity {
                     .setNegativeButton("Отмена", null)
                     .show();
         }
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, PreferencesActivity.class);
     }
 }

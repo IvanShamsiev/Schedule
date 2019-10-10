@@ -8,11 +8,11 @@ import static com.example.schedule.ScheduleApplication.url;
 
 public class StartHelper {
 
-    public static void getBranches(Callback callback) {
+    public static void getBranches(Callback callback, String server) {
         OkHttpClient client = new OkHttpClient();
 
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url + branchesUrl)
+                .url(url + branchesUrl + "?server=" + server)
                 .build();
 
         client.newCall(request).enqueue(callback);
