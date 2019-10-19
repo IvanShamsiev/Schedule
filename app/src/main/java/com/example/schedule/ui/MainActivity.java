@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import static com.example.schedule.ScheduleApplication.currentTheme;
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTheme(currentTheme);
         setContentView(R.layout.activity_main);
 
         // Ser preferences
@@ -62,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
         currentDate = new GregorianCalendar();
         pageDate = new GregorianCalendar();
 
+
         // Set UI
         viewPager = findViewById(R.id.viewPager);
         navigationLayout = findViewById(R.id.navigationLayout);
         navigationTitle = findViewById(R.id.twTitle);
-
 
         loadSchedule();
     }

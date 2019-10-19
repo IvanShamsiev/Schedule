@@ -16,6 +16,11 @@ import android.widget.TextView;
 import com.example.schedule.R;
 import com.example.schedule.model.Lesson;
 
+import static com.example.schedule.ScheduleApplication.COLOR_ACCENT;
+import static com.example.schedule.ScheduleApplication.COLOR_PRIMARY;
+import static com.example.schedule.ScheduleApplication.COLOR_SECONDARY;
+import static com.example.schedule.ScheduleApplication.currentTheme;
+
 public class AboutLessonActivity extends AppCompatActivity {
 
     Lesson lesson;
@@ -23,12 +28,26 @@ public class AboutLessonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int theme = R.style.AppTheme_NoActionBar;
+        switch(currentTheme) {
+            case R.style.AppTheme_Dark:
+                theme = R.style.AppTheme_Dark_NoActionBar;
+                break;
+            case R.style.AppTheme_Light:
+                theme = R.style.AppTheme_Light_NoActionBar;
+                break;
+        }
+
+        setTheme(theme);
         setContentView(R.layout.activity_about_lesson);
 
         setTitle("О предмете");
 
         // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(getResources().getColor(COLOR_PRIMARY));
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -48,8 +67,8 @@ public class AboutLessonActivity extends AppCompatActivity {
         @Override
         public LessonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_about_lesson, parent, false);
-            LessonViewHolder lessonViewHolder = new LessonViewHolder(view);
-            return lessonViewHolder;
+
+            return new LessonViewHolder(view);
         }
 
         @Override
@@ -71,6 +90,9 @@ public class AboutLessonActivity extends AppCompatActivity {
 
                 twName = itemView.findViewById(R.id.twName);
                 twValue = itemView.findViewById(R.id.twValue);
+
+                twName.setTextColor(itemView.getContext().getResources().getColor(COLOR_SECONDARY));
+                twValue.setTextColor(itemView.getContext().getResources().getColor(COLOR_ACCENT));
             }
 
             void bind(int position) {

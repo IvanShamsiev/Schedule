@@ -7,13 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.schedule.ui.StartActivity">
 
-
     <Button
         android:id="@+id/btnDownload"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Скачать расписание"
+        android:text="Выбрать группу"
         android:textSize="12pt"
         android:layout_marginBottom="176dp"
         app:layout_constraintBottom_toBottomOf="parent"

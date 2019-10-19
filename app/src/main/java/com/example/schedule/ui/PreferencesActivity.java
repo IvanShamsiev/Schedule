@@ -3,28 +3,17 @@ package com.example.schedule.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.example.schedule.BuildConfig;
 import com.example.schedule.R;
 import com.example.schedule.logic.UpdateHelper;
 import com.example.schedule.util.LoadDialog;
-import com.google.gson.Gson;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-import static com.example.schedule.ScheduleApplication.showToast;
+import static com.example.schedule.ScheduleApplication.currentTheme;
 
 public class PreferencesActivity extends AppCompatActivity {
 
@@ -32,6 +21,7 @@ public class PreferencesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTheme(currentTheme);
         setTitle("Настройки");
 
         // Display the fragment as the main content.
@@ -57,6 +47,12 @@ public class PreferencesActivity extends AppCompatActivity {
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preferences);
 
+            /*SwitchPreference themePref = findPreference("theme_pref");
+            themePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                Toast.makeText(getContext(), "Перезапустите приложения для применения темы", Toast.LENGTH_SHORT).show();
+                return true;
+            });*/
+
             Preference aboutAppPref = findPreference("about_app_pref");
             aboutAppPref.setOnPreferenceClickListener(preference -> {
                 startActivity(AboutAppActivity.newIntent(getContext()));
@@ -65,60 +61,11 @@ public class PreferencesActivity extends AppCompatActivity {
 
             Preference updateAppPref = findPreference("check_update_app_pref");
             updateAppPref.setOnPreferenceClickListener(pref -> {
-                loadDialog.show("Проверка обновлений");
-                UpdateHelper.checkUpdate(checkUpdateCallback);
+                UpdateHelper updateHelper = new UpdateHelper(getContext(), getFragmentManager());
+                updateHelper.checkUpdate();
                 return true;
             });
 
-        }
-
-        Callback checkUpdateCallback = new Callback() {
-
-                String newVersion;
-                String newVersionUrl;
-
-                Handler updCheckHandler = new Handler(msg -> {
-                    if (newVersion.equals(BuildConfig.VERSION_NAME)) {
-                        Toast.makeText(getContext(), "У вас установлена последняя версия приложения",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                    openUpdateDialog(newVersion, newVersionUrl);
-                    return true;
-                });
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    loadDialog.close();
-                    showToast(getContext(), "Не удалось проверить обновление");
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) {
-                    loadDialog.close();
-                    try {
-                        String str = response.body().string();
-                        String[] fromJson = new Gson().fromJson(str, String[].class);
-                        newVersion = fromJson[0];
-                        newVersionUrl = fromJson[1];
-                        updCheckHandler.sendEmptyMessage(0);
-                    }
-                    catch (IOException e) {
-                        showToast(getContext(), "Не удалось прочитать ответ сервера");
-                        e.printStackTrace();
-                    }
-                }
-        };
-
-        private void openUpdateDialog(String newVersion, String newVersionUrl) {
-            new AlertDialog.Builder(getContext())
-                    .setMessage("Текущая версия: " + BuildConfig.VERSION_NAME + "\n" + "Новая версия: " + newVersion)
-                    .setPositiveButton("Обновить", (dialogInterface, i) -> {
-                        UpdateHelper.update(getContext(), newVersionUrl);
-                        Toast.makeText(getContext(), "Скачивание обновления", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("Отмена", null)
-                    .show();
         }
     }
 

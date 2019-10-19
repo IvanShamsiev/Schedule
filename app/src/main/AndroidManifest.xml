@@ -14,12 +14,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name="com.example.schedule.ui.AboutLessonActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name="com.example.schedule.ui.FullScheduleActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity android:name="com.example.schedule.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- No action bar -->
+        <activity android:name="com.example.schedule.ui.AboutLessonActivity" />
+        <activity android:name="com.example.schedule.ui.FullScheduleActivity" />
+        <!-- -->
+
         <activity android:name="com.example.schedule.ui.StartActivity" />
         <activity android:name="com.example.schedule.ui.PreferencesActivity" />
         <activity android:name="com.example.schedule.ui.AboutAppActivity" />
@@ -41,6 +42,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
     </application>
 
 </manifest>

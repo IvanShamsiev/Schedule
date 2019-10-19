@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
 import java.io.FileOutputStream;
@@ -30,11 +29,29 @@ public class ScheduleApplication extends Application {
     private static final int CURRENT_SCHEDULE_VERSION = 1;
     private static final String SCHEDULE_VERSION_PREF = "schedule_version";
 
+    public static final String THEME_PREF = "theme_pref";
+    public static int COLOR_PRIMARY, COLOR_SECONDARY, COLOR_PRIMARY_DARK, COLOR_ACCENT;
+    public static int currentTheme;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+        setCurrentTheme();
+
         checkScheduleVersion();
+    }
+
+    private void setCurrentTheme() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean isDarkTheme = sharedPreferences.getBoolean(THEME_PREF, false);
+        currentTheme = isDarkTheme ? R.style.AppTheme_Dark : R.style.AppTheme_Light;
+
+        COLOR_PRIMARY = isDarkTheme ? R.color.darkColorPrimary : R.color.lightColorPrimary;
+        COLOR_PRIMARY_DARK = isDarkTheme ? R.color.darkColorPrimaryDark : R.color.lightColorPrimaryDark;
+        COLOR_SECONDARY = isDarkTheme ? R.color.darkColorSecondary : R.color.lightColorSecondary;
+        COLOR_ACCENT = isDarkTheme ? R.color.darkColorAccent : R.color.lightColorAccent;
     }
 
 

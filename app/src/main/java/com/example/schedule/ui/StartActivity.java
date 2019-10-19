@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.logic.SheetsHelper;
-import com.example.schedule.logic.StartHelper;
+import com.example.schedule.logic.ServerHelper;
 import com.example.schedule.model.Lesson;
 import com.example.schedule.util.LoadDialog;
 import com.google.gson.Gson;
@@ -34,10 +34,13 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.schedule.ScheduleApplication.branchesUrl;
+import static com.example.schedule.ScheduleApplication.currentTheme;
 import static com.example.schedule.ScheduleApplication.serverApp;
 import static com.example.schedule.ScheduleApplication.serverKpfu;
 import static com.example.schedule.ScheduleApplication.showToast;
 import static com.example.schedule.ScheduleApplication.scheduleFileName;
+import static com.example.schedule.ScheduleApplication.url;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -48,6 +51,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTheme(currentTheme);
         setContentView(R.layout.activity_start);
 
         loadDialog = new LoadDialog(getSupportFragmentManager());
@@ -55,7 +60,7 @@ public class StartActivity extends AppCompatActivity {
         Button btnDownload = findViewById(R.id.btnDownload);
         btnDownload.setOnClickListener(btn -> {
             loadDialog.show("Загрузка списка групп");
-            StartHelper.getBranches(getBranchesCallback, serverKpfu);
+            ServerHelper.call(url + branchesUrl + "?server=" + serverKpfu, getBranchesCallback);
         });
 
         Button btnChoose = findViewById(R.id.btnChooseFromFile);
@@ -74,7 +79,7 @@ public class StartActivity extends AppCompatActivity {
         Button btnDownloadFromAppServer = findViewById(R.id.btnDownloadFromAppServer);
         btnDownloadFromAppServer.setOnClickListener(btn -> {
             loadDialog.show("Загрузка списка групп");
-            StartHelper.getBranches(getBranchesCallback, serverApp);
+            ServerHelper.call(url + branchesUrl + "?server=" + serverApp, getBranchesCallback);
         });
 
         Button btnSettings = findViewById(R.id.btnSettings);
@@ -126,7 +131,7 @@ public class StartActivity extends AppCompatActivity {
                         Object value = new ArrayList<>(map.values()).get(i);
                         if (value instanceof String) {
                             loadDialog.show("Загрузка таблицы");
-                            StartHelper.getBranch((String) value, getBranchCallback);
+                            ServerHelper.call((String) value, getBranchCallback);
                         }
                         else showDialog(new LinkedHashMap<>((Map) value));
                     })

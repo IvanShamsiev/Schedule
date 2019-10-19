@@ -3,7 +3,7 @@
     <string name="calendar">Календарь</string>
     <string name="weeks">Недели</string>
     <string name="preferences">Настройки</string>
-    <string name="reloadSchedule">Обновить расписание</string>
+    <string name="changeGroup">Изменить группу</string>
     <string name="noLessons">Сегодня нет занятий</string>
     <string name="changeSchedule">Изменить расписание</string>
     <string name="send">Отправить</string>

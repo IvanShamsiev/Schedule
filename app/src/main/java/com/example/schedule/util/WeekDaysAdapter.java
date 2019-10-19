@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.example.schedule.ScheduleApplication.COLOR_ACCENT;
+import static com.example.schedule.ScheduleApplication.COLOR_SECONDARY;
 import static com.example.schedule.ScheduleApplication.dayOfWeek;
 
 public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDayHolder> {
@@ -81,10 +83,9 @@ public class WeekDaysAdapter extends RecyclerView.Adapter<WeekDaysAdapter.WeekDa
 
             twDayOfWeek.setText(weekDay.getDayOfWeek());
 
-            if (weekDay.isToday())
-                twDayOfWeek.setTextColor(itemView.getResources().getColor(R.color.colorAccent));
-            else
-                twDayOfWeek.setTextColor(itemView.getResources().getColor(R.color.colorPrimary));
+            if (weekDay.isToday()) twDayOfWeek.setTextColor(itemView.getResources().getColor(COLOR_ACCENT));
+            //else twDayOfWeek.setTextColor(itemView.getResources().getColor(COLOR_SECONDARY));
+            else twDayOfWeek.setTextColor(itemView.getResources().getColor(COLOR_SECONDARY));
 
             if (weekDay.getLessons() == null || weekDay.getLessons().isEmpty()) {
                 twDayLessons.setText("Нет пар");

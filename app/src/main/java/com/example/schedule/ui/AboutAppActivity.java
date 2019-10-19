@@ -20,11 +20,15 @@ import com.example.schedule.R;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.schedule.ScheduleApplication.currentTheme;
+
 public class AboutAppActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTheme(currentTheme);
         setContentView(R.layout.activity_about_app);
 
         setTitle("О приложении");

@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context="com.example.schedule.ui.MainActivity">
 
-
     <LinearLayout
         android:id="@+id/navigationLayout"
         android:layout_width="match_parent"

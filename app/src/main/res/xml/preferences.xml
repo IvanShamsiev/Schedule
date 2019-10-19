@@ -5,6 +5,14 @@
     <PreferenceCategory android:title="Визуальное оформление"
         app:iconSpaceReserved="false">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="theme_pref"
+            android:title="Тёмная тема"
+            android:summaryOff="Включена светлая тема"
+            android:summaryOn="Включена тёмная тема"
+            app:iconSpaceReserved="false" />
+
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/week_style_entries"
