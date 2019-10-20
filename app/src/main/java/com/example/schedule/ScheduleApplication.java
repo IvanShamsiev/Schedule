@@ -30,7 +30,7 @@ public class ScheduleApplication extends Application {
     private static final String SCHEDULE_VERSION_PREF = "schedule_version";
 
     public static final String THEME_PREF = "theme_pref";
-    public static int COLOR_PRIMARY, COLOR_SECONDARY, COLOR_PRIMARY_DARK, COLOR_ACCENT;
+    public static int COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_SECONDARY, COLOR_ACCENT;
     public static int currentTheme;
 
     @Override

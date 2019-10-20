@@ -2,12 +2,14 @@ package com.example.schedule.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.example.schedule.R;
 import com.example.schedule.logic.UpdateHelper;
@@ -47,11 +49,11 @@ public class PreferencesActivity extends AppCompatActivity {
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preferences);
 
-            /*SwitchPreference themePref = findPreference("theme_pref");
+            SwitchPreference themePref = findPreference("theme_pref");
             themePref.setOnPreferenceChangeListener((preference, newValue) -> {
-                Toast.makeText(getContext(), "Перезапустите приложения для применения темы", Toast.LENGTH_SHORT).show();
+                new RestartAppTask().execute();
                 return true;
-            });*/
+            });
 
             Preference aboutAppPref = findPreference("about_app_pref");
             aboutAppPref.setOnPreferenceClickListener(preference -> {
@@ -66,6 +68,22 @@ public class PreferencesActivity extends AppCompatActivity {
                 return true;
             });
 
+        }
+    }
+
+    private static class RestartAppTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try { Thread.sleep(100); }
+            catch (InterruptedException e) { e.printStackTrace(); }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            System.exit(0);
         }
     }
 
