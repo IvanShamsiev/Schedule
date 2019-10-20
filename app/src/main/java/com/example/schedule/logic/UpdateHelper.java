@@ -14,6 +14,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.schedule.BuildConfig;
+import com.example.schedule.ScheduleApplication;
 import com.example.schedule.util.LoadDialog;
 import com.google.gson.Gson;
 
@@ -88,7 +89,7 @@ public class UpdateHelper {
                 .setMessage("Текущая версия: " + BuildConfig.VERSION_NAME + "\n" + "Новая версия: " + newVersion)
                 .setPositiveButton("Обновить", (dialogInterface, i) -> {
                     update(context, newVersionUrl);
-                    Toast.makeText(context, "Скачивание обновления", Toast.LENGTH_SHORT).show();
+                    ScheduleApplication.showToast(context, "Скачивание обновления");
                 })
                 .setNegativeButton("Отмена", null)
                 .show();

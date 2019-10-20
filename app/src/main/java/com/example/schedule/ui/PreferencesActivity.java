@@ -49,12 +49,6 @@ public class PreferencesActivity extends AppCompatActivity {
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preferences);
 
-            SwitchPreference themePref = findPreference("theme_pref");
-            themePref.setOnPreferenceChangeListener((preference, newValue) -> {
-                new RestartAppTask().execute();
-                return true;
-            });
-
             Preference aboutAppPref = findPreference("about_app_pref");
             aboutAppPref.setOnPreferenceClickListener(preference -> {
                 startActivity(AboutAppActivity.newIntent(getContext()));
@@ -68,22 +62,6 @@ public class PreferencesActivity extends AppCompatActivity {
                 return true;
             });
 
-        }
-    }
-
-    private static class RestartAppTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try { Thread.sleep(100); }
-            catch (InterruptedException e) { e.printStackTrace(); }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            System.exit(0);
         }
     }
 

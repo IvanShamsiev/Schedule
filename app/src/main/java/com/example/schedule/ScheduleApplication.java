@@ -3,6 +3,7 @@ package com.example.schedule;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
@@ -45,6 +46,11 @@ public class ScheduleApplication extends Application {
     private void setCurrentTheme() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        sharedPreferences.registerOnSharedPreferenceChangeListener((sp, key) -> {
+            if (!key.equals(THEME_PREF)) return;
+            new RestartAppTask().execute();
+        });
+
         boolean isDarkTheme = sharedPreferences.getBoolean(THEME_PREF, false);
         currentTheme = isDarkTheme ? R.style.AppTheme_Dark : R.style.AppTheme_Light;
 
@@ -52,6 +58,21 @@ public class ScheduleApplication extends Application {
         COLOR_PRIMARY_DARK = isDarkTheme ? R.color.darkColorPrimaryDark : R.color.lightColorPrimaryDark;
         COLOR_SECONDARY = isDarkTheme ? R.color.darkColorSecondary : R.color.lightColorSecondary;
         COLOR_ACCENT = isDarkTheme ? R.color.darkColorAccent : R.color.lightColorAccent;
+    }
+
+    private static class RestartAppTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try { Thread.sleep(200); } catch (InterruptedException e) { e.printStackTrace(); }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            System.exit(0);
+        }
     }
 
 
