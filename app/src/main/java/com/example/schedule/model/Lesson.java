@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Lesson implements Parcelable {
 
+    public static final int fieldsCount = 9;
+
     private String beginTime, endTime, even, name, location, type, chair, post, teacher;
 
     public Lesson(String beginTime, String endTime, String even, String name, String location,
@@ -94,7 +96,7 @@ public class Lesson implements Parcelable {
 
     // For parcelable
     private Lesson(Parcel source) {
-        String[] strings = new String[9];
+        String[] strings = new String[fieldsCount];
         source.readStringArray(strings);
 
         beginTime = strings[0];

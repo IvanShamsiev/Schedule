@@ -24,6 +24,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.internal.annotations.EverythingIsNonNull;
 
 import static com.example.schedule.ScheduleApplication.checkUpdateUrl;
 import static com.example.schedule.ScheduleApplication.showToast;
@@ -62,15 +63,18 @@ public class UpdateHelper {
         });
 
         @Override
+        @EverythingIsNonNull
         public void onFailure(Call call, IOException e) {
             loadDialog.close();
             showToast(context, "Не удалось проверить обновление");
         }
 
         @Override
+        @EverythingIsNonNull
         public void onResponse(Call call, Response response) {
             loadDialog.close();
             try {
+                if (response.body() == null) throw new NullPointerException("Тело ответа сервера равно null");
                 String str = response.body().string();
                 String[] fromJson = new Gson().fromJson(str, String[].class);
                 newVersion = fromJson[0];
@@ -115,6 +119,10 @@ public class UpdateHelper {
 
         // Get download service and enqueue file
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        if (manager == null) {
+            showToast(context, "Ошибка: На вашем устройстве отсутсвует менеджер загрузок");
+            return;
+        }
         long downloadId = manager.enqueue(request);
 
         // Set BroadcastReceiver to install app when .apk is downloaded

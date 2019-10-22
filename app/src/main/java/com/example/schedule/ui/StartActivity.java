@@ -33,6 +33,7 @@ import java.util.TreeMap;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.internal.annotations.EverythingIsNonNull;
 
 import static com.example.schedule.ScheduleApplication.branchesUrl;
 import static com.example.schedule.ScheduleApplication.currentTheme;
@@ -94,9 +95,10 @@ public class StartActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOSE_FILE_CODE && resultCode == RESULT_OK) {
+        if (requestCode == CHOSE_FILE_CODE && resultCode == RESULT_OK && data != null) {
             try {
                 Uri fileUri = data.getData();
+                if (fileUri == null) { showToast(StartActivity.this, "Не удалось определить путь до таблицы"); return; }
                 InputStream inputStream = getContentResolver().openInputStream(fileUri);
                 new Thread(() -> {
                     loadDialog.show("Чтение таблицы");
@@ -133,22 +135,27 @@ public class StartActivity extends AppCompatActivity {
                             loadDialog.show("Загрузка таблицы");
                             ServerHelper.call((String) value, getBranchCallback);
                         }
-                        else showDialog(new LinkedHashMap<>((Map) value));
+                        else showDialog(new LinkedHashMap<String, Object>((Map) value));
                     })
                     .show();
         }
 
         @Override
+        @EverythingIsNonNull
         public void onFailure(Call call, IOException e) {
             loadDialog.close();
             showToast(StartActivity.this, "Не удалось загрузить список отделений");
         }
 
         @Override
+        @EverythingIsNonNull
         public void onResponse(Call call, Response response) {
             loadDialog.close();
             String branchesJson;
-            try {branchesJson = response.body().string();}
+            try {
+                if (response.body() == null) throw new NullPointerException("Тело ответа сервера равно null");
+                branchesJson = response.body().string();
+            }
             catch (IOException | NullPointerException e) {
                 showToast(StartActivity.this, "Произошла ошибка при чтении списка отделений");
                 return;
@@ -163,15 +170,20 @@ public class StartActivity extends AppCompatActivity {
     Callback getBranchCallback = new Callback() {
 
         @Override
+        @EverythingIsNonNull
         public void onFailure(Call call, IOException e) {
             loadDialog.close();
             showToast(StartActivity.this, "Не удалось загрузить список групп");
         }
 
         @Override
+        @EverythingIsNonNull
         public void onResponse(Call call, Response response) {
             loadDialog.changeText("Чтение таблицы");
-            try { coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream()); }
+            try {
+                if (response.body() == null) throw new NullPointerException("Тело ответа серверо равно null");
+                coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream());
+            }
             catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
             finally { loadDialog.close(); }
             getBranchHandler.sendEmptyMessage(0);

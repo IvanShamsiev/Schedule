@@ -47,7 +47,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
         Lesson lesson;
 
-        public LessonViewHolder(@NonNull View itemView) {
+        LessonViewHolder(@NonNull View itemView) {
             super(itemView);
 
             // Bind views

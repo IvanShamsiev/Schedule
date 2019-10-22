@@ -22,36 +22,38 @@ import java.util.Locale;
 
 public class SheetsHelper {
 
-    private static int lessonMinutesCount = 90;
+    private static final int lessonMinutesCount = 90;
 
-    private static int leftRows = 2;
+    private static final int leftRows = 2;
 
-    private static int groupRow = 0;
-    private static int groupColumn = 3;
+    private static final int groupRow = 0;
+    private static final int groupColumn = 3;
 
-    private static int dayRow = 0;
-    private static int dayColumn = 0;
+    private static final int dayRow = 0;
+    private static final int dayColumn = 0;
 
-    private static int timeColumn = 1;
-    private static int evenColumn = 2;
-    private static int nameColumn = 3;
-    private static int locationOneColumn = 4;
-    private static int locationTwoColumn = 5;
-    private static int typeColumn = 6;
-    private static int chairColumn = 7;
-    private static int postColumn = 8;
-    private static int teacherColumn = 9;
+    private static final int timeColumn = 1;
+    private static final int evenColumn = 2;
+    private static final int nameColumn = 3;
+    private static final int locationOneColumn = 4;
+    private static final int locationTwoColumn = 5;
+    private static final int typeColumn = 6;
+    private static final int chairColumn = 7;
+    private static final int postColumn = 8;
+    private static final int teacherColumn = 9;
 
-    private static final SimpleDateFormat dateFormat =
-            new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private static SimpleDateFormat lessonTimeFormat;
 
     public static HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> getCoursesMap(InputStream inputStream) {
 
         if (inputStream == null) return null;
 
+        lessonTimeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
         HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap = new HashMap<>();
 
         Workbook workbook = readWorkbook(inputStream);
+        if (workbook == null) return null;
 
         for (Sheet courseSheet : workbook)
             coursesMap.put(courseSheet.getSheetName(), getGroupsMap(courseSheet));
@@ -84,7 +86,8 @@ public class SheetsHelper {
             while (true) {
                 if (courseSheet.getRow(row) == null || courseSheet.getRow(row).getCell(column) == null) break;
 
-                String currentDayOfWeek = courseSheet.getRow(row + dayRow).getCell(column + dayColumn).toString();
+                String currentDayOfWeek = courseSheet.getRow(row + dayRow)
+                        .getCell(column + dayColumn).toString();
                 if (!currentDayOfWeek.trim().isEmpty()) {
                     if (dayOfWeek == null) dayOfWeek = currentDayOfWeek;
                     else dayOfWeek = currentDayOfWeek + "";
@@ -92,9 +95,10 @@ public class SheetsHelper {
 
                 Lesson lesson = getLesson(courseSheet, row, column);
                 if (lesson != null) {
-                    if (week.get(ScheduleApplication.dayOfWeek.indexOf(dayOfWeek)) == null)
-                        week.put(ScheduleApplication.dayOfWeek.indexOf(dayOfWeek), new ArrayList<>());
-                    week.get(ScheduleApplication.dayOfWeek.indexOf(dayOfWeek)).add(lesson);
+                    int dayOfWeekIndex = ScheduleApplication.dayOfWeek.indexOf(dayOfWeek);
+                    if (week.get(dayOfWeekIndex) == null)
+                        week.put(dayOfWeekIndex, new ArrayList<>());
+                    week.get(dayOfWeekIndex).add(lesson);
                 }
 
                 row++;
@@ -107,8 +111,11 @@ public class SheetsHelper {
             if (!isEmpty) groupsMap.put(groupName, week);
 
             column++;
+
+            Cell cell;
             while (true) {
-                if (courseSheet.getRow(leftRows).getCell(column) != null && !courseSheet.getRow(leftRows).getCell(column).toString().equals("Понедельник")) column++;
+                cell = courseSheet.getRow(leftRows).getCell(column);
+                if (cell != null && !cell.toString().equals("Понедельник")) column++;
                 else break;
             }
         }
@@ -120,29 +127,32 @@ public class SheetsHelper {
 
         Row lessonRow = sheet.getRow(row);
 
-        if (lessonRow.getCell(column + nameColumn) == null || lessonRow.getCell(column + nameColumn).toString().trim().isEmpty()) return null;
+        if (lessonRow.getCell(column + nameColumn) == null ||
+                lessonRow.getCell(column + nameColumn).toString().trim().isEmpty()) return null;
 
         String beginTime, endTime;
         if (lessonRow.getCell(column + timeColumn).getCellType() == CellType.NUMERIC) {
             Date beginDate = lessonRow.getCell(column + timeColumn).getDateCellValue();
             Date endDate = new Date(beginDate.getTime() + 1000 * 60 * lessonMinutesCount);
 
-            beginTime = dateFormat.format(beginDate);
-            endTime = dateFormat.format(endDate);
+            beginTime = lessonTimeFormat.format(beginDate);
+            endTime = lessonTimeFormat.format(endDate);
         } else {
             String timeCell = lessonRow.getCell(column + timeColumn).toString();
-            if (timeCell.contains(";")) timeCell = timeCell.replace(".", ":");
-            if (timeCell.contains(".")) timeCell = timeCell.replace(".", ":");
-            if (timeCell.contains(",")) timeCell = timeCell.replace(".", ":");
+            char[] symbols = new char[] {';', '.', ','};
+            for (char c: symbols) if (timeCell.contains(String.valueOf(c))) {
+                timeCell = timeCell.replace(c, ':');
+                break;
+            }
             String[] time = timeCell.split(":");
             Calendar date = new GregorianCalendar();
             date.set(Calendar.AM_PM, Calendar.AM);
             date.set(Calendar.HOUR, Integer.parseInt(time[0]));
             date.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 
-            beginTime = dateFormat.format(date.getTime());
+            beginTime = lessonTimeFormat.format(date.getTime());
             date.add(Calendar.MINUTE, lessonMinutesCount);
-            endTime = dateFormat.format(date.getTime());
+            endTime = lessonTimeFormat.format(date.getTime());
         }
 
         String even = lessonRow.getCell(column + evenColumn).toString();

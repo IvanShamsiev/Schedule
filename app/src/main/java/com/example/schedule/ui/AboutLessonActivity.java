@@ -78,14 +78,14 @@ public class AboutLessonActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return lesson.getNames().size();
+            return Lesson.fieldsCount;
         }
 
         class LessonViewHolder extends RecyclerView.ViewHolder {
 
             TextView twName, twValue;
 
-            public LessonViewHolder(@NonNull View itemView) {
+            LessonViewHolder(@NonNull View itemView) {
                 super(itemView);
 
                 twName = itemView.findViewById(R.id.twName);

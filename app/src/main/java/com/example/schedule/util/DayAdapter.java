@@ -53,7 +53,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         TextView textDate, textEvenWeek;
         TextView textNoLessons;
 
-        public DayViewHolder(@NonNull View itemView) {
+        DayViewHolder(@NonNull View itemView) {
             super(itemView);
 
             lessonsRecyclerView = itemView.findViewById(R.id.recyclerView);
@@ -71,6 +71,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         void bind(Calendar date) {
 
             String month = date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+            if (month == null) throw new NullPointerException("Имя месяца не задано");
             month = month.substring(0, 1).toUpperCase() + month.substring(1);
             textDate.setText(String.format(Locale.getDefault(), "%d %s",
                     date.get(Calendar.DAY_OF_MONTH), month));
