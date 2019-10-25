@@ -98,11 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 pageDate = (Calendar) currentDate.clone();
                 pageDate.add(Calendar.DATE, position - DayAdapter.middlePos);
 
-                String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-                if (day == null) throw new RuntimeException("Имя дня недели не задано");
-                if (day.length() > 0) day = day.substring(0, 1).toUpperCase() + day.substring(1);
-                if (showNavigationLayout) navigationTitle.setText(day);
-                else setTitle(day);
+                setCurrentTitle();
             }
         });
         viewPager.setCurrentItem(DayAdapter.middlePos, false);
@@ -139,13 +135,7 @@ public class MainActivity extends AppCompatActivity {
         showNavigationLayout = preferences.getBoolean("show_navigation_layout", false);
         navigationLayout.setVisibility(showNavigationLayout ? View.VISIBLE : View.GONE);
 
-        String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-        if (day == null) throw new RuntimeException("Имя дня недели не задано");
-        if (day.length() > 0) day = day.substring(0, 1).toUpperCase() + day.substring(1);
-        if (showNavigationLayout) {
-            setTitle(R.string.app_name);
-            navigationTitle.setText(day);
-        } else setTitle(day);
+        setCurrentTitle();
 
         if (viewPager != null && viewPager.getAdapter() != null) viewPager.getAdapter().notifyDataSetChanged();
     }
@@ -178,6 +168,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         return true;
+    }
+
+    private void setCurrentTitle() {
+        String day = pageDate.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+        if (day == null) throw new RuntimeException("Имя дня недели не задано");
+        if (day.length() > 0) day = day.substring(0, 1).toUpperCase() + day.substring(1);
+        if (showNavigationLayout) {
+            setTitle(R.string.app_name);
+            navigationTitle.setText(day);
+        } else setTitle(day);
     }
 
 

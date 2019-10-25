@@ -25,16 +25,18 @@ public class ScheduleHelper {
     }
 
     public static void loadSchedule(FileInputStream inputStream) throws IOException {
-        StringBuilder json = new StringBuilder();
+        StringBuilder jsonBuilder = new StringBuilder();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String s;
-        while ((s = br.readLine()) != null) json.append(s);
+        while ((s = br.readLine()) != null) jsonBuilder.append(s);
         br.close();
 
-        if (json.toString().isEmpty()) throw new IOException("Пустой файл с расписанием");
+        String json = jsonBuilder.toString();
 
-        setSchedule(json.toString());
+        if (json.isEmpty()) throw new IOException("Пустой файл с расписанием");
+
+        setSchedule(json);
     }
 
     public static void saveSchedule(String json, FileOutputStream outputStream) throws IOException {

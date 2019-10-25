@@ -6,10 +6,13 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.example.schedule.R;
+import com.example.schedule.ScheduleApplication;
 import com.example.schedule.logic.UpdateHelper;
 import com.example.schedule.util.LoadDialog;
 
@@ -46,6 +49,12 @@ public class PreferencesActivity extends AppCompatActivity {
 
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preferences);
+
+            SwitchPreference themePref = findPreference("theme_pref");
+            themePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                new ScheduleApplication.RestartAppTask().execute();
+                return true;
+            });
 
             Preference aboutAppPref = findPreference("about_app_pref");
             aboutAppPref.setOnPreferenceClickListener(preference -> {

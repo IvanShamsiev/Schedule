@@ -54,8 +54,7 @@ public class UpdateHelper {
 
         Handler updCheckHandler = new Handler(msg -> {
             if (newVersion.equals(BuildConfig.VERSION_NAME)) {
-                Toast.makeText(context, "У вас установлена последняя версия приложения",
-                        Toast.LENGTH_SHORT).show();
+                showToast(context, "У вас установлена последняя версия приложения");
                 return true;
             }
             openUpdateDialog(newVersion, newVersionUrl);

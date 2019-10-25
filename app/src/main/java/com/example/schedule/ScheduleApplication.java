@@ -8,7 +8,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.util.List;
 
 public class ScheduleApplication extends Application {
 
+    // Constants
     public static final String scheduleFileName = "schedule.json";
     public static final String branchesUrl = "getBranches.php";
     public static final String serverKpfu = "kpfu";
@@ -27,9 +30,11 @@ public class ScheduleApplication extends Application {
             "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
 
 
+    // Check JSON-Schedule version
     private static final int CURRENT_SCHEDULE_VERSION = 1;
     private static final String SCHEDULE_VERSION_PREF = "schedule_version";
 
+    // Theme constants
     public static final String THEME_PREF = "theme_pref";
     public static int COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_SECONDARY, COLOR_ACCENT;
     public static int currentTheme;
@@ -46,13 +51,13 @@ public class ScheduleApplication extends Application {
     private void setCurrentTheme() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        sharedPreferences.registerOnSharedPreferenceChangeListener((sp, key) -> {
-            if (!key.equals(THEME_PREF)) return;
-            new RestartAppTask().execute();
-        });
-
         boolean isDarkTheme = sharedPreferences.getBoolean(THEME_PREF, false);
         currentTheme = isDarkTheme ? R.style.AppTheme_Dark : R.style.AppTheme_Light;
+
+        /*sharedPreferences.registerOnSharedPreferenceChangeListener((sp, key) -> {
+            if (!key.equals(THEME_PREF)) return;
+            new RestartAppTask().execute();
+        });*/
 
         COLOR_PRIMARY = isDarkTheme ? R.color.darkColorPrimary : R.color.lightColorPrimary;
         COLOR_PRIMARY_DARK = isDarkTheme ? R.color.darkColorPrimaryDark : R.color.lightColorPrimaryDark;
@@ -60,10 +65,10 @@ public class ScheduleApplication extends Application {
         COLOR_ACCENT = isDarkTheme ? R.color.darkColorAccent : R.color.lightColorAccent;
     }
 
-    private static class RestartAppTask extends AsyncTask<Void, Void, Void> {
+    public static class RestartAppTask extends AsyncTask<SwitchPreference, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(SwitchPreference... preferences) {
             try { Thread.sleep(200); } catch (InterruptedException e) { e.printStackTrace(); }
             return null;
         }
@@ -98,6 +103,7 @@ public class ScheduleApplication extends Application {
 
 
 
+    // For Toasts in main thread
     private static Handler toastHandler = new Handler(msg -> {
         Toast.makeText((Context) ((Object[]) msg.obj)[0], (String) ((Object[]) msg.obj)[1],
                 Toast.LENGTH_SHORT).show();
