@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.widget.Toast;
@@ -134,16 +135,22 @@ public class UpdateHelper {
                         BuildConfig.APPLICATION_ID + ".provider", file);
                 intentInstall.setDataAndType(uri, "application/vnd.android.package-archive");
                 intentInstall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                if (context.getPackageManager().resolveActivity(intentInstall,
+                        PackageManager.MATCH_DEFAULT_ONLY) == null) {
+                    showToast(context, "Ошибка: на устройстве отсутсвует менеджер установки приложений");
+                    return;
+                }
+
                 context.startActivity(intentInstall);
 
                 context.unregisterReceiver(this);
+                onDestroy();
             }
         };
 
         // Register receiver for when .apk download is compete
         context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-        onDestroy();
     }
 
     private void onDestroy() {

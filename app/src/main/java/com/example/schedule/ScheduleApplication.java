@@ -105,8 +105,11 @@ public class ScheduleApplication extends Application {
 
     // For Toasts in main thread
     private static Handler toastHandler = new Handler(msg -> {
-        Toast.makeText((Context) ((Object[]) msg.obj)[0], (String) ((Object[]) msg.obj)[1],
-                Toast.LENGTH_SHORT).show();
+        Object[] message = (Object[]) msg.obj;
+        Context context = (Context) message[0];
+        String text = (String) message[1];
+        if (context != null && text != null)
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
         return true;
     });
 

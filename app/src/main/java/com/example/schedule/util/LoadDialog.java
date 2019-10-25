@@ -1,5 +1,6 @@
 package com.example.schedule.util;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -54,6 +55,14 @@ public class LoadDialog {
             View view = inflater.inflate(R.layout.dialog_load, container, false);
             ((TextView) view.findViewById(R.id.textView)).setText(text);
             return view;
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            Dialog dialog = new Dialog(getContext(), getTheme());
+            dialog.setTitle("Пожалуйста, подождите");
+            return dialog;
         }
 
         public void setText(String text) {
