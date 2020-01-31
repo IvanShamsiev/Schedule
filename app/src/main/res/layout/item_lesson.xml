@@ -15,7 +15,7 @@
 
 
     <TextView
-        android:id="@+id/timeLessonBegin"
+        android:id="@+id/tvBeginTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="9pt"
@@ -25,52 +25,52 @@
         tools:text="8:00" />
 
     <TextView
-        android:id="@+id/timeLessonEnd"
+        android:id="@+id/tvEndTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="textEnd"
         android:textSize="8pt"
-        app:layout_constraintEnd_toEndOf="@+id/timeLessonBegin"
+        app:layout_constraintEnd_toEndOf="@+id/tvBeginTime"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timeLessonBegin"
+        app:layout_constraintTop_toBottomOf="@+id/tvBeginTime"
         tools:text="9:30" />
 
 
     <TextView
-        android:id="@+id/lessonName"
+        android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textSize="9pt"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/lessonType"
-        app:layout_constraintStart_toEndOf="@+id/timeLessonBegin"
-        app:layout_constraintTop_toTopOf="@+id/timeLessonBegin"
+        app:layout_constraintEnd_toEndOf="@+id/tvType"
+        app:layout_constraintStart_toEndOf="@+id/tvBeginTime"
+        app:layout_constraintTop_toTopOf="@+id/tvBeginTime"
         tools:text="Название предмета" />
 
     <TextView
-        android:id="@+id/lessonTeacher"
+        android:id="@+id/tvTeacher"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="8pt"
-        app:layout_constraintEnd_toEndOf="@+id/lessonType"
-        app:layout_constraintStart_toStartOf="@+id/lessonName"
-        app:layout_constraintTop_toBottomOf="@+id/lessonName"
+        app:layout_constraintEnd_toEndOf="@+id/tvType"
+        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="Имя препода" />
 
 
     <TextView
-        android:id="@+id/lessonLocation"
+        android:id="@+id/tvLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="7pt"
-        app:layout_constraintEnd_toStartOf="@+id/lessonType"
-        app:layout_constraintStart_toStartOf="@+id/lessonTeacher"
-        app:layout_constraintTop_toBottomOf="@+id/lessonTeacher"
+        app:layout_constraintEnd_toStartOf="@+id/tvType"
+        app:layout_constraintStart_toStartOf="@+id/tvTeacher"
+        app:layout_constraintTop_toBottomOf="@+id/tvTeacher"
         tools:text="Аудитория (УЛК-2 420)" />
 
     <TextView
-        android:id="@+id/lessonType"
+        android:id="@+id/tvType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="7pt"

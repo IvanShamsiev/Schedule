@@ -12,6 +12,8 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import com.example.schedule.logic.ScheduleHelper;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,7 +22,12 @@ import java.util.List;
 public class ScheduleApplication extends Application {
 
     // Constants
-    public static final String scheduleFileName = "schedule.json";
+    public static final String GROUP_FILE = "group.json";
+
+    public static final String LESSON_EXTRA = "lesson";
+    public static final String CURRENT_DATE_EXTRA = "current_date";
+
+    // Server
     public static final String branchesUrl = "getBranches.php";
     public static final String serverKpfu = "kpfu";
     public static final String serverApp = "appServer";
@@ -30,7 +37,11 @@ public class ScheduleApplication extends Application {
             "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
 
 
-    // Check JSON-Schedule version
+    // Request code for StartActivity
+    public static final int START_ACTIVITY_REQUEST_CODE = 2;
+
+
+    // Check JSON-Schedule2 version
     private static final int CURRENT_SCHEDULE_VERSION = 1;
     private static final String SCHEDULE_VERSION_PREF = "schedule_version";
 
@@ -46,6 +57,8 @@ public class ScheduleApplication extends Application {
         setCurrentTheme();
 
         checkScheduleVersion();
+
+        ScheduleHelper.INSTANCE.setContext(this);
     }
 
     private void setCurrentTheme() {
@@ -92,7 +105,7 @@ public class ScheduleApplication extends Application {
 
 
         try {
-            FileOutputStream outputStream = openFileOutput(scheduleFileName, MODE_PRIVATE);
+            FileOutputStream outputStream = openFileOutput(GROUP_FILE, MODE_PRIVATE);
             outputStream.write(new byte[0]);
             outputStream.flush();
             outputStream.close();

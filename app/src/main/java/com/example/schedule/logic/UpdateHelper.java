@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import okhttp3.internal.annotations.EverythingIsNonNull;
 
 import static com.example.schedule.ScheduleApplication.checkUpdateUrl;
 import static com.example.schedule.ScheduleApplication.showToast;
@@ -63,14 +61,12 @@ public class UpdateHelper {
         });
 
         @Override
-        @EverythingIsNonNull
         public void onFailure(Call call, IOException e) {
             loadDialog.close();
             showToast(context, "Не удалось проверить обновление");
         }
 
         @Override
-        @EverythingIsNonNull
         public void onResponse(Call call, Response response) {
             loadDialog.close();
             try {

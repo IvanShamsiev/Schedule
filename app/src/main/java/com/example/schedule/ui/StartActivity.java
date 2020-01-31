@@ -16,36 +16,37 @@ import com.example.schedule.R;
 import com.example.schedule.logic.ScheduleHelper;
 import com.example.schedule.logic.SheetsHelper;
 import com.example.schedule.logic.ServerHelper;
-import com.example.schedule.model.Lesson;
+import com.example.schedule.model.Course;
+import com.example.schedule.model.Group;
+import com.example.schedule.model.Schedule;
 import com.example.schedule.util.LoadDialog;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import okhttp3.internal.annotations.EverythingIsNonNull;
 
 import static com.example.schedule.ScheduleApplication.branchesUrl;
 import static com.example.schedule.ScheduleApplication.currentTheme;
 import static com.example.schedule.ScheduleApplication.serverApp;
 import static com.example.schedule.ScheduleApplication.serverKpfu;
 import static com.example.schedule.ScheduleApplication.showToast;
-import static com.example.schedule.ScheduleApplication.scheduleFileName;
 import static com.example.schedule.ScheduleApplication.url;
 
 public class StartActivity extends AppCompatActivity {
 
     private static final int CHOSE_FILE_CODE = 1;
+
+    private Handler handler = new Handler();
 
     private LoadDialog loadDialog;
 
@@ -84,11 +85,9 @@ public class StartActivity extends AppCompatActivity {
         });
 
         Button btnSettings = findViewById(R.id.btnSettings);
-        btnSettings.setOnClickListener(btn -> startActivity(PreferencesActivity.newIntent(this)));
+        btnSettings.setOnClickListener(btn -> startActivity(new Intent(this, PreferencesActivity.class)));
 
-
-        if (ScheduleHelper.getSchedule() != null) setResult(RESULT_OK);
-        else setResult(RESULT_CANCELED);
+        if (ScheduleHelper.INSTANCE.getGroup() != null) setResult(RESULT_OK);
     }
 
     @Override
@@ -102,32 +101,29 @@ public class StartActivity extends AppCompatActivity {
                 InputStream inputStream = getContentResolver().openInputStream(fileUri);
                 new Thread(() -> {
                     loadDialog.show("Чтение таблицы");
-                    try { coursesMap = SheetsHelper.getCoursesMap(inputStream); }
-                    catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
-                    finally { loadDialog.close(); }
-                    getBranchHandler.sendEmptyMessage(0);
+                    Schedule schedule;
+                    try { schedule = SheetsHelper.INSTANCE.getSchedule(inputStream); }
+                    catch (Exception e) {
+                        showToast(StartActivity.this, "Не удалось прочитать таблицу");
+                        e.printStackTrace();
+                        return;
+                    } finally { loadDialog.close(); }
+                    handler.post(() -> {
+                        if (schedule == null) Toast.makeText(this, "Не удалось прочитать расписание", Toast.LENGTH_SHORT).show();
+                        else openCoursesDialog(schedule.getCourses());
+                    });
                 }).start();
 
             } catch (Exception e) {
+                e.printStackTrace();
                 showToast(StartActivity.this, "Не удалось прочитать таблицу");
             }
         }
     }
 
-    private void onSuccess() {
-        setResult(RESULT_OK);
-        finish();
-    }
-
     Callback getBranchesCallback = new Callback() {
-        LinkedHashMap<String, Object> branchesEntries;
 
-        Handler getBranchesHandler = new Handler(msg -> {
-            showDialog(branchesEntries);
-            return true;
-        });
-
-        void showDialog(LinkedHashMap<String, Object> map) {
+        void showBranchDialog(LinkedHashMap<String, Object> map) {
             new AlertDialog.Builder(StartActivity.this)
                     .setItems(map.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
                         Object value = new ArrayList<>(map.values()).get(i);
@@ -135,20 +131,18 @@ public class StartActivity extends AppCompatActivity {
                             loadDialog.show("Загрузка таблицы");
                             ServerHelper.call((String) value, getBranchCallback);
                         }
-                        else showDialog(new LinkedHashMap<String, Object>((Map) value));
+                        else showBranchDialog(new LinkedHashMap<String, Object>((Map) value));
                     })
                     .show();
         }
 
         @Override
-        @EverythingIsNonNull
         public void onFailure(Call call, IOException e) {
             loadDialog.close();
             showToast(StartActivity.this, "Не удалось загрузить список отделений");
         }
 
         @Override
-        @EverythingIsNonNull
         public void onResponse(Call call, Response response) {
             loadDialog.close();
             String branchesJson;
@@ -161,63 +155,58 @@ public class StartActivity extends AppCompatActivity {
                 return;
             }
 
-            branchesEntries = new Gson().fromJson(branchesJson, LinkedHashMap.class);
-
-            getBranchesHandler.sendEmptyMessage(0);
+            Type type = new TypeToken<LinkedHashMap<String, Object>>(){}.getType();
+            LinkedHashMap<String, Object> branchesEntries = new Gson().fromJson(branchesJson, type);
+            handler.post(() -> showBranchDialog(branchesEntries));
         }
     };
 
     Callback getBranchCallback = new Callback() {
 
         @Override
-        @EverythingIsNonNull
         public void onFailure(Call call, IOException e) {
             loadDialog.close();
             showToast(StartActivity.this, "Не удалось загрузить список групп");
         }
 
         @Override
-        @EverythingIsNonNull
         public void onResponse(Call call, Response response) {
             loadDialog.changeText("Чтение таблицы");
             try {
                 if (response.body() == null) throw new NullPointerException("Тело ответа серверо равно null");
-                coursesMap = SheetsHelper.getCoursesMap(response.body().byteStream());
-            }
-            catch (Exception e) { showToast(StartActivity.this, "Не удалось прочитать таблицу"); return; }
-            finally { loadDialog.close(); }
-            getBranchHandler.sendEmptyMessage(0);
+                Schedule schedule = SheetsHelper.INSTANCE.getSchedule(response.body().byteStream());
+                handler.post(() -> {
+                    if (schedule == null) showToast(StartActivity.this,"Не удалось прочитать расписание");
+                    else openCoursesDialog(schedule.getCourses());
+                });
+            } catch (NullPointerException e) {
+                showToast(StartActivity.this, "Не удалось прочитать таблицу");
+                e.printStackTrace();
+            } finally { loadDialog.close(); }
         }
 
     };
 
-    HashMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap;
-
-    Handler getBranchHandler = new Handler(msg -> {
-        if (coursesMap == null) Toast.makeText(this, "Не удалось прочитать расписание", Toast.LENGTH_SHORT).show();
-        else openCoursesDialog(new TreeMap<>(coursesMap));
-        return true;
-    });
-
-    void openCoursesDialog(TreeMap<String, HashMap<String, HashMap<Integer, List<Lesson>>>> coursesMap) {
+    void openCoursesDialog(List<Course> courses) {
+        List<String> coursesNames = new ArrayList<>(courses.size());
+        for (Course c: courses) coursesNames.add(c.getName());
         new AlertDialog.Builder(StartActivity.this)
-                .setItems(coursesMap.keySet().toArray(new String[]{}), (dialogInterface, i) ->
-                        openGroupsDialog(new TreeMap<>(new ArrayList<>(coursesMap.values()).get(i)))
+                .setItems(coursesNames.toArray(new String[]{}), (dialogInterface, i) ->
+                        openGroupsDialog(courses.get(i))
                 )
                 .show();
     }
 
-    void openGroupsDialog(TreeMap<String, HashMap<Integer, List<Lesson>>> groupsMap) {
-        new AlertDialog.Builder(StartActivity.this)
-                .setItems(groupsMap.keySet().toArray(new String[]{}), (dialogInterface, i) -> {
-                    HashMap<Integer, List<Lesson>> weekMap = new ArrayList<>(groupsMap.values()).get(i);
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.add("week", new Gson().toJsonTree(weekMap));
-                    String json = jsonObject.toString();
-                    try { ScheduleHelper.saveSchedule(json, openFileOutput(scheduleFileName, MODE_PRIVATE)); }
-                    catch (IOException e) { e.printStackTrace(); }
+    void openGroupsDialog(Course course) {
+        List<Group> groups = course.getGroups();
+        List<String> groupsNames = new ArrayList<>(groups.size());
+        for (Group g: groups) groupsNames.add(g.getName());
 
-                    onSuccess();
+        new AlertDialog.Builder(StartActivity.this)
+                .setItems(groupsNames.toArray(new String[]{}), (dialogInterface, i) -> {
+                    ScheduleHelper.INSTANCE.saveGroup(groups.get(i));
+                    setResult(RESULT_OK);
+                    finish();
                 })
                 .show();
     }
@@ -227,5 +216,7 @@ public class StartActivity extends AppCompatActivity {
     public static Intent newIntent(Context ctx) {
         return new Intent(ctx, StartActivity.class);
     }
+
+
 
 }
