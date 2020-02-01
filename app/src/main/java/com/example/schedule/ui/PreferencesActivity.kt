@@ -50,8 +50,7 @@ class PreferencesActivity : AppCompatActivity() {
 
             val updateAppPref = findPreference<Preference>("check_update_app_pref")
             updateAppPref!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                val updateHelper = UpdateHelper(context, fragmentManager)
-                updateHelper.checkUpdate()
+                UpdateHelper(context!!, fragmentManager!!).checkUpdate()
                 true
             }
         }

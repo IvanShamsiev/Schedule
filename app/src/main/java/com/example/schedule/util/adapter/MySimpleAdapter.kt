@@ -1,4 +1,4 @@
-package com.example.schedule.util
+package com.example.schedule.util.adapter
 
 import android.view.LayoutInflater
 import android.view.View

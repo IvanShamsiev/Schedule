@@ -1,4 +1,4 @@
-package com.example.schedule.util
+package com.example.schedule.util.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.example.schedule.R
 import com.example.schedule.ScheduleApplication.LESSON_EXTRA
 import com.example.schedule.logic.ScheduleHelper
 import com.example.schedule.ui.AboutLessonActivity
-import com.example.schedule.util.DayAdapter.DayViewHolder
+import com.example.schedule.util.adapter.DayAdapter.DayViewHolder
 import kotlinx.android.synthetic.main.item_fragment_page.view.*
 import kotlinx.android.synthetic.main.item_lesson.view.*
 import java.util.*
@@ -60,7 +60,7 @@ class DayAdapter(private val currentDate: Calendar, private var weekEvenStyle: B
                     lessonsRecyclerView.visibility = View.VISIBLE
                     textNoLessons.visibility = View.GONE
                     lessonsRecyclerView.adapter = MySimpleAdapter(R.layout.item_lesson, lessons, { itemView, lesson ->
-                        with (itemView) {
+                        with(itemView) {
                             tvBeginTime.text = lesson.beginTime
                             tvEndTime.text = lesson.endTime
                             tvName.text = lesson.name

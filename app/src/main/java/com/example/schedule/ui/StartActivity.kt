@@ -18,7 +18,7 @@ import com.example.schedule.model.Branch
 import com.example.schedule.model.Course
 import com.example.schedule.model.Schedule
 import com.example.schedule.util.LoadDialog
-import com.example.schedule.util.subs
+import com.example.schedule.util.buildSubscribe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -77,7 +77,7 @@ class StartActivity : AppCompatActivity() {
                         } else it.onError(Throwable("Не удалось прочитать таблицу"))
                     }}
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subs(
+                    .buildSubscribe(
                             onSubscribe = { loadDialog.show("Чтение таблицы") },
                             onNext = { openCoursesDialog(it.courses) },
                             onComplete = { loadDialog.close() },
@@ -90,7 +90,7 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun Observable<List<Branch>>.subscribeToGetBranches(): Disposable {
-        return this.observeOn(AndroidSchedulers.mainThread()).subs(
+        return this.observeOn(AndroidSchedulers.mainThread()).buildSubscribe(
                 onSubscribe = { loadDialog.show("Загрузка списка групп") },
                 onNext = { showBranchDialog(it) },
                 onComplete = {loadDialog.close() },
@@ -118,7 +118,7 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun Observable<Schedule>.subscribeToGetSchedule(): Disposable {
-        return this.observeOn(AndroidSchedulers.mainThread()).subs(
+        return this.observeOn(AndroidSchedulers.mainThread()).buildSubscribe(
                 onSubscribe = { loadDialog.show("Загрузка таблицы") },
                 onNext = {
                     loadDialog.changeText("Чтение таблицы")

@@ -9,6 +9,14 @@ fun daysBetween(d1: Date, d2: Date): Int {
     return ((d2.time - d1.time) / (1000 * 60 * 60 * 24)).toInt()
 }
 
-fun <T> Observable<T>.subs(onNext: (item: T) -> Unit, onError: (t: Throwable) -> Unit, onComplete: () -> Unit, onSubscribe: (s: Disposable) -> Unit): Disposable {
-    return this.subscribe(onNext, onError, onComplete, onSubscribe)
+fun <T> Observable<T>.buildSubscribe(onNext: ((item: T) -> Unit)? = null,
+                                     onError: ((t: Throwable) -> Unit)? = null,
+                                     onComplete: (() -> Unit)? = null,
+                                     onSubscribe: ((s: Disposable) -> Unit)? = null): Disposable {
+    return this.subscribe(
+            { onNext?.invoke(it) },
+            { onError?.invoke(it) },
+            { onComplete?.invoke() },
+            { onSubscribe?.invoke(it) }
+    )
 }

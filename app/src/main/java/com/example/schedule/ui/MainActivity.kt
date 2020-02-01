@@ -16,8 +16,11 @@ import com.example.schedule.ScheduleApplication
 import com.example.schedule.ScheduleApplication.CURRENT_DATE_EXTRA
 import com.example.schedule.ScheduleApplication.START_ACTIVITY_REQUEST_CODE
 import com.example.schedule.logic.ScheduleHelper
-import com.example.schedule.util.DayAdapter
+import com.example.schedule.logic.ServerHelper
+import com.example.schedule.model.Branch
+import com.example.schedule.util.adapter.DayAdapter
 import com.example.schedule.util.daysBetween
+import com.google.gson.internal.LinkedTreeMap
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 

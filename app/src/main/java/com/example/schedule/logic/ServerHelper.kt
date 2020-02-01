@@ -1,5 +1,6 @@
 package com.example.schedule.logic
 
+import com.example.schedule.model.AppVersion
 import com.example.schedule.model.Branch
 import com.example.schedule.model.Schedule
 import com.google.gson.Gson
@@ -26,6 +27,7 @@ object ServerHelper {
     private const val serverBranchesUrl = "$serverUrl$branchesUrl?server=$serverApp"
 
 
+    private val simpleGson: Gson = Gson()
     private val client = OkHttpClient()
 
     @JvmStatic
@@ -39,6 +41,8 @@ object ServerHelper {
     fun getKfuBranches(): Observable<List<Branch>> = callForBranches(kfuBranchesUrl)
 
     fun getServerBranches(): Observable<List<Branch>> = callForBranches(serverBranchesUrl)
+
+
 
     private fun call(url: String): Observable<Response> {
         val request = Request.Builder()
@@ -57,63 +61,70 @@ object ServerHelper {
                 .subscribeOn(Schedulers.io())
     }
 
-    private fun callForString(url: String): Observable<String> {
-        return call(url).flatMap { response ->
-            ObservableSource<String> {
-                try {
-                    val responseBody = response.body()
-                            ?: throw NullPointerException("Тело ответа сервера равно null")
-                    val str = responseBody.string()
-                    it.onNext(str)
-                    it.onComplete()
-                    return@ObservableSource
-                } catch (e: IOException) {
-                    it.onError(Throwable("Произошла ошибка при чтении ответа сервера"))
-                    return@ObservableSource
-                } catch (e: NullPointerException) {
-                    it.onError(e)
-                    return@ObservableSource
-                }
+    private fun <T> getFromResponse(url: String, castFunction: (response: Response) -> T): Observable<T> {
+        return call(url).flatMap { response -> ObservableSource<T> {
+            try {
+                val item = castFunction(response)
+                it.onNext(item)
+                it.onComplete()
+            } catch (e: Exception) {
+                it.onError(e)
             }
+            return@ObservableSource
+        }}
+    }
+
+    private fun <T> getObject(url: String): Observable<T> {
+        return getFromResponse(url) {
+            try {
+                val responseBody = it.body()
+                        ?: throw NullPointerException("Тело ответа сервера равно null")
+                val str = responseBody.string()
+                val typeToken = object : TypeToken<T>() {}
+                return@getFromResponse simpleGson.fromJson<T>(str, typeToken.type)
+            } catch (e: IOException) {
+                throw Exception("Произошла ошибка при чтении ответа сервера")
+            }
+        }
+    }
+
+    private fun callForString(url: String): Observable<String> {
+        return getFromResponse(url) {
+            val responseBody = it.body() ?: throw Exception("Пустое тело ответа")
+            return@getFromResponse responseBody.string()
         }
     }
 
     private fun callForBranches(url: String): Observable<List<Branch>> {
         return callForString(url)
-                .subscribeOn(Schedulers.computation())
-                .flatMap { str ->
-            ObservableSource<List<Branch>> {
-                try {
-                    val hashMapType = object : TypeToken<LinkedHashMap<String, Any>>() {}.type
-                    val hashMap = Gson().fromJson<LinkedHashMap<String, Any>>(str, hashMapType)
+                .flatMap { str -> ObservableSource<List<Branch>> {
+                    try {
+                        val hashMapType = object : TypeToken<LinkedHashMap<String, Any>>() {}.type
+                        val hashMap = simpleGson.fromJson<LinkedHashMap<String, Any>>(str, hashMapType)
 
-                    val branches = hashMap.map { entry -> Branch(entry.key, entry.value) }
-                    it.onNext(branches)
-                    it.onComplete()
-                } catch (e: JsonSyntaxException) {
-                    e.printStackTrace()
-                    it.onError(Throwable("Произошла ошибка при чтении расписаний отделений"))
-                }
-            }
-        }
+                        val branches = hashMap.map { entry -> Branch(entry.key, entry.value) }
+                        it.onNext(branches)
+                        it.onComplete()
+                    } catch (e: JsonSyntaxException) {
+                        e.printStackTrace()
+                        it.onError(Throwable("Произошла ошибка при чтении расписаний отделений"))
+                    }
+                }}
     }
 
     fun callForSchedule(url: String): Observable<Schedule> {
-        return call(url).flatMap { response ->
-            ObservableSource<Schedule> {
-                try {
-                    val responseBody = response.body()
-                            ?: throw NullPointerException("Тело ответа серверо равно null")
-                    val schedule = SheetsHelper.getSchedule(responseBody.byteStream())
-                            ?: throw NullPointerException("Не удалось прочитать таблицу с расписанием")
-                    it.onNext(schedule)
-                    it.onComplete()
-                } catch (e: NullPointerException) {
-                    it.onError(e)
-                    e.printStackTrace()
-                }
-            }
+        return getFromResponse(url) {
+            val responseBody = it.body()
+                    ?: throw NullPointerException("Тело ответа серверо равно null")
+            return@getFromResponse SheetsHelper.getSchedule(responseBody.byteStream())
+                    ?: throw NullPointerException("Не удалось прочитать таблицу с расписанием")
         }
+    }
+
+    @JvmStatic
+    fun checkUpdates(): Observable<AppVersion> {
+        return getObject<List<String>>(serverUrl + checkUpdateUrl)
+                .map { AppVersion(it[0], it[1]) }
     }
 
 

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.schedule.R
 import com.example.schedule.ScheduleApplication
 import com.example.schedule.model.Lesson
-import com.example.schedule.util.MySimpleAdapter
+import com.example.schedule.util.adapter.MySimpleAdapter
 import kotlinx.android.synthetic.main.activity_about_lesson.*
 import kotlinx.android.synthetic.main.item_about_lesson.view.*
 
@@ -43,7 +43,7 @@ class AboutLessonActivity : AppCompatActivity() {
                 twValue.text = lessonField.value
             }
         }, {
-            with (it) {
+            with(it) {
                 twName.setTextColor(context.resources.getColor(ScheduleApplication.COLOR_SECONDARY))
                 twValue.setTextColor(context.resources.getColor(ScheduleApplication.COLOR_ACCENT))
             }

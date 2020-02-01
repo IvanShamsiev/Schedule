@@ -1,4 +1,4 @@
-package com.example.schedule.util
+package com.example.schedule.util.adapter
 
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import com.example.schedule.ScheduleApplication
 import com.example.schedule.logic.ScheduleHelper.group
 import com.example.schedule.logic.ScheduleHelper.isEven
 import com.example.schedule.model.Lesson
-import com.example.schedule.util.WeekDaysAdapter.WeekDayHolder
+import com.example.schedule.util.adapter.WeekDaysAdapter.WeekDayHolder
 import kotlinx.android.synthetic.main.week_day_item.view.*
 import java.util.*
 
