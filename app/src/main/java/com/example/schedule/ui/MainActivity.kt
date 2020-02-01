@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toStartActivity() {
-        startActivityForResult(StartActivity.newIntent(this), START_ACTIVITY_REQUEST_CODE)
+        startActivityForResult(Intent(this, StartActivity::class.java), START_ACTIVITY_REQUEST_CODE)
     }
 
     private fun setUI() {
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
         menu.findItem(R.id.reloadSchedule).setOnMenuItemClickListener {
-            startActivityForResult(StartActivity.newIntent(this), START_ACTIVITY_REQUEST_CODE)
+            startActivityForResult(Intent(this, StartActivity::class.java), START_ACTIVITY_REQUEST_CODE)
             true
         }
         return true

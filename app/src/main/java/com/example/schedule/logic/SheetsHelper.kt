@@ -4,6 +4,7 @@ import com.example.schedule.ScheduleApplication
 import com.example.schedule.model.*
 import org.apache.poi.ss.usermodel.*
 import java.io.InputStream
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,7 +32,12 @@ object SheetsHelper {
         if (inputStream == null) return null
         locale = Locale.getDefault()
         lessonTimeFormat = SimpleDateFormat("HH:mm", locale)
-        val workbook = readWorkbook(inputStream) ?: return null
+        val workbook: Workbook
+        try { workbook = readWorkbook(inputStream) ?: return null }
+        catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
         val courses: MutableList<Course> = ArrayList()
         for (courseSheet in workbook) courses.add(Course(courseSheet.sheetName, getGroups(courseSheet)))
         return Schedule(courses)

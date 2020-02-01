@@ -25,9 +25,9 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.example.schedule.ScheduleApplication.checkUpdateUrl;
 import static com.example.schedule.ScheduleApplication.showToast;
-import static com.example.schedule.ScheduleApplication.url;
+import static com.example.schedule.logic.ServerHelper.checkUpdateUrl;
+import static com.example.schedule.logic.ServerHelper.serverUrl;
 
 public class UpdateHelper {
 
@@ -36,13 +36,12 @@ public class UpdateHelper {
 
     public UpdateHelper(Context context, FragmentManager fragmentManager) {
         this.context = context;
-
         loadDialog = new LoadDialog(fragmentManager);
     }
 
     public void checkUpdate() {
         loadDialog.show("Проверка обновлений");
-        ServerHelper.call(url + checkUpdateUrl, checkUpdateCallback);
+        ServerHelper.justCall(serverUrl + checkUpdateUrl, checkUpdateCallback);
     }
 
 

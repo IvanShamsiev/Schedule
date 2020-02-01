@@ -27,12 +27,6 @@ public class ScheduleApplication extends Application {
     public static final String LESSON_EXTRA = "lesson";
     public static final String CURRENT_DATE_EXTRA = "current_date";
 
-    // Server
-    public static final String branchesUrl = "getBranches.php";
-    public static final String serverKpfu = "kpfu";
-    public static final String serverApp = "appServer";
-    public static final String checkUpdateUrl = "checkUpdate.php";
-    public static final String url = "https://schedule2171112.000webhostapp.com/";
     public static final List<String> dayOfWeek = Arrays.asList(
             "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
 
