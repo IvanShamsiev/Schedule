@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widgetLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    style="@style/MainWidget.Dark.Layout">
+
+    <TextView
+        android:id="@+id/tvDayOfWeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10pt"
+        android:gravity="center_horizontal"
+        tools:text="День недели"
+        style="@style/MainWidget.Dark.TextView" />
+
+    <TextView
+        android:id="@+id/tvNoLessons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="11pt"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/noLessons"
+        style="@style/MainWidget.Dark.TextView"/>
+
+    <ListView
+        android:id="@+id/lvLessons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/MainWidget.Dark.TextView"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="9pt"
+            tools:text="27 Апреля"
+            style="@style/MainWidget.Dark.TextView" />
+
+        <TextView
+            android:id="@+id/tvEven"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9pt"
+            tools:text="Нижняя неделя"
+            style="@style/MainWidget.Dark.TextView" />
+
+    </LinearLayout>
+
+</LinearLayout>

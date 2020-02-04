@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.schedule.R
 import com.example.schedule.ScheduleApplication
+import com.example.schedule.ScheduleApplication.CHOSE_FILE_REQUEST_CODE
 import com.example.schedule.logic.ScheduleHelper.group
 import com.example.schedule.logic.ScheduleHelper.saveGroup
 import com.example.schedule.logic.ServerHelper
@@ -56,7 +57,7 @@ class StartActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CHOSE_FILE_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == CHOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             Observable.just(data)
                     .subscribeOn(Schedulers.io())
                     .flatMap { intent -> ObservableSource<InputStream> {
@@ -95,7 +96,6 @@ class StartActivity : AppCompatActivity() {
                 onNext = { showBranchDialog(it) },
                 onComplete = {loadDialog.close() },
                 onError = {
-                    Log.d("myTag", "onError")
                     loadDialog.close()
                     Toast.makeText(this@StartActivity, it.message, Toast.LENGTH_LONG).show()
                 }
@@ -109,7 +109,6 @@ class StartActivity : AppCompatActivity() {
                     if (value is String) {
                         ServerHelper.callForSchedule(value).subscribeToGetSchedule()
                     } else {
-                        Log.d("myTag", value.toString())
                         val hashMap = LinkedHashMap<String, Any>(value as Map<String, Any>)
                         showBranchDialog(hashMap.map { Branch(it.key, it.value) })
                     }
@@ -137,7 +136,7 @@ class StartActivity : AppCompatActivity() {
         intent.type = "*/*"
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         try {
-            startActivityForResult(Intent.createChooser(intent, "Выберите таблицу"), CHOSE_FILE_CODE)
+            startActivityForResult(Intent.createChooser(intent, "Выберите таблицу"), CHOSE_FILE_REQUEST_CODE)
         } catch (ex: ActivityNotFoundException) {
             Toast.makeText(this, "Серьёзно? Установи файловый менеджер", Toast.LENGTH_SHORT).show()
         }
@@ -160,9 +159,5 @@ class StartActivity : AppCompatActivity() {
                     finish()
                 }
                 .show()
-    }
-
-    companion object {
-        private const val CHOSE_FILE_CODE = 1
     }
 }

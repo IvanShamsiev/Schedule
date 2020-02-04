@@ -7,9 +7,9 @@ data class Schedule(val courses: List<Course>)
 
 data class Course(val name: String, val groups: List<Group>)
 
-data class Group(val name: String, val week: Week)
+data class Group(val name: String, val week: Week): Serializable
 
-data class Week(val days: List<Day>) {
+data class Week(val days: List<Day>): Serializable {
     fun getDay(date: Calendar): Day {
         val num = date.get(Calendar.DAY_OF_WEEK) - 1
         return days.find {it.number == num}!!
@@ -17,7 +17,7 @@ data class Week(val days: List<Day>) {
 }
 
 data class Day(val number: Int,
-               val lessons: List<Lesson>) {
+               val lessons: List<Lesson>): Serializable {
 
     val evenLessons: List<Lesson>
         get() = lessons.filter { lesson -> lesson.even == "Нижняя" }
@@ -52,4 +52,4 @@ data class Lesson(val beginTime: String,
 }
 
 data class LessonField(val name: String,
-                       val value: String)
+                       val value: String): Serializable

@@ -30,6 +30,65 @@
         <item name="colorAccent">@color/darkColorAccent</item>
     </style>
 
+    <style name="MainWidget" />
+
+
+    <style name="MainWidget.Transparent" />
+
+    <style name="MainWidget.Transparent.Layout">
+
+    </style>
+
+    <style name="MainWidget.Transparent.TextView">
+
+    </style>
+
+    <style name="MainWidget.Transparent.Item" />
+
+    <style name="MainWidget.Transparent.Item.TextView">
+
+    </style>
+
+
+
+
+    <style name="MainWidget.Light" />
+
+    <style name="MainWidget.Light.Layout">
+        <item name="android:background">#FFFFFF</item>
+    </style>
+
+    <style name="MainWidget.Light.TextView">
+
+    </style>
+
+    <style name="MainWidget.Light.Item" />
+
+    <style name="MainWidget.Light.Item.TextView">
+
+    </style>
+
+
+
+
+    <style name="MainWidget.Dark" />
+
+    <style name="MainWidget.Dark.Layout">
+        <item name="android:background">@color/material_grey_800</item>
+    </style>
+
+    <style name="MainWidget.Dark.TextView">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="MainWidget.Dark.Item" />
+
+    <style name="MainWidget.Dark.Item.TextView">
+        <item name="android:textColor">#CCCCCC</item>
+    </style>
+
+
+
 
 
 

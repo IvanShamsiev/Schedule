@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <RadioGroup
+        android:id="@+id/radioButtonsTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/rbTransparent">
+
+        <RadioButton
+            android:id="@+id/rbTransparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Прозрачная тема" />
+
+        <RadioButton
+            android:id="@+id/rbLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Светлая тема" />
+
+        <RadioButton
+            android:id="@+id/rbDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Тёмная тема" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnCreateWidget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Создать виджет" />
+
+</LinearLayout>

@@ -12,16 +12,14 @@ object ScheduleHelper {
     var context: Context? = null
         set(value) { field = value?.applicationContext }
 
+    private val simpleGson = Gson()
+
     var group: Group? = null
 
-    private fun setSchedule(json: String) {
-        group = Gson().fromJson(json, Group::class.java)
-    }
-
-    fun loadGroup(): Boolean {
+    fun loadGroup(context: Context): Group? {
         var json: String? = null
         try {
-            val br = BufferedReader(InputStreamReader(context!!.openFileInput(GROUP_FILE)))
+            val br = BufferedReader(InputStreamReader(context.openFileInput(GROUP_FILE)))
 
             val jsonBuilder = StringBuilder()
             var s: String?
@@ -33,17 +31,30 @@ object ScheduleHelper {
             e.printStackTrace()
         }
 
+        println("Json: ${json == null} $json")
+
         return if (json != null && json.isNotEmpty()) {
-            setSchedule(json)
-            true
+            simpleGson.fromJson(json, Group::class.java)
         } else {
-            false
+            null
         }
+    }
+
+    fun loadGroup(): Boolean {
+        val group = loadGroup(context!!)
+        return if (group != null) {
+            this.group = group
+            true
+        } else false
+    }
+
+    private fun setSchedule(json: String) {
+        group = simpleGson.fromJson(json, Group::class.java)
     }
 
     fun saveGroup(group: Group): Boolean {
         return try {
-            val jsonGroup: String = Gson().toJson(group)
+            val jsonGroup: String = simpleGson.toJson(group)
             val bw = BufferedWriter(OutputStreamWriter(context!!.openFileOutput(GROUP_FILE, Context.MODE_PRIVATE)))
             bw.write(jsonGroup)
             bw.close()

@@ -12,6 +12,7 @@ import com.example.schedule.BuildConfig
 import com.example.schedule.ScheduleApplication
 import com.example.schedule.util.LoadDialog
 import com.example.schedule.util.buildSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
 import java.io.File
 
 class UpdateHelper(private val context: Context, private val fragmentManager: FragmentManager) {
@@ -21,11 +22,12 @@ class UpdateHelper(private val context: Context, private val fragmentManager: Fr
     fun checkUpdate() {
         loadDialog = LoadDialog(fragmentManager)
         ServerHelper.checkUpdates()
+                .observeOn(AndroidSchedulers.mainThread())
                 .buildSubscribe(
                         onSubscribe = { loadDialog.show("Проверка обновлений") },
                         onNext = {
                             if (it.version == BuildConfig.VERSION_NAME) {
-                                ScheduleApplication.showToast(context, "У вас установлена последняя версия приложения")
+                                Toast.makeText(context, "У вас установлена последняя версия приложения", Toast.LENGTH_LONG).show()
                             } else openUpdateDialog(it.version, it.url)
                         },
                         onComplete = { loadDialog.close() },

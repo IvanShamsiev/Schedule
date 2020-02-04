@@ -1,14 +1,9 @@
 package com.example.schedule;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-import android.widget.Toast;
 
-import androidx.preference.CheckBoxPreference;
+import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
@@ -17,11 +12,11 @@ import com.example.schedule.logic.ScheduleHelper;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-public class ScheduleApplication extends Application {
+public class ScheduleApplication extends MultiDexApplication {
 
-    // Constants
     public static final String GROUP_FILE = "group.json";
 
     public static final String LESSON_EXTRA = "lesson";
@@ -32,8 +27,8 @@ public class ScheduleApplication extends Application {
 
 
     // Request code for StartActivity
+    public static final int CHOSE_FILE_REQUEST_CODE = 1;
     public static final int START_ACTIVITY_REQUEST_CODE = 2;
-
 
     // Check JSON-Schedule2 version
     private static final int CURRENT_SCHEDULE_VERSION = 1;
@@ -42,6 +37,7 @@ public class ScheduleApplication extends Application {
     // Theme constants
     public static final String THEME_PREF = "theme_pref";
     public static int COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_SECONDARY, COLOR_ACCENT;
+    public static boolean isDarkTheme;
     public static int currentTheme;
 
     @Override
@@ -55,10 +51,11 @@ public class ScheduleApplication extends Application {
         ScheduleHelper.INSTANCE.setContext(this);
     }
 
+
     private void setCurrentTheme() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        boolean isDarkTheme = sharedPreferences.getBoolean(THEME_PREF, false);
+        isDarkTheme = sharedPreferences.getBoolean(THEME_PREF, false);
         currentTheme = isDarkTheme ? R.style.AppTheme_Dark : R.style.AppTheme_Light;
 
         /*sharedPreferences.registerOnSharedPreferenceChangeListener((sp, key) -> {
@@ -97,7 +94,6 @@ public class ScheduleApplication extends Application {
         editor.putInt(SCHEDULE_VERSION_PREF, CURRENT_SCHEDULE_VERSION);
         editor.commit();
 
-
         try {
             FileOutputStream outputStream = openFileOutput(GROUP_FILE, MODE_PRIVATE);
             outputStream.write(new byte[0]);
@@ -107,24 +103,5 @@ public class ScheduleApplication extends Application {
             e.printStackTrace();
         }
     }
-
-
-
-    // For Toasts in main thread
-    private static Handler toastHandler = new Handler(msg -> {
-        Object[] message = (Object[]) msg.obj;
-        Context context = (Context) message[0];
-        String text = (String) message[1];
-        if (context != null && text != null)
-            Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-        return true;
-    });
-
-    public static void showToast(Context ctx, String str) {
-        Message msg = new Message();
-        msg.obj = new Object[] {ctx, str};
-        toastHandler.sendMessage(msg);
-    }
-
 
 }
