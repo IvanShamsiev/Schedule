@@ -9,7 +9,7 @@
         android:id="@+id/radioButtonsTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkedButton="@id/rbTransparent">
+        android:checkedButton="@id/rbLight">
 
         <RadioButton
             android:id="@+id/rbTransparent"

@@ -12,7 +12,6 @@ import com.example.schedule.logic.ScheduleHelper;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class ScheduleApplication extends MultiDexApplication {
@@ -30,8 +29,8 @@ public class ScheduleApplication extends MultiDexApplication {
     public static final int CHOSE_FILE_REQUEST_CODE = 1;
     public static final int START_ACTIVITY_REQUEST_CODE = 2;
 
-    // Check JSON-Schedule2 version
-    private static final int CURRENT_SCHEDULE_VERSION = 1;
+    // Check JSON-Schedule version
+    private static final int CURRENT_SCHEDULE_VERSION = 2;
     private static final String SCHEDULE_VERSION_PREF = "schedule_version";
 
     // Theme constants
