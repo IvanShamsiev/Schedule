@@ -5,11 +5,9 @@ import com.example.schedule.model.Branch
 import com.example.schedule.model.Schedule
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.schedulers.Schedulers
-import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -20,8 +18,8 @@ object ServerHelper {
     private const val branchesUrl = "getBranches.php"
     private const val serverKpfu = "kpfu"
     private const val serverApp = "appServer"
-    const val checkUpdateUrl = "checkUpdate.php"
-    const val serverUrl = "https://schedule2171112.000webhostapp.com/"
+    private const val checkUpdateUrl = "checkUpdate.php"
+    private const val serverUrl = "https://schedule2171112.000webhostapp.com/"
 
     private const val kfuBranchesUrl = "$serverUrl$branchesUrl?server=$serverKpfu"
     private const val serverBranchesUrl = "$serverUrl$branchesUrl?server=$serverApp"
@@ -30,13 +28,12 @@ object ServerHelper {
     private val simpleGson: Gson = Gson()
     private val client = OkHttpClient()
 
-    @JvmStatic
-    fun justCall(url: String, callback: Callback) {
+    /*fun justCall(url: String, callback: Callback) {
         val request = Request.Builder()
                 .url(url)
                 .build()
         client.newCall(request).enqueue(callback)
-    }
+    }*/
 
     fun getKfuBranches(): Observable<List<Branch>> = callForBranches(kfuBranchesUrl)
 
@@ -67,21 +64,20 @@ object ServerHelper {
                 val item = castFunction(response)
                 it.onNext(item)
                 it.onComplete()
-            } catch (e: Exception) {
-                it.onError(e)
+            } catch (t: Throwable) {
+                it.onError(t)
             }
             return@ObservableSource
         }}
     }
 
-    private fun <T> getObject(url: String): Observable<T> {
+    private inline fun <reified T> getObject(url: String): Observable<T> {
         return getFromResponse(url) {
             try {
                 val responseBody = it.body()
                         ?: throw NullPointerException("Тело ответа сервера равно null")
                 val str = responseBody.string()
-                val typeToken = object : TypeToken<T>() {}
-                return@getFromResponse simpleGson.fromJson<T>(str, typeToken.type)
+                return@getFromResponse simpleGson.fromJson<T>(str, T::class.java)
             } catch (e: IOException) {
                 throw Exception("Произошла ошибка при чтении ответа сервера")
             }
@@ -99,8 +95,7 @@ object ServerHelper {
         return callForString(url)
                 .flatMap { str -> ObservableSource<List<Branch>> {
                     try {
-                        val hashMapType = object : TypeToken<LinkedHashMap<String, Any>>() {}.type
-                        val hashMap = simpleGson.fromJson<LinkedHashMap<String, Any>>(str, hashMapType)
+                        val hashMap = simpleGson.fromJson<LinkedHashMap<String, Any>>(str, LinkedHashMap<String, Any>()::class.java)
 
                         val branches = hashMap.map { entry -> Branch(entry.key, entry.value) }
                         it.onNext(branches)

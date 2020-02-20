@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import com.example.schedule.BuildConfig
-import com.example.schedule.ScheduleApplication
 import com.example.schedule.util.LoadDialog
 import com.example.schedule.util.buildSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -72,7 +71,7 @@ class UpdateHelper(private val context: Context, private val fragmentManager: Fr
             Toast.makeText(context, "Ошибка: На вашем устройстве отсутсвует менеджер загрузок", Toast.LENGTH_LONG).show()
             return
         }
-        //val downloadId = manager.enqueue(request)
+        val downloadId = manager.enqueue(request)
 
         // Set BroadcastReceiver to install app when .apk is downloaded
         val onComplete = object: BroadcastReceiver() {
