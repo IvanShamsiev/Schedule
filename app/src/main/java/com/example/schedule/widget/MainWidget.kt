@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.view.View
 import android.widget.RemoteViews
 import androidx.preference.PreferenceManager
@@ -23,12 +24,8 @@ import java.util.*
 
 class MainWidget: AppWidgetProvider() {
 
-    private lateinit var currentDate: Calendar
-    private lateinit var pageDate: Calendar
-
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        println("MainWidget.onEnabled")
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         weekEvenStyle = sharedPreferences.getString("week_even_style", "0") == "0"
@@ -37,7 +34,7 @@ class MainWidget: AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        println("MainWidget.onUpdate appWidgetIds = [${appWidgetIds.contentToString()}]")
+        //println("MainWidget.onUpdate appWidgetIds = [${appWidgetIds.contentToString()}]")
 
         val preferences = context.getSharedPreferences(WIDGET_PREFERENCES, Context.MODE_PRIVATE)
         appWidgetIds.forEach { widgetId -> updateWidget(context, appWidgetManager, preferences, widgetId) }
@@ -51,11 +48,6 @@ class MainWidget: AppWidgetProvider() {
         editor.commit()
     }
 
-    override fun onDisabled(context: Context?) {
-        super.onDisabled(context)
-        println("MainWidget.onDisabled")
-    }
-
 
 
 
@@ -67,6 +59,7 @@ class MainWidget: AppWidgetProvider() {
         private var showNavigationLayout: Boolean = false // false: hide, true: show = false
 
         fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, preferences: SharedPreferences, widgetId: Int) {
+
             val locale = Locale.getDefault()
             val date: Calendar = GregorianCalendar.getInstance()
             val isEven = ScheduleHelper.isEven(date)
@@ -79,9 +72,15 @@ class MainWidget: AppWidgetProvider() {
             }
             val remoteViews = RemoteViews(context.packageName, currentView)
 
+            val updIntent = Intent(context, MainWidget::class.java)
+            updIntent.action = ACTION_APPWIDGET_UPDATE
+            updIntent.putExtra(EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+            val updPIntent = PendingIntent.getBroadcast(context, widgetId, updIntent, 0)
+
             var dayOfWeek = date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()) ?: "Wrong day of week"
             if (dayOfWeek.isNotEmpty()) dayOfWeek = dayOfWeek.substring(0, 1).toUpperCase(Locale.getDefault()) + dayOfWeek.substring(1)
             remoteViews.setTextViewText(R.id.tvDayOfWeek, dayOfWeek)
+            remoteViews.setOnClickPendingIntent(R.id.tvDayOfWeek, updPIntent)
 
             var dateString = date.getDisplayName(Calendar.MONTH, Calendar.LONG, locale) ?: "Wrong month name"
             dateString = dateString.substring(0, 1).toUpperCase(locale) + dateString.substring(1)
@@ -106,10 +105,15 @@ class MainWidget: AppWidgetProvider() {
                     remoteViews.setViewVisibility(R.id.lvLessons, View.GONE)
                     remoteViews.setViewVisibility(R.id.tvNoLessons, View.VISIBLE)
                 } else {
+                    remoteViews.setViewVisibility(R.id.lvLessons, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.tvNoLessons, View.GONE)
+
                     val adapter = Intent(context, LessonsService::class.java)
                     adapter.putExtra(EXTRA_APPWIDGET_ID, widgetId)
-                    adapter.putExtra(DATE_EXTRA, date)
+                    adapter.putExtra(DATE_EXTRA, date.time.time)
                     adapter.putExtra(IS_EVEN_EXTRA, isEven)
+                    val data: Uri = Uri.parse(adapter.toUri(Intent.URI_INTENT_SCHEME))
+                    adapter.data = data // Чтобы интент каждый раз различался
                     remoteViews.setRemoteAdapter(R.id.lvLessons, adapter)
                 }
             }

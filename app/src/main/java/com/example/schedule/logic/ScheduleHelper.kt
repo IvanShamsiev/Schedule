@@ -31,7 +31,7 @@ object ScheduleHelper {
             e.printStackTrace()
         }
 
-        println("Json: ${json == null} $json")
+        //println("Json: ${json == null} $json")
 
         return if (json != null && json.isNotEmpty()) {
             simpleGson.fromJson(json, Group::class.java)

@@ -13,7 +13,8 @@ import java.util.*
 class LessonsService: RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        val date = intent.getSerializableExtra(DATE_EXTRA) as Calendar
+        val longDate = intent.getSerializableExtra(DATE_EXTRA) as Long
+        val date = Calendar.getInstance().apply { time = Date(longDate) }
         val isEven = intent.getBooleanExtra(IS_EVEN_EXTRA, false)
 
         val group: Group? = ScheduleHelper.loadGroup(applicationContext)
