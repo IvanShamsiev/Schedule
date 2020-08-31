@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="transparent">#00000000</color>
+
     <color name="lightColorPrimary">#008577</color>
     <color name="lightColorPrimaryDark">#00574B</color>
     <color name="lightColorSecondary">@color/lightColorPrimary</color>

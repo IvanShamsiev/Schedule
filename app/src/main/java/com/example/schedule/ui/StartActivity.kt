@@ -44,6 +44,10 @@ class StartActivity : AppCompatActivity() {
 
         ScheduleApplication.checkEvening(PreferenceManager.getDefaultSharedPreferences(this))
 
+        val background = if (ScheduleApplication.isDarkTheme)
+            R.drawable.choose_group_button_dark_bg
+        else R.drawable.choose_group_button_light_bg
+        btnDownload.setBackgroundResource(background)
         btnDownload.setOnClickListener {
             ServerHelper.getKfuBranches().subscribeToGetBranches()
         }
