@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import java.io.InterruptedIOException
 
 object ServerHelper {
 
@@ -19,6 +20,7 @@ object ServerHelper {
     private const val serverKpfu = "kpfu"
     private const val serverApp = "appServer"
     private const val checkUpdateUrl = "checkUpdate.php"
+    private const val getEveningUrl = "getEvening.php"
     private const val serverUrl = "https://schedule2171112.000webhostapp.com/"
 
     private const val kfuBranchesUrl = "$serverUrl$branchesUrl?server=$serverKpfu"
@@ -39,6 +41,8 @@ object ServerHelper {
 
     fun getServerBranches(): Observable<List<Branch>> = callForBranches(serverBranchesUrl)
 
+    fun checkEvening(): Observable<Boolean> = callForString(serverUrl + getEveningUrl)
+            .flatMap { Observable.just(it == "1") }
 
 
     private fun call(url: String): Observable<Response> {
@@ -50,7 +54,7 @@ object ServerHelper {
             try {
                 val response: Response = client.newCall(request).execute()
                 Observable.just(response)
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 Observable.error(e)
             }
         }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedule.R
-import com.example.schedule.ScheduleApplication.LESSON_EXTRA
+import com.example.schedule.ScheduleApplication.Companion.LESSON_EXTRA
 import com.example.schedule.logic.ScheduleHelper
 import com.example.schedule.ui.AboutLessonActivity
 import com.example.schedule.util.adapter.DayAdapter.DayViewHolder
@@ -22,7 +22,8 @@ class DayAdapter(private val currentDate: Calendar, private var weekEvenStyle: B
     private val locale = Locale.getDefault()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
-        val dayView = LayoutInflater.from(parent.context).inflate(R.layout.item_fragment_page, parent, false)
+        val dayView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_fragment_page, parent, false)
         return DayViewHolder(dayView)
     }
 

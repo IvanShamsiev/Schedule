@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.schedule.R
 import com.example.schedule.ScheduleApplication
-import com.example.schedule.ScheduleApplication.CURRENT_DATE_EXTRA
+import com.example.schedule.ScheduleApplication.Companion.CURRENT_DATE_EXTRA
 import com.example.schedule.logic.ScheduleHelper
 import com.example.schedule.util.adapter.WeekDaysAdapter
 import kotlinx.android.synthetic.main.activity_full_schedule.*

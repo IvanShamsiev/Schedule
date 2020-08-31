@@ -1,7 +1,8 @@
 package com.example.schedule.logic
 
 import android.content.Context
-import com.example.schedule.ScheduleApplication.GROUP_FILE
+import com.example.schedule.ScheduleApplication
+import com.example.schedule.ScheduleApplication.Companion.GROUP_FILE
 import com.example.schedule.model.Group
 import com.google.gson.Gson
 import java.io.*
@@ -9,7 +10,7 @@ import java.util.*
 
 object ScheduleHelper {
 
-    var context: Context? = null
+    var appContext: Context? = null
         set(value) { field = value?.applicationContext }
 
     private val simpleGson = Gson()
@@ -41,7 +42,7 @@ object ScheduleHelper {
     }
 
     fun loadGroup(): Boolean {
-        val group = loadGroup(context!!)
+        val group = loadGroup(appContext!!)
         return if (group != null) {
             this.group = group
             true
@@ -55,7 +56,7 @@ object ScheduleHelper {
     fun saveGroup(group: Group): Boolean {
         return try {
             val jsonGroup: String = simpleGson.toJson(group)
-            val bw = BufferedWriter(OutputStreamWriter(context!!.openFileOutput(GROUP_FILE, Context.MODE_PRIVATE)))
+            val bw = BufferedWriter(OutputStreamWriter(appContext!!.openFileOutput(GROUP_FILE, Context.MODE_PRIVATE)))
             bw.write(jsonGroup)
             bw.close()
             true
@@ -66,6 +67,7 @@ object ScheduleHelper {
     }
 
     fun isEven(date: Calendar): Boolean { // true - Нижняя, false - Верхняя
-        return date[Calendar.WEEK_OF_YEAR] % 2 == 0
+        val even = date[Calendar.WEEK_OF_YEAR] % 2 == 0
+        return if (ScheduleApplication.eveningChanged) !even else even
     }
 }

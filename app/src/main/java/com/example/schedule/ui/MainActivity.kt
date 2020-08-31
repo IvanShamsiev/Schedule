@@ -13,14 +13,11 @@ import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.example.schedule.R
 import com.example.schedule.ScheduleApplication
-import com.example.schedule.ScheduleApplication.CURRENT_DATE_EXTRA
-import com.example.schedule.ScheduleApplication.START_ACTIVITY_REQUEST_CODE
+import com.example.schedule.ScheduleApplication.Companion.CURRENT_DATE_EXTRA
+import com.example.schedule.ScheduleApplication.Companion.START_ACTIVITY_REQUEST_CODE
 import com.example.schedule.logic.ScheduleHelper
-import com.example.schedule.logic.ServerHelper
-import com.example.schedule.model.Branch
 import com.example.schedule.util.adapter.DayAdapter
 import com.example.schedule.util.daysBetween
-import com.google.gson.internal.LinkedTreeMap
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -51,15 +48,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadSchedule() {
         val groupLoaded = ScheduleHelper.loadGroup()
-        if (groupLoaded) setUI()
-        else toStartActivity()
+        if (!groupLoaded) toStartActivity()
+        else {
+            val eveningUpdated = preferences.contains(ScheduleApplication.EVENING_CHANGED_PREF)
+            if (eveningUpdated) setUi()
+            else ScheduleApplication.checkEvening(preferences, onComplete = ::setUi)
+        }
     }
 
     private fun toStartActivity() {
         startActivityForResult(Intent(this, StartActivity::class.java), START_ACTIVITY_REQUEST_CODE)
     }
 
-    private fun setUI() {
+    private fun setUi() {
         adapter = DayAdapter(currentDate, weekEvenStyle)
         viewPager.adapter = adapter
         viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {

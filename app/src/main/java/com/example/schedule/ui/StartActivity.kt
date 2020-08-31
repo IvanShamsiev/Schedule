@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.example.schedule.R
 import com.example.schedule.ScheduleApplication
-import com.example.schedule.ScheduleApplication.CHOSE_FILE_REQUEST_CODE
+import com.example.schedule.ScheduleApplication.Companion.CHOSE_FILE_REQUEST_CODE
 import com.example.schedule.logic.ScheduleHelper.group
 import com.example.schedule.logic.ScheduleHelper.saveGroup
 import com.example.schedule.logic.ServerHelper
@@ -23,12 +23,15 @@ import com.example.schedule.util.buildSubscribe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_start.*
 import java.io.InputStream
 
 class StartActivity : AppCompatActivity() {
+
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var loadDialog: LoadDialog
 
@@ -38,6 +41,8 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
         loadDialog = LoadDialog(supportFragmentManager)
+
+        ScheduleApplication.checkEvening(PreferenceManager.getDefaultSharedPreferences(this))
 
         btnDownload.setOnClickListener {
             ServerHelper.getKfuBranches().subscribeToGetBranches()
@@ -86,8 +91,14 @@ class StartActivity : AppCompatActivity() {
                                 loadDialog.close()
                                 Toast.makeText(this@StartActivity, it.message, Toast.LENGTH_LONG).show()
                             })
+                    .also { compositeDisposable.add(it) }
 
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
     private fun Observable<List<Branch>>.subscribeToGetBranches(): Disposable {
@@ -99,7 +110,7 @@ class StartActivity : AppCompatActivity() {
                     loadDialog.close()
                     Toast.makeText(this@StartActivity, it.message, Toast.LENGTH_LONG).show()
                 }
-        )
+        ).also { compositeDisposable.add(it) }
     }
 
     private fun showBranchDialog(branches: List<Branch>) {
