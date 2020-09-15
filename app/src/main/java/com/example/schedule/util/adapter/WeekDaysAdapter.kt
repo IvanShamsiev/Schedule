@@ -26,7 +26,7 @@ class WeekDaysAdapter(private val currentDate: Calendar, private val isEven: Boo
     override fun onBindViewHolder(holder: WeekDayHolder, position: Int) {
         val day = group!!.week.days[position + 1]
         val lessons = if (isEven) day.evenLessons else day.unevenLessons
-        val weekDay = WeekDay(ScheduleApplication.dayOfWeek[position + 1], lessons,
+        val weekDay = WeekDay(ScheduleApplication.daysOfWeek[position + 1], lessons,
                 isEven(currentDate) == isEven &&
                         currentDate.get(Calendar.DAY_OF_WEEK) - 1 == position + 1)
         holder.onBind(weekDay)

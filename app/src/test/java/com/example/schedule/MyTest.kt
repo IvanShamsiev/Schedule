@@ -13,6 +13,11 @@ import java.util.concurrent.TimeUnit
 class MyTest {
 
     @Test
+    fun mTest() {
+        println(listOf("2", "3", "1", "0").sortedBy { it })
+    }
+
+    @Test
     fun testFlatMap() {
         println("Привет, Мир!")
 

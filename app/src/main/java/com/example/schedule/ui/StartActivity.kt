@@ -92,6 +92,7 @@ class StartActivity : AppCompatActivity() {
                             onNext = { openCoursesDialog(it.courses) },
                             onComplete = { loadDialog.close() },
                             onError = {
+                                it.printStackTrace()
                                 loadDialog.close()
                                 Toast.makeText(this@StartActivity, it.message, Toast.LENGTH_LONG).show()
                             })
@@ -140,6 +141,7 @@ class StartActivity : AppCompatActivity() {
                 },
                 onComplete = { loadDialog.close() },
                 onError = {
+                    it.printStackTrace()
                     loadDialog.close()
                     Toast.makeText(this@StartActivity, it.message, Toast.LENGTH_LONG).show()
                 }

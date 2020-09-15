@@ -81,7 +81,7 @@ class ScheduleApplication : MultiDexApplication() {
         const val GROUP_FILE = "group.json"
         const val LESSON_EXTRA = "lesson"
         const val CURRENT_DATE_EXTRA = "current_date"
-        val dayOfWeek: List<String> = listOf(
+        val daysOfWeek: List<String> = listOf(
                 "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
 
         // Request code for StartActivity
