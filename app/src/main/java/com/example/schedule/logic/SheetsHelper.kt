@@ -18,18 +18,12 @@ object SheetsHelper {
     private const val dayColumn = 0
     private const val timeColumn = 1
     private const val evenColumn = 2
-    private const val nameColumn = 3
-    private const val buildingColumn = 4
-    private const val classroomColumn = 5
-    private const val typeColumn = 6
-    private const val chairColumn = 7
-    private const val postColumn = 8
-    private const val teacherColumn = 9
     private lateinit var locale: Locale
     private lateinit var lessonTimeFormat: SimpleDateFormat
 
     fun getSchedule(inputStream: InputStream?): Schedule? {
         if (inputStream == null) return null
+        val first = System.nanoTime()
         locale = Locale.getDefault()
         lessonTimeFormat = SimpleDateFormat("HH:mm", locale)
         val workbook: Workbook
@@ -41,6 +35,8 @@ object SheetsHelper {
         val courses: MutableList<Course> = ArrayList()
         for (courseSheet in workbook)
             courses.add(Course(courseSheet.sheetName, getGroups(courseSheet)))
+        val second = System.nanoTime()
+        println("time: ${(second-first)*1e-9}")
         return Schedule(courses)
     }
 
@@ -112,8 +108,8 @@ object SheetsHelper {
     }
 
     private fun getLesson(sheetGroup: SheetGroup, row: Row, column: Int): Lesson? {
-        if (row.getCell(column + sheetGroup.name) == null ||
-                row.getCell(column + sheetGroup.name).toString().trim { it <= ' ' }.isEmpty()) return null
+        if (row.getCell(column + sheetGroup.name)
+                        ?.toString()?.trim { it <= ' ' }.isNullOrBlank()) return null
         val (beginTime, endTime) = getTime(row.getCell(column + timeColumn))
         val even = when (val evenStr = row.getCell(column + evenColumn).toString()) {
             "в", "В" -> "Верхняя"
@@ -179,22 +175,22 @@ object SheetsHelper {
     private class SheetGroup {
 
         private val fieldsMap: MutableMap<String, Pair<String, Int>> = mutableMapOf(
-                "name" to Pair("Дис", FIELD_NONE),
-                "building" to Pair("Здан", FIELD_NONE),
-                "classroom" to Pair("Ауд", FIELD_NONE),
-                "type" to Pair("Вид", FIELD_NONE),
-                "chair" to Pair("Вед", FIELD_NONE),
-                "post" to Pair("Долж", FIELD_NONE),
-                "teacher" to Pair("Преп", FIELD_NONE)
+                "name" to Pair("дис", FIELD_NONE),
+                "building" to Pair("здан", FIELD_NONE),
+                "classroom" to Pair("ауд", FIELD_NONE),
+                "type" to Pair("вид", FIELD_NONE),
+                "chair" to Pair("каф", FIELD_NONE),
+                "post" to Pair("долж", FIELD_NONE),
+                "teacher" to Pair("преп", FIELD_NONE)
         )
 
-        var name: Pair<String, Int> by fieldsMap
-        var building: Pair<String, Int> by fieldsMap
-        var classroom: Pair<String, Int> by fieldsMap
-        var type: Pair<String, Int> by fieldsMap
-        var chair: Pair<String, Int> by fieldsMap
-        var post: Pair<String, Int> by fieldsMap
-        var teacher: Pair<String, Int> by fieldsMap
+        val name: Int get() = fieldsMap["name"]!!.second
+        val building: Int get() = fieldsMap["building"]!!.second
+        val classroom: Int get() = fieldsMap["classroom"]!!.second
+        val type: Int get() = fieldsMap["type"]!!.second
+        val chair: Int get() = fieldsMap["chair"]!!.second
+        val post: Int get() = fieldsMap["post"]!!.second
+        val teacher: Int get() = fieldsMap["teacher"]!!.second
 
         fun setColumns(courseSheet: Sheet, rowNum: Int, columnNum: Int) {
             val row = courseSheet.getRow(rowNum)
@@ -205,30 +201,9 @@ object SheetsHelper {
                 val field = fieldsMap.entries.find {
                     fieldStr.contains(it.value.first)
                 } ?: continue
-                field.setValue(Pair(field.value.first, column))
+                fieldsMap[field.key] = Pair(field.value.first, column)
             }
-            /*name = getColumn(row, columnNum, LessonField.NAME)
-            building = getColumn(row, columnNum, LessonField.BUILDING)
-            classroom = getColumn(row, columnNum, LessonField.CLASSROOM)
-            type = getColumn(row, columnNum, LessonField.TYPE)
-            chair = getColumn(row, columnNum, LessonField.CHAIR)
-            post = getColumn(row, columnNum, LessonField.POST)
-            teacher = getColumn(row, columnNum, LessonField.TEACHER)*/
         }
-
-        private fun getColumn(row: Row?, column: Int, lessonField: LessonField): Int {
-            val cellIsOk = row?.getCell(column + lessonField.column)
-                    ?.toString()
-                    ?.toLowerCase(locale)
-                    ?.contains(lessonField.fieldName.toLowerCase(locale)) == true
-            return if (cellIsOk) lessonField.column else FIELD_NONE
-        }
-
-        override fun toString(): String {
-            return "SheetGroup(name=$name, building=$building, classroom=$classroom, type=$type, chair=$chair, post=$post, teacher=$teacher)"
-        }
-
-
     }
 
     private const val FIELD_NONE = -1

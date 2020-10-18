@@ -112,6 +112,7 @@ class StartActivity : AppCompatActivity() {
                 onNext = { showBranchDialog(it) },
                 onComplete = {loadDialog.close() },
                 onError = {
+                    it.printStackTrace()
                     loadDialog.close()
                     Toast.makeText(this@StartActivity, it.message, Toast.LENGTH_LONG).show()
                 }
