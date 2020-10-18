@@ -8,8 +8,8 @@ android {
         applicationId "com.example.schedule"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 12
-        versionName "1.1.1"
+        versionCode 13
+        versionName "1.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true // For vector drawables
         multiDexEnabled true // For support 19 version
@@ -47,7 +47,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
 
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
