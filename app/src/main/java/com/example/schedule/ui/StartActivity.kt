@@ -20,6 +20,9 @@ import com.example.schedule.model.Course
 import com.example.schedule.model.Schedule
 import com.example.schedule.util.LoadDialog
 import com.example.schedule.util.buildSubscribe
+import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.profile.Attribute
+import com.yandex.metrica.profile.UserProfile
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,11 +32,16 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_start.*
 import java.io.InputStream
 
+
 class StartActivity : AppCompatActivity() {
 
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var loadDialog: LoadDialog
+
+    private var attrBranch: String = ""
+    private var attrCourse: String = ""
+    private var attrGroup: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +118,7 @@ class StartActivity : AppCompatActivity() {
         return this.observeOn(AndroidSchedulers.mainThread()).buildSubscribe(
                 onSubscribe = { loadDialog.show("Загрузка списка групп") },
                 onNext = { showBranchDialog(it) },
-                onComplete = {loadDialog.close() },
+                onComplete = { loadDialog.close() },
                 onError = {
                     it.printStackTrace()
                     loadDialog.close()
@@ -121,10 +129,12 @@ class StartActivity : AppCompatActivity() {
 
     private fun showBranchDialog(branches: List<Branch>) {
         AlertDialog.Builder(this)
-                .setItems(branches.map{ it.name }.toTypedArray()) { _, pos ->
-                    val value = branches[pos].value
+                .setItems(branches.map { it.name }.toTypedArray()) { _, pos ->
+                    val branch = branches[pos]
+                    val value = branch.value
                     if (value is String) {
                         ServerHelper.callForSchedule(value).subscribeToGetSchedule()
+                        attrBranch = branch.name
                     } else {
                         val hashMap = LinkedHashMap<String, Any>(value as Map<String, Any>)
                         showBranchDialog(hashMap.map { Branch(it.key, it.value) })
@@ -163,7 +173,9 @@ class StartActivity : AppCompatActivity() {
     private fun openCoursesDialog(courses: List<Course>) {
         AlertDialog.Builder(this@StartActivity)
                 .setItems(courses.map { it.name }.toTypedArray()) { _, pos ->
-                    openGroupsDialog(courses[pos])
+                    val course = courses[pos]
+                    openGroupsDialog(course)
+                    attrCourse = course.name
                 }
                 .show()
     }
@@ -172,10 +184,29 @@ class StartActivity : AppCompatActivity() {
         val sortedGroups = course.groups.sortedBy { it.name }
         AlertDialog.Builder(this@StartActivity)
                 .setItems(sortedGroups.map { it.name }.toTypedArray()) { _, pos ->
-                    saveGroup(sortedGroups[pos])
+                    val group = sortedGroups[pos]
+                    saveGroup(group)
+                    attrGroup = group.name
+                    sendMetrica(attrBranch, attrCourse, attrGroup)
                     setResult(Activity.RESULT_OK)
                     finish()
                 }
                 .show()
+    }
+
+    companion object {
+
+        private const val BRANCH_ATTRIBUTE: String = "branch"
+        private const val COURSE_ATTRIBUTE: String = "course"
+        private const val GROUP_ATTRIBUTE: String = "group"
+
+        private fun sendMetrica(branch: String, course: String, group: String) {
+            val userProfile = UserProfile.newBuilder()
+                    .apply(Attribute.customString(BRANCH_ATTRIBUTE).withValue(branch))
+                    .apply(Attribute.customString(COURSE_ATTRIBUTE).withValue(course))
+                    .apply(Attribute.customString(GROUP_ATTRIBUTE).withValue(group))
+                    .build()
+            YandexMetrica.reportUserProfile(userProfile)
+        }
     }
 }

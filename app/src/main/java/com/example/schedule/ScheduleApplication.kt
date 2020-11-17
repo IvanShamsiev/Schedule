@@ -8,6 +8,8 @@ import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.example.schedule.logic.ScheduleHelper.appContext
 import com.example.schedule.logic.ServerHelper
+import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.YandexMetricaConfig
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -17,10 +19,17 @@ class ScheduleApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        initYandexMetrica()
         setCurrentTheme()
         setEveningChanged()
         checkScheduleVersion()
         appContext = this
+    }
+
+    fun initYandexMetrica() {
+        val config = YandexMetricaConfig.newConfigBuilder(YM_API_KEY).build() // Creating an extended library configuration.
+        YandexMetrica.activate(applicationContext, config) // Initializing the AppMetrica SDK.
+        YandexMetrica.enableActivityAutoTracking(this) // Automatic tracking of user activity.
     }
 
     private fun setEveningChanged() {
@@ -78,6 +87,9 @@ class ScheduleApplication : MultiDexApplication() {
     }
 
     companion object {
+
+        const val YM_API_KEY = "d1fd29c6-46bc-4cda-9519-e3d68b944ce1"
+
         const val GROUP_FILE = "group.json"
         const val LESSON_EXTRA = "lesson"
         const val CURRENT_DATE_EXTRA = "current_date"
